@@ -1,3 +1,8 @@
+#ifndef API_H
+#define API_H
+
+#include <stdio.h>
+#include <stdlib.h>
 // defini un type pour la liste chainee renvoyée en réponse de la requete de recherche dans l'arbre.
 
 typedef struct _token {
@@ -30,5 +35,10 @@ void purgeTree(void *root);
 // L'appel à votre parser un char* et une longueur à parser.
 int parseur(char *req, int len);
 
-//test
-//test
+//***--------Fonctions Utiles pour le bon fonctionnement des fonctions si dessus--------***
+
+_Token* creerToken();
+
+void setToken(*_Token token_, void* node_, _Token* next_)
+
+#endif

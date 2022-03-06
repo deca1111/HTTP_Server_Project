@@ -1,6 +1,6 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <string.h> 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -8,9 +8,11 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "api.h" 
+#include "api.h"
+#include "grammaire_simp.h"
+#include "arbre.h"
 
-#define false 0 
+#define false 0
 
 
 int main(int argc,char *argv[])
@@ -18,11 +20,11 @@ int main(int argc,char *argv[])
 	int res,i,fi;
 	char *p=NULL,*addr;
 
-	
+
         struct stat st;
 
 	if (argc < 3 ) { printf("Usage: httpparser <file> <search>\nAttention <search> is case sensitive\n"); exit(1); }
-	/* ouverture du fichier contenant la requête */ 
+	/* ouverture du fichier contenant la requête */
 	if ((fi=open(argv[1],O_RDWR)) == -1) {
                 perror("open");
                 return false;
@@ -34,32 +36,32 @@ int main(int argc,char *argv[])
 
 	// This is a special HACK since identificateur in C can't have character '-'
 
-	if (argc == 3 ) { 
-		p=argv[2]; 	
-		printf("searching for %s\n",p); 
-		while (*p) { 
+	if (argc == 3 ) {
+		p=argv[2];
+		printf("searching for %s\n",p);
+		while (*p) {
 			if (*p=='-') { *p='_'; }
-			p++; 
+			p++;
 		}
-		p=argv[2]; 	
+		p=argv[2];
 	}
-	// call parser and get results. 
+	// call parser and get results.
 	if (res=parseur(addr,st.st_size)) {
-		_Token *r,*tok; 
+		_Token *r,*tok;
 		void *root=NULL;
-		root=getRootTree(); 
-		r=searchTree(root,p); 
-		tok=r; 
+		root=getRootTree();
+		r=searchTree(root,p);
+		tok=r;
 		while (tok) {
-			int l; 
-			char *s; 
-			s=getElementValue(tok->node,&l); 
+			int l;
+			char *s;
+			s=getElementValue(tok->node,&l);
 			printf("FOUND [%.*s]\n",l,s);
-			tok=tok->next; 
+			tok=tok->next;
 		}
 		purgeElement(&r);
 		purgeTree(root);
 	}
 	close(fi);
-	return(res); 
+	return(res);
 }
