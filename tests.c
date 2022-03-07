@@ -13,7 +13,7 @@
 #include "arbre.h"
 
 int main(int argc, char const *argv[]) {
-  char* mot = "125oc";
+  char* mot = "startCoucou ,je :taime\t.69_?fin\n";
 
   char* valeur;
   valeur = &(mot[0]);
@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
   int res;
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
-  res = verifNombre(valeur, racine);
+  res = verifMessage(valeur, racine);
   printf("Mot de taille : %d\n", res);
 
 

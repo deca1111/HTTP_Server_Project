@@ -8,6 +8,7 @@ Noeud* creerNoeud(){
   nouveau->longueur = 0;
   nouveau->frere = NULL;
   nouveau->fils = NULL;
+  nouveau->profondeur = 0;
 
   return nouveau ;
 }
@@ -15,12 +16,14 @@ Noeud* creerNoeud(){
 Noeud* creerFils(Noeud* n){
   Noeud* nouveau = creerNoeud();
   n->fils = nouveau;
+  nouveau->profondeur = n->profondeur + 1;
   return nouveau ;
 }
 
 Noeud* creerFrere(Noeud* n){
   Noeud* nouveau = creerNoeud();
-  n->frere = nouveau ;
+  n->frere = nouveau;
+  nouveau->profondeur = n->profondeur;
   return nouveau ;
 }
 

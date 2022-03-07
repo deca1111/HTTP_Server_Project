@@ -20,7 +20,7 @@ int verifNombre(char* valeur, Noeud* pere);
 
 int verifSeparateur(char* valeur, Noeud* noeud);
 
-int verifFin(char* valeur, Noeud* noeud);
+int verifFin(char* valeur, Noeud* pere);
 
 int verifLF(char* valeur, Noeud* noeud);
 
