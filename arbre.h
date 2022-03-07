@@ -14,6 +14,7 @@ typedef struct Noeud{
 
   char* valeur;
   int longueur;
+  int profondeur;
 
   struct Noeud* fils;
   struct Noeud* frere;
