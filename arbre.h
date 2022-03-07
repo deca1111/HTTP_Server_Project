@@ -12,7 +12,7 @@
 typedef struct{
   char* tag;
 
-  char* value;
+  char* valeur;
   int longueur;
 
   struct Noeud* fils;
@@ -24,7 +24,7 @@ Noeud* creerNoeud();
 Noeud* creerFils(Noeud* n);
 Noeud* creerFrere(Noeud* n);
 
-void setNoeud(Noeud* noeud_, char* tag_, char* value_, int longueur_);
+void setNoeud(Noeud* noeud_, char* tag_, char* valeur__, int longueur_);
 
 
 
