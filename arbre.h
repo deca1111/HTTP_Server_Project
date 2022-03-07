@@ -21,8 +21,8 @@ typedef struct{
 } Noeud;
 
 Noeud* creerNoeud();
-Noeud* creerFils(Noeud*);
-Noeud* creerFrere(Noeud*);
+Noeud* creerFils(Noeud* n);
+Noeud* creerFrere(Noeud* n);
 
 void setNoeud(Noeud* noeud_, char* tag_, char* value_, int longueur_);
 
