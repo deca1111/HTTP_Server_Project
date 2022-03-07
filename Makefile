@@ -21,4 +21,4 @@ grammaire_simp.o : grammaire_simp.c
 	gcc -c grammaire_simp.c $(OPTIONS) grammaire_simp.o
 
 clean :
-	rm -f *.o *~ $(BIN) *.hex *.s
+	rm -f *.o *~ $(EXEC) *.hex *.s
