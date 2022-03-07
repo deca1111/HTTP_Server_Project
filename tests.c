@@ -8,21 +8,24 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "api.h"
+#include "grammaire_simp.h"
+#include "arbre.h"
+
 int main(int argc, char const *argv[]) {
 
-  char* str = "abcdefgh";
+  char* mot = "arc-";
 
-  char* tag;
-  int longueur;
+  char* valeur;
+  valeur = &(mot[0]);
 
-  tag = &(str[2]);
-  longueur = 3;
+  Noeud* racine;
 
-  for (int i = 0; i < longueur; i++) {
-    printf("%c",*(tag+i) );
+  racine = creerNoeud();
 
-  }
-  printf("\n");
+  int res;
+  res = verifMot(valeur, racine);
 
+  printf("Mot de taille : %d\n", res);
   return 0;
 }

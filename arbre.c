@@ -26,6 +26,6 @@ Noeud* creerFrere(Noeud* n){
 
 void setNoeud(Noeud* noeud_, char* tag_, char* valeur_, int longueur_){
   noeud_->tag = tag_ ;
-  noeud_->value = valeur_ ;
+  noeud_->valeur = valeur_ ;
   noeud_->longueur= longueur_ ;
 }
