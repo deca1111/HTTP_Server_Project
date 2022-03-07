@@ -4,7 +4,7 @@ OBJECTS_TEST = test.o arbre.o api.o grammaire_simp.o
 EXEC = parseur
 OPTIONS = -Wall -o
 
-all : exec
+all : test
 
 test : $(OBJECTS_TEST)
 	gcc $(OBJECTS_TEST) -o $(EXEC)
