@@ -58,8 +58,24 @@ int verifSeparateur(char* valeur, Noeud* noeud){
 
   //remplissage Noeud
   noeud->tag = "separateur";
-  pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  noeud->valeur = valeur;
+  noeud->longueur = taille_mot;
+
+  return taille_mot;
+}
+int verifALPHA(char* valeur, Noeud* noeud){
+  int taille_mot;
+
+  if( ((*valeur < 91) && (*valeur > 64)) || ((*valeur > 96) && (*valeur < 123))){
+    taille_mot = 1;//est un separateur
+  }else{
+    taille_mot = 0;//pas un separateur
+  }
+
+  //remplissage Noeud
+  noeud->tag = "separateur";
+  noeud->valeur = valeur;
+  noeud->longueur = taille_mot;
 
   return taille_mot;
 }

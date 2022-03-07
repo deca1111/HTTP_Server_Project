@@ -36,16 +36,16 @@ char *getElementValue(void *node,int *len){
 
   noeud = (Noeud*) node;
   valeur_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
-  for(int i = 0; i < longueur, i++){
+  for(int i = 0; i < noeud->longueur; i++){
     *(valeur_+i) = *((noeud->valeur)+i);
   }
-  valeur_[noeud->longueur] = '\0'
+  valeur_[noeud->longueur] = '\0';
 
   if(len!=NULL){
     *len = noeud->longueur;
   }
 
-  return value_;
+  return valeur_;
 }
 
 void purgeElement(_Token **r){}
@@ -57,13 +57,13 @@ int parseur(char *req, int len){
 }
 
 _Token* creerToken(){
-  _Token* token = (*_Token) malloc(sizeof(_Token));
+  _Token* token = (_Token*) malloc(sizeof(_Token));
   token->node = NULL;
   token->next = NULL;
 
   return token;
 }
 
-void afficheToken(*_Token racine){
+void afficheToken(_Token* racine){
 
 }

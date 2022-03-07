@@ -8,6 +8,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include "api.h"
+#include "grammaire_simp.h"
+#include "arbre.h"
+
 int main(int argc, char const *argv[]) {
 
   char* mot = "arc-";

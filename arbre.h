@@ -9,7 +9,7 @@
 
 //Structure de noeud contentant le tag, la valeur et la longueur de la valeur
 //Contient aussi des pointeurs vers des noeuds fils et frere
-typedef struct{
+typedef struct Noeud{
   char* tag;
 
   char* valeur;
