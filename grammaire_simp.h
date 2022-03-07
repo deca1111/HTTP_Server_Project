@@ -7,24 +7,24 @@
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
 
-int fillMessage();
+int verifMessage();
 
-int fillDebut();
+int verifDebut();
 
-int fillMot();
+int verifMot(char* valeur, Noeud* pere);
 
-int fillPonct();
+int verifPonct();
 
-int fillNombre();
+int verifNombre();
 
-int fillSeparateur();
+int verifSeparateur(char* valeur, Noeud* noeud);
 
-int fillFin();
+int verifFin();
 
-int fillLF();
+int verifLF();
 
-int fillDIGIT();
+int verifDIGIT();
 
-int fillALPHA();
+int verifALPHA(char* valeur, Noeud* noeud);
 
 #endif
