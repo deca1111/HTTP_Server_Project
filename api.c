@@ -32,14 +32,14 @@ char *getElementTag(void *node,int *len){
 
 char *getElementValue(void *node,int *len){
   Noeud* noeud;
-  char* value_;
+  char* valeur_;
 
   noeud = (Noeud*) node;
-  value_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
+  valeur_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
   for(int i = 0; i < longueur, i++){
-    *(value_+i) = *((noeud->tag)+i);
+    *(valeur_+i) = *((noeud->valeur)+i);
   }
-  value_[noeud->longueur] = '\0'
+  valeur_[noeud->longueur] = '\0'
 
   if(len!=NULL){
     *len = noeud->longueur;
