@@ -14,7 +14,7 @@
 
 int main(int argc, char const *argv[]) {
   //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
-  char* mot = "Coucou_";
+  char* mot = "startO ,DCvWahPeh	.q .UC-,Ka-:itN	:fin\n";
 
   char* valeur;
   valeur = &(mot[0]);
@@ -27,12 +27,10 @@ int main(int argc, char const *argv[]) {
   int res;
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
-  res = verifMot(valeur, racine);
+  res = verifMessage(valeur, racine);
   printf("Mot de taille : %d\n", res);
 
-  //purgeTree(racine->fils);
-
-  afficherArbre(racine2);
+  afficherArbre(racine);
 
 
 

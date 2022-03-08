@@ -56,15 +56,18 @@ void purgeTree(void *root){
 
   if(noeud->fils != NULL){
     purgeTree(noeud->fils);
+    noeud->fils = NULL;
   }
   if(noeud->frere != NULL){
     purgeTree(noeud->frere);
+    noeud->frere = NULL;
   }
+  free(noeud);
+  noeud = NULL;
 
-  noeud->fils = NULL;
-  noeud->frere = NULL;
 
-  
+
+
 }
 
 int parseur(char *req, int len){
