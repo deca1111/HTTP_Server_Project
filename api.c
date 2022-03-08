@@ -50,7 +50,22 @@ char *getElementValue(void *node,int *len){
 
 void purgeElement(_Token **r){}
 
-void purgeTree(void *root){}
+void purgeTree(void *root){
+  Noeud * noeud;
+  noeud = (Noeud*) root;
+
+  if(noeud->fils != NULL){
+    purgeTree(noeud->fils);
+  }
+  if(noeud->frere != NULL){
+    purgeTree(noeud->frere);
+  }
+
+  noeud->fils = NULL;
+  noeud->frere = NULL;
+
+  
+}
 
 int parseur(char *req, int len){
 

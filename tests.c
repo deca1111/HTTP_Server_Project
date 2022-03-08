@@ -13,21 +13,28 @@
 #include "arbre.h"
 
 int main(int argc, char const *argv[]) {
-  char* mot = "startCoucou ,je :taime\t.69_?fin\n";
+  //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
+  char* mot = "Coucou_";
 
   char* valeur;
   valeur = &(mot[0]);
 
   Noeud* racine;
 
+  Noeud* racine2;
   racine = creerNoeud();
 
   int res;
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
-  res = verifMessage(valeur, racine);
+  res = verifMot(valeur, racine);
   printf("Mot de taille : %d\n", res);
-  afficherArbre(racine);
+
+  //purgeTree(racine->fils);
+
+  afficherArbre(racine2);
+
+
 
 
   return 0;

@@ -21,7 +21,7 @@ int verifMessage(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
   //verification mot ponct / nombre Separateur
@@ -67,7 +67,7 @@ int verifMessage(char* valeur, Noeud* pere){
   free(frere_3);
   free(frere_2);
   if(compteur < 2){
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
   //verification ponct
@@ -88,7 +88,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
   //verification LF
@@ -98,7 +98,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
 
@@ -171,7 +171,7 @@ int verifMot(char* valeur, Noeud* pere){
 
   //verif qu'il y a au moins 1 ALPHA
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -182,7 +182,7 @@ int verifMot(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -251,7 +251,7 @@ int verifNombre(char* valeur, Noeud* pere){
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
   //remplissage Noeud
