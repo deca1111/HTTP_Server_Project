@@ -26,6 +26,7 @@ Noeud* creerFils(Noeud* n);
 Noeud* creerFrere(Noeud* n);
 
 void setNoeud(Noeud* noeud_, char* tag_, char* valeur__, int longueur_);
+void afficherArbre(Noeud* noeud);
 
 
 

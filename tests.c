@@ -27,6 +27,7 @@ int main(int argc, char const *argv[]) {
   printf("Valeur = %s\n",valeur);
   res = verifMessage(valeur, racine);
   printf("Mot de taille : %d\n", res);
+  afficherArbre(racine);
 
 
   return 0;

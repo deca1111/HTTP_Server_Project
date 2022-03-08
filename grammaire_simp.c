@@ -16,7 +16,7 @@ int verifMessage(char* valeur, Noeud* pere){
 
   //verification Debut
   fils = creerFils(pere);
-  frere = creerFrere(fils);
+  frere = fils;
   if((res = verifDebut(valeur, frere))){
     taille_mot += res;
     res = 0;
