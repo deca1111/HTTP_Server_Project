@@ -40,8 +40,8 @@ int parseur(char *req, int len);
 
 _Token* creerToken();
 
-void afficheToken(*_Token racine);
+void afficheToken(_Token* racine);
 
-void setToken(*_Token token_, void* node_, _Token* next_)
+void setToken(_Token* token_, void* node_, _Token* next_);
 
 #endif
