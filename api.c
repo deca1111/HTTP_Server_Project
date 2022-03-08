@@ -14,6 +14,34 @@ void *getRootTree(){
 
 _Token *searchTree(void *start,char *name){
 
+  _Token* racine;
+
+  if(start == NULL){
+    recursifSearchTree(getRootTree(), name, racine);
+  }else{
+    recursifSearchTree(start, name, racine);
+  }
+
+  return racine;
+
+}
+
+_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
+
+  char* tag = getElementTag(noeud, NULL);
+
+  if(strcmp(tag,name) == 0){
+    token = creerToken();
+    token->node =
+  }
+
+  if(noeud->fils != NULL){
+    recursifSearchTree(noeud->fils);
+  }
+
+  if(noeud->frere != NULL){
+    recursifSearchTree(noeud->frere);
+  }
 }
 
 char *getElementTag(void *node,int *len){
@@ -48,7 +76,10 @@ char *getElementValue(void *node,int *len){
   return valeur_;
 }
 
-void purgeElement(_Token **r){}
+void purgeElement(_Token **r){
+
+}
+
 
 void purgeTree(void *root){
   Noeud * noeud;
@@ -56,18 +87,14 @@ void purgeTree(void *root){
 
   if(noeud->fils != NULL){
     purgeTree(noeud->fils);
-    noeud->fils = NULL;
   }
   if(noeud->frere != NULL){
     purgeTree(noeud->frere);
-    noeud->frere = NULL;
   }
+
+  printf("Free d'un [%s] : [%s]\n", getElementTag(noeud,NULL), getElementValue(noeud,NULL));
+
   free(noeud);
-  noeud = NULL;
-
-
-
-
 }
 
 int parseur(char *req, int len){

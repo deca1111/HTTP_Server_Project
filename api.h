@@ -42,6 +42,8 @@ _Token* creerToken();
 
 void afficheToken(_Token* racine);
 
+_Token *recursifSearchTree(void *start,char *name, _Token* token);
+
 void setToken(_Token* token_, void* node_, _Token* next_);
 
 #endif
