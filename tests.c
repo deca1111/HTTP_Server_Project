@@ -15,7 +15,7 @@
 int main(int argc, char const *argv[]) {
   //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
   char* mot = "startcou_,COU-.fin\n";
-
+  _Token* premier_element;
   char* valeur;
   valeur = &(mot[0]);
 
@@ -33,7 +33,10 @@ int main(int argc, char const *argv[]) {
     afficherArbre(racine);
   }
 
+  premier_element = searchTree(racine, "ALPHA");
+  afficheToken(premier_element);
   purgeTree(racine);
+  purgeElement(&premier_element);
 
 
 

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arbre.h"
 
 // defini un type pour la liste chainee renvoyée en réponse de la requete de recherche dans l'arbre.
 typedef struct _token {
@@ -40,9 +41,13 @@ int parseur(char *req, int len);
 
 _Token* creerToken();
 
-void afficheToken(_Token* racine);
+void afficheToken(_Token* token);
 
-_Token *recursifSearchTree(void *start,char *name, _Token* token);
+//noeud: noeud actuel
+//name: tag recherche
+//token: element a remplir de la liste chainee
+//return: element suivant de la liste chainee
+_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token);
 
 void setToken(_Token* token_, void* node_, _Token* next_);
 
