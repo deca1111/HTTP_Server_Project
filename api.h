@@ -49,6 +49,8 @@ void afficheToken(_Token* token);
 //return: element suivant de la liste chainee
 _Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token);
 
+_Token *recursifSearchTree(void *start,char *name, _Token* token);
+
 void setToken(_Token* token_, void* node_, _Token* next_);
 
 #endif
