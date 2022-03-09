@@ -2,12 +2,12 @@
 OBJECTS = main.o arbre.o api.o grammaire_simp.o
 OBJECTS_TEST = test.o arbre.o api.o grammaire_simp.o
 EXEC = parseur
-OPTIONS = -Wall -o
+OPTIONS = -Wall -g -o
 
-all : test
+all : clean test
 
 test : $(OBJECTS_TEST)
-	gcc $(OBJECTS_TEST) -o $(EXEC)
+	gcc $(OBJECTS_TEST) -o $(EXEC) -g
 
 exec : $(OBJECTS)
 	gcc $(OBJECTS) -o $(EXEC)

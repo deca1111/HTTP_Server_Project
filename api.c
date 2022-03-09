@@ -1,5 +1,5 @@
 #include "api.h"
-#include "arbre.h"
+
 
 
 
@@ -14,6 +14,40 @@ void *getRootTree(){
 
 _Token *searchTree(void *start,char *name){
 
+  //premier element de la liste chainee
+  _Token* premier_element = creerToken();
+  _Token* temp;
+  if(start == NULL){
+    temp = recursifSearchTree(getRootTree(), name, premier_element);
+  }else{
+    temp = recursifSearchTree((Noeud*)start, name, premier_element);
+  }
+  premier_element = temp->next;
+  free(temp);
+  return premier_element;
+
+}
+
+_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
+
+  char* tag = getElementTag(noeud, NULL);
+  _Token* precedent = token;
+  if(strcmp(tag,name) == 0){
+    precedent = creerToken();
+    precedent->next = token;
+    token->node = (void*)noeud;
+
+  }
+
+  if(noeud->fils != NULL){
+    precedent = recursifSearchTree(noeud->fils, name, precedent);
+  }
+
+  if(noeud->frere != NULL){
+    precedent = recursifSearchTree(noeud->frere, name, precedent);
+  }
+
+  return precedent;
 }
 
 char *getElementTag(void *node,int *len){
@@ -48,26 +82,29 @@ char *getElementValue(void *node,int *len){
   return valeur_;
 }
 
-void purgeElement(_Token **r){}
+void purgeElement(_Token **r){
+  //printf("[Tag]: _%d_\t[Valeur]: _%s_\n",getElementTag(r, NULL), getElementValue((*r)->node, NULL));
+  if((*r)->next != NULL){
+    printf("coucou\n");
+    purgeElement((*r)->next);
+  }
+  //free(*r);
+}
+
 
 void purgeTree(void *root){
-  Noeud * noeud;
-  noeud = (Noeud*) root;
+  Noeud * noeud = (Noeud*) root;
 
   if(noeud->fils != NULL){
     purgeTree(noeud->fils);
-    noeud->fils = NULL;
   }
   if(noeud->frere != NULL){
     purgeTree(noeud->frere);
-    noeud->frere = NULL;
   }
+
+  printf("Free d'un [%s] : [%s]\n", getElementTag(noeud,NULL), getElementValue(noeud,NULL));
+
   free(noeud);
-  noeud = NULL;
-
-
-
-
 }
 
 int parseur(char *req, int len){
@@ -82,6 +119,11 @@ _Token* creerToken(){
   return token;
 }
 
-void afficheToken(_Token* racine){
+void afficheToken(_Token* token){
+
+  if(token->next != NULL){
+    afficheToken(token->next);
+  }
+    printf("[Tag]: _%s_\t[Valeur]: _%s_\n",getElementTag(token->node, NULL), getElementValue(token->node, NULL));
 
 }

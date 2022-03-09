@@ -35,21 +35,20 @@ void setNoeud(Noeud* noeud_, char* tag_, char* valeur_, int longueur_){
 
 void afficherArbre(Noeud* noeud){
 
-  if(noeud != NULL){
-    for(int i = 0; i < noeud->profondeur; i++){
-      printf("\t");
-    }
-    printf("[%s] : {",noeud->tag);
-    for(int i = 0; i < noeud->longueur; i++){
-      printf("%c",*(noeud->valeur + i));
-    }
-    printf("}\n");
+  for(int i = 0; i < noeud->profondeur; i++){
+    printf("\t");
+  }
+  printf("[%d] - [%s] : {",noeud->profondeur,noeud->tag);
+  for(int i = 0; i < noeud->longueur; i++){
+    printf("%c",*(noeud->valeur + i));
+  }
+  printf("}\n");
 
-    if(noeud->fils != NULL){
-      afficherArbre(noeud->fils);
-    }
-    if(noeud->frere != NULL){
-      afficherArbre(noeud->frere);
-    }
+  if(noeud->fils != NULL){
+    afficherArbre(noeud->fils);
+  }
+
+  if(noeud->frere != NULL){
+    afficherArbre(noeud->frere);
   }
 }

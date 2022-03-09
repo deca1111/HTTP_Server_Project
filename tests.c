@@ -14,14 +14,13 @@
 
 int main(int argc, char const *argv[]) {
   //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
-  char* mot = "startO ,DCvWahPeh	.q .UC-,Ka-:itN	:fin\n";
-
+  char* mot = "startcou_,COU-.fin\n";
+  _Token* premier_element;
   char* valeur;
   valeur = &(mot[0]);
 
   Noeud* racine;
 
-  Noeud* racine2;
   racine = creerNoeud();
 
   int res;
@@ -30,7 +29,14 @@ int main(int argc, char const *argv[]) {
   res = verifMessage(valeur, racine);
   printf("Mot de taille : %d\n", res);
 
-  afficherArbre(racine);
+  if(res){
+    afficherArbre(racine);
+  }
+
+  premier_element = searchTree(racine, "ALPHA");
+  afficheToken(premier_element);
+  purgeTree(racine);
+  purgeElement(&premier_element);
 
 
 

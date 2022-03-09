@@ -1,6 +1,6 @@
 #include "grammaire_simp.h"
 
-
+/*message = debut 2*( mot ponct /nombre separateur ) [ponct] fin LF*/
 int verifMessage(char* valeur, Noeud* pere){
   int taille_mot = 0;
   int res = 0;
@@ -21,31 +21,32 @@ int verifMessage(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    purgeTree(fils);
+    free(fils);
+    pere->fils = NULL;
     return 0;
   }
+
   //verification mot ponct / nombre Separateur
-  frere_2 = creerFrere(frere);
-  frere_3 = creerFrere(frere_2);
   while(!fin)
   {
+    frere_2 = creerFrere(frere);
+    frere_3 = creerFrere(frere_2);
+
     if(((res = verifMot(valeur+taille_mot, frere_2)))){
       if((res2 = verifPonct(valeur+taille_mot+res, frere_3))){
         taille_mot = taille_mot + res + res2;
         res = 0;
         res2 = 0;
         compteur += 1;
-        frere = frere_3;
-        frere_2 = creerFrere(frere);
-        frere_3 = creerFrere(frere_2);
         est_mot = 1;
+        frere = frere_3;
       }else{
         est_mot = 0;
       }
     }else{
       est_mot = 0;
-
     }
+
     if(!est_mot){
       if((res = verifNombre(valeur+taille_mot, frere_2))){
         if((res2 = verifSeparateur(valeur+taille_mot+res, frere_3))){
@@ -54,25 +55,27 @@ int verifMessage(char* valeur, Noeud* pere){
           res2 = 0;
           compteur += 1;
           frere = frere_3;
-          frere_2 = creerFrere(frere);
-          frere_3 = creerFrere(frere_2);
         }else{
           fin = 1;
+          free(frere_2);
+          free(frere_3);
+          frere->frere = NULL;
         }
       }else{
         fin = 1;
+        free(frere_2);
+        free(frere_3);
+        frere->frere = NULL;
       }
     }
-
   }
-  free(frere_3);
-  free(frere_2);
+
   if(compteur < 2){
-    purgeTree(fils);
+    ////purgeTree(fils);
     return 0;
   }
+
   //verification ponct
-  frere = frere_3;
   frere_2 = creerFrere(frere);
 
   if((res = verifPonct(valeur+taille_mot, frere_2))){
@@ -81,7 +84,9 @@ int verifMessage(char* valeur, Noeud* pere){
     frere = frere_2;
   }else{
     free(frere_2);
+    frere->frere = NULL;
   }
+
   //verification fin
   frere_2 = creerFrere(frere);
   if((res = verifFin(valeur+taille_mot, frere_2))){
@@ -89,9 +94,10 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
+
   //verification LF
   frere_2 = creerFrere(frere);
   if((res = verifLF(valeur+taille_mot, frere_2))){
@@ -99,7 +105,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    //purgeTree(fils);
     return 0;
   }
 
@@ -107,6 +113,7 @@ int verifMessage(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -116,9 +123,11 @@ int verifMessage(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
 
   return taille_mot;
 }
+
 int verifDebut(char* valeur, Noeud* pere){
   int taille_mot = 0;
   char* start = "start";
@@ -135,6 +144,7 @@ int verifDebut(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -144,8 +154,11 @@ int verifDebut(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifMot(char* valeur, Noeud* pere){
   int taille_mot = 0;
   int res = 0;
@@ -169,10 +182,11 @@ int verifMot(char* valeur, Noeud* pere){
     petit_frere = creerFrere(frere);
   }
   free(petit_frere);
+  frere->frere = NULL;
 
   //verif qu'il y a au moins 1 ALPHA
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -183,7 +197,7 @@ int verifMot(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -192,6 +206,7 @@ int verifMot(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -201,9 +216,11 @@ int verifMot(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
 
   return taille_mot;
 }
+
 int verifPonct(char* valeur, Noeud* pere){
   int taille_mot;
   if((*(valeur)==',') || (*(valeur)=='.') || (*(valeur)=='!') || (*(valeur)=='?') || (*(valeur)==':')){
@@ -216,6 +233,7 @@ int verifPonct(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -225,8 +243,11 @@ int verifPonct(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifNombre(char* valeur, Noeud* pere){
   int taille_mot = 0;
   int res = 0;
@@ -249,16 +270,20 @@ int verifNombre(char* valeur, Noeud* pere){
     petit_frere = creerFrere(frere);
   }
   free(petit_frere);
+  frere->frere = NULL;
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    //purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
+
   //remplissage Noeud
   pere->tag = "nombre";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
+
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -268,8 +293,11 @@ int verifNombre(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifSeparateur(char* valeur, Noeud* noeud){
   int taille_mot;
   if((*(valeur)==' ') || (*(valeur)=='\t') || (*(valeur)=='-') || (*(valeur)=='_')){
@@ -282,6 +310,8 @@ int verifSeparateur(char* valeur, Noeud* noeud){
   noeud->tag = "separateur";
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
+
+  /*
   //affichage du Mot
   for(int i = 0; i < noeud->profondeur; i++){
     printf("\t");
@@ -291,8 +321,11 @@ int verifSeparateur(char* valeur, Noeud* noeud){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifFin(char* valeur, Noeud* pere){
   int taille_mot = 0;
   char* fin = "fin";
@@ -309,6 +342,7 @@ int verifFin(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
+  /*
   //affichage du Mot
   for(int i = 0; i < pere->profondeur; i++){
     printf("\t");
@@ -318,16 +352,21 @@ int verifFin(char* valeur, Noeud* pere){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifLF(char* valeur, Noeud* noeud){
   int taille_mot;
 
   if(*valeur == '\n'){
+    /*
     for(int i = 0; i < noeud->profondeur; i++){
       printf("\t");
     }
     printf("LF: \\n\n");
+    */
     taille_mot = 1;//est un separateur
   }else{
     taille_mot = 0;//pas un separateur
@@ -340,6 +379,7 @@ int verifLF(char* valeur, Noeud* noeud){
 
   return taille_mot;
 }
+
 int verifDIGIT(char* valeur, Noeud* noeud){
   int taille_mot;
 
@@ -354,6 +394,8 @@ int verifDIGIT(char* valeur, Noeud* noeud){
   noeud->tag = "DIGIT";
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
+
+  /*
   //affichage du Mot
   for(int i = 0; i < noeud->profondeur; i++){
     printf("\t");
@@ -363,8 +405,11 @@ int verifDIGIT(char* valeur, Noeud* noeud){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
+
 int verifALPHA(char* valeur, Noeud* noeud){
   int taille_mot;
 
@@ -379,6 +424,8 @@ int verifALPHA(char* valeur, Noeud* noeud){
   noeud->tag = "ALPHA";
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
+
+  /*
   //affichage du Mot
   for(int i = 0; i < noeud->profondeur; i++){
     printf("\t");
@@ -388,5 +435,7 @@ int verifALPHA(char* valeur, Noeud* noeud){
     printf("%c",*(valeur+i));
   }
   printf("\n");
+  */
+
   return taille_mot;
 }
