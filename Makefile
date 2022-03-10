@@ -1,31 +1,25 @@
+
 #parseur
-OBJECTS = main.o arbre.o api.o grammaire_simp.o
-OBJECTS_TEST = test.o arbre.o api.o grammaire_simp.o
-HEADER = api.h arbre.h grammaire_simp.h
+PROGRAMME = test_file
+OBJECTS = $(PROGRAMME).o arbre.o api.o grammaire_simp.o
 EXEC = parseur
 OPTIONS = -Wall -g -o
 
-all : clean test
+all : clean main
 
-test : $(OBJECTS_TEST)
-	gcc $(OBJECTS_TEST) -o $(EXEC) -g
+main : $(OBJECTS)
+	gcc $(OBJECTS) -o $(EXEC) -g
 
-exec : $(OBJECTS)
-	gcc $(OBJECTS) -o $(EXEC)
+$(PROGRAMME).o :
+	gcc -c $(PROGRAMME).c $(OPTIONS) $(PROGRAMME).o
 
-test.o :test_file.c
-	gcc -c test_file.c $(OPTIONS) test.o
-
-main.o : $(HEADER)
-	gcc -c main.c $(OPTIONS) main.o
-
-arbre.o : $(HEADER)
+arbre.o : api.h arbre.h struct.h
 	gcc -c arbre.c $(OPTIONS) arbre.o
 
-api.o : $(HEADER)
+api.o : arbre.h api.h struct.h
 	gcc -c api.c $(OPTIONS) api.o
 
-grammaire_simp.o : $(HEADER)
+grammaire_simp.o : api.h arbre.h grammaire_simp.h struct.h
 	gcc -c grammaire_simp.c $(OPTIONS) grammaire_simp.o
 
 clean :

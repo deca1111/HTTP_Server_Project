@@ -1,11 +1,11 @@
-#ifndef ARBRE_H
-#define ARBRE_H
+#ifndef __ARBRE_H__
+#define __ARBRE_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "api.h"
 
-
+#include "struct.h"
 //Contient les fonctions permettant de creer l'arbre ainsi que la structure de noeud
 
 //Structure de noeud contentant le tag, la valeur et la longueur de la valeur

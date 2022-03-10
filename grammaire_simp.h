@@ -1,10 +1,14 @@
-#ifndef GRAMMAIRE_SIMP_H
-#define GRAMMAIRE_SIMP_H
+#ifndef __GRAMMAIRE_SIMP_H__
+#define __GRAMMAIRE_SIMP_H__
 
 #include <stdio.h>
 #include <stdlib.h>
+
+
 #include "arbre.h"
 #include "api.h"
+
+#include "struct.h"
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
 

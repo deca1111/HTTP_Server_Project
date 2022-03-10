@@ -61,12 +61,12 @@ _Token* creerToken(){
 }
 
 void afficheToken(_Token* token){
-
+  int len;
   if(token->next != NULL){
     afficheToken(token->next);
   }
   if(token->node != 0){
-    printf("[Tag]: _%s_\t[Valeur]: _%s_\n",getElementTag(token->node, NULL), getElementValue(token->node, NULL));
+    printf("[Tag]: _%s_\t[Valeur]: _[%.*s]_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
   }
 }
 
@@ -78,7 +78,6 @@ _Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
     precedent = creerToken();
     precedent->next = token;
     token->node = (void*)noeud;
-    printf("token->next = %p, precedent = %p\n", token->next, precedent);
 
   }
 
