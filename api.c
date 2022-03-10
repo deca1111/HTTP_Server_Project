@@ -1,6 +1,6 @@
 #include "api.h"
-
-
+#include "arbre.h"
+#include "grammaire_simp.h"
 Noeud* racine;
 char* request_line;
 
@@ -19,9 +19,7 @@ _Token *searchTree(void *start,char *name){
   }else{
     temp = recursifSearchTree((Noeud*)start, name, premier_element);
   }
-  printf("premier_element = %p\n", premier_element);
   premier_element = temp->next;
-  printf("premier_element = %p\n", premier_element);
   free(temp);
   return premier_element;
 
@@ -84,5 +82,15 @@ void purgeTree(void *root){
 }
 
 int parseur(char *req, int len){
-
+  int res;
+  char* valeur;
+  racine = creerNoeud();
+  valeur = &(req[0]);
+  res = verifMessage(valeur, racine);
+  if(res != len){
+    purgeTree(racine);
+    return 0;
+  }else{
+    return res;
+  }
 }

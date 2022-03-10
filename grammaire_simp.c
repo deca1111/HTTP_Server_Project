@@ -133,17 +133,6 @@ int verifDebut(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Debut: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -196,17 +185,6 @@ int verifMot(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Mot: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -223,17 +201,6 @@ int verifPonct(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Ponctuation: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -277,17 +244,6 @@ int verifNombre(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Nombre: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -305,17 +261,6 @@ int verifSeparateur(char* valeur, Noeud* noeud){
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < noeud->profondeur; i++){
-    printf("\t");
-  }
-  printf("Separateur: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -336,17 +281,7 @@ int verifFin(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Fin: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
+
 
   return taille_mot;
 }
@@ -355,12 +290,6 @@ int verifLF(char* valeur, Noeud* noeud){
   int taille_mot;
 
   if(*valeur == '\n'){
-    /*
-    for(int i = 0; i < noeud->profondeur; i++){
-      printf("\t");
-    }
-    printf("LF: \\n\n");
-    */
     taille_mot = 1;//est un separateur
   }else{
     taille_mot = 0;//pas un separateur
@@ -389,17 +318,6 @@ int verifDIGIT(char* valeur, Noeud* noeud){
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < noeud->profondeur; i++){
-    printf("\t");
-  }
-  printf("DIGIT: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -419,17 +337,6 @@ int verifALPHA(char* valeur, Noeud* noeud){
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < noeud->profondeur; i++){
-    printf("\t");
-  }
-  printf("ALPHA: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }

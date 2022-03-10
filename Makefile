@@ -1,6 +1,6 @@
 
 #parseur
-PROGRAMME = test_file
+PROGRAMME = main
 OBJECTS = $(PROGRAMME).o arbre.o api.o grammaire_simp.o
 EXEC = parseur
 OPTIONS = -Wall -g -o
