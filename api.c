@@ -1,9 +1,6 @@
 #include "api.h"
 
 
-
-
-
 Noeud* racine;
 char* request_line;
 
@@ -30,28 +27,6 @@ _Token *searchTree(void *start,char *name){
 
 }
 
-_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
-
-  char* tag = getElementTag(noeud, NULL);
-  _Token* precedent = token;
-  if(strcmp(tag,name) == 0){
-    precedent = creerToken();
-    precedent->next = token;
-    token->node = (void*)noeud;
-    printf("token->next = %p, precedent = %p\n", token->next, precedent);
-
-  }
-
-  if(noeud->fils != NULL){
-    precedent = recursifSearchTree(noeud->fils, name, precedent);
-  }
-
-  if(noeud->frere != NULL){
-    precedent = recursifSearchTree(noeud->frere, name, precedent);
-  }
-
-  return precedent;
-}
 
 char *getElementTag(void *node,int *len){
   Noeud* noeud;
@@ -109,25 +84,5 @@ void purgeTree(void *root){
 }
 
 int parseur(char *req, int len){
-
-}
-
-_Token* creerToken(){
-  _Token* token = (_Token*) malloc(sizeof(_Token));
-  token->node = NULL;
-  token->next = NULL;
-
-  return token;
-}
-
-void afficheToken(_Token* token){
-
-  if(token->next != NULL){
-    afficheToken(token->next);
-  }
-  if(token->node != 0){
-    printf("[Tag]: _%s_\t[Valeur]: _%s_\n",getElementTag(token->node, NULL), getElementValue(token->node, NULL));
-  }
-
 
 }
