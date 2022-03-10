@@ -1,15 +1,14 @@
-#ifndef API_H
-#define API_H
+#ifndef __API_H__
+#define __API_H__
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "arbre.h"
+#include "struct.h"
 // defini un type pour la liste chainee renvoyée en réponse de la requete de recherche dans l'arbre.
-typedef struct _token {
-		void *node;  		// node type opaque pointant vers un noeud de votre structure de données.
-		struct _token *next; 	// next pointe vers le prochain token.
-		} _Token;
+
 
 // Fonction qui retourne un pointeur (type opaque) vers la racine de l'arbre construit.
 void *getRootTree();
@@ -36,12 +35,5 @@ void purgeTree(void *root);
 // L'appel à votre parser un char* et une longueur à parser.
 int parseur(char *req, int len);
 
-//***--------Fonctions Utiles pour le bon fonctionnement des fonctions si dessus--------***
-
-_Token* creerToken();
-
-void afficheToken(_Token* racine);
-
-void setToken(_Token* token_, void* node_, _Token* next_);
 
 #endif
