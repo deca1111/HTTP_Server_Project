@@ -1,0 +1,3 @@
+faire getelementvalue sans malloc pour regler les leaks 
+verifier le double free
+voir purgeTree

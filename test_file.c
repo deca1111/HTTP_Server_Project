@@ -12,18 +12,34 @@
 #include "grammaire_simp.h"
 #include "arbre.h"
 
+#define MAX 200
+
 int main(int argc, char const *argv[]) {
   //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
-  char* mot = "startcou_,COU-.fin\n";
-  _Token* premier_element;
+  char mot[MAX];
   char* valeur;
+  _Token* premier_element;
+  int res;
+  Noeud* racine;
+  FILE * requete;
+
+
+
+  if(argc<3){
+    printf("Rentrez un fichier et une recherche\n");
+    return 0;
+  }
+
+  requete = fopen(argv[1],"r");
+  if(requete == NULL){
+    printf("Erreur ouverture fichier\n");
+    return 0;
+  }
+  fgets(mot, MAX, requete);
+  racine = creerNoeud();
   valeur = &(mot[0]);
 
-  Noeud* racine;
 
-  racine = creerNoeud();
-
-  int res;
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
   res = verifMessage(valeur, racine);
@@ -33,10 +49,10 @@ int main(int argc, char const *argv[]) {
     afficherArbre(racine);
   }
 
-  premier_element = searchTree(racine, "ALPHA");
+  premier_element = searchTree(racine, argv[2]);
   afficheToken(premier_element);
-  purgeTree(racine);
   purgeElement(&premier_element);
+  purgeTree(racine);
 
 
 

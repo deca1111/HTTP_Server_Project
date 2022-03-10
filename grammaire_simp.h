@@ -3,27 +3,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "arbre.h"
+#include "api.h"
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
 
-int verifMessage();
+int verifMessage(char* valeur, Noeud* pere);
 
-int verifDebut();
+int verifDebut(char* valeur, Noeud* pere);
 
 int verifMot(char* valeur, Noeud* pere);
 
-int verifPonct();
+int verifPonct(char* valeur, Noeud* pere);
 
-int verifNombre();
+int verifNombre(char* valeur, Noeud* pere);
 
 int verifSeparateur(char* valeur, Noeud* noeud);
 
-int verifFin();
+int verifFin(char* valeur, Noeud* pere);
 
-int verifLF();
+int verifLF(char* valeur, Noeud* noeud);
 
-int verifDIGIT();
+int verifDIGIT(char* valeur, Noeud* noeud);
 
 int verifALPHA(char* valeur, Noeud* noeud);
 
