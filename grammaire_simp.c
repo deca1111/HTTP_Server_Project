@@ -71,7 +71,7 @@ int verifMessage(char* valeur, Noeud* pere){
   }
 
   if(compteur < 2){
-    //printf("Purge\n");purgeTree(fils);
+    purgeTree(fils);
     return 0;
   }
 
@@ -94,7 +94,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    printf("Purge\n");purgeTree(fils);
+    purgeTree(fils);
     return 0;
   }
 
@@ -105,7 +105,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    printf("Purge\n");purgeTree(fils);
+    purgeTree(fils);
     return 0;
   }
 
@@ -173,7 +173,7 @@ int verifMot(char* valeur, Noeud* pere){
 
   //verif qu'il y a au moins 1 ALPHA
   if(taille_mot == 0){
-    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }else{
     free(petit_frere);
@@ -187,7 +187,7 @@ int verifMot(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -263,7 +263,7 @@ int verifNombre(char* valeur, Noeud* pere){
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot == 0){
-    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     pere->fils = NULL;
     return 0;//il y a un probleme
   }else{

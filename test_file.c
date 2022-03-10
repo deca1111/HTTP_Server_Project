@@ -25,8 +25,8 @@ int main(int argc, char const *argv[]) {
 
 
 
-  if(argc<3){
-    printf("Rentrez un fichier et une recherche\n");
+  if(argc<4){
+    printf("Rentrez un fichier, une recherche et une taille pour parser\n");
     return 0;
   }
 
@@ -44,6 +44,11 @@ int main(int argc, char const *argv[]) {
   printf("Valeur = %s\n",valeur);
   res = verifMessage(valeur, racine);
   printf("Mot de taille : %d\n", res);
+  if(res != atoi(argv[3])){
+    printf("Erreur parser\n");
+    purgeTree(racine);
+    return 0;
+  }
 
   if(res){
     afficherArbre(racine);
