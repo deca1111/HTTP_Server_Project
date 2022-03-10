@@ -1,6 +1,6 @@
 #parseur
 OBJECTS = main.o arbre.o api.o grammaire_simp.o
-OBJECTS_TEST = test.o arbre.o api.o grammaire_simp.o
+OBJECTS_TEST = test_file.o arbre.o api.o grammaire_simp.o
 EXEC = parseur
 OPTIONS = -Wall -g -o
 
@@ -13,7 +13,7 @@ exec : $(OBJECTS)
 	gcc $(OBJECTS) -o $(EXEC)
 
 test.o :
-	gcc -c tests.c $(OPTIONS) test.o
+	gcc -c test_file.c $(OPTIONS) test.o
 
 main.o :
 	gcc -c main.c $(OPTIONS) main.o

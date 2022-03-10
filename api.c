@@ -22,7 +22,9 @@ _Token *searchTree(void *start,char *name){
   }else{
     temp = recursifSearchTree((Noeud*)start, name, premier_element);
   }
+  printf("premier_element = %p\n", premier_element);
   premier_element = temp->next;
+  printf("premier_element = %p\n", premier_element);
   free(temp);
   return premier_element;
 
@@ -36,6 +38,7 @@ _Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
     precedent = creerToken();
     precedent->next = token;
     token->node = (void*)noeud;
+    printf("token->next = %p, precedent = %p\n", token->next, precedent);
 
   }
 
@@ -67,8 +70,8 @@ char *getElementTag(void *node,int *len){
 char *getElementValue(void *node,int *len){
   Noeud* noeud;
   char* valeur_;
-
   noeud = (Noeud*) node;
+
   valeur_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
   for(int i = 0; i < noeud->longueur; i++){
     *(valeur_+i) = *((noeud->valeur)+i);
@@ -83,12 +86,10 @@ char *getElementValue(void *node,int *len){
 }
 
 void purgeElement(_Token **r){
-  //printf("[Tag]: _%d_\t[Valeur]: _%s_\n",getElementTag(r, NULL), getElementValue((*r)->node, NULL));
   if((*r)->next != NULL){
-    printf("coucou\n");
-    purgeElement((*r)->next);
+    purgeElement(&((*r)->next));
   }
-  //free(*r);
+  free(*r);
 }
 
 
@@ -101,8 +102,6 @@ void purgeTree(void *root){
   if(noeud->frere != NULL){
     purgeTree(noeud->frere);
   }
-
-  printf("Free d'un [%s] : [%s]\n", getElementTag(noeud,NULL), getElementValue(noeud,NULL));
 
   free(noeud);
 }
@@ -124,6 +123,9 @@ void afficheToken(_Token* token){
   if(token->next != NULL){
     afficheToken(token->next);
   }
+  if(token->node != 0){
     printf("[Tag]: _%s_\t[Valeur]: _%s_\n",getElementTag(token->node, NULL), getElementValue(token->node, NULL));
+  }
+
 
 }
