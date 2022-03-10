@@ -70,13 +70,10 @@ char *getElementTag(void *node,int *len){
 char *getElementValue(void *node,int *len){
   Noeud* noeud;
   char* valeur_;
+
   noeud = (Noeud*) node;
 
-  valeur_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
-  for(int i = 0; i < noeud->longueur; i++){
-    *(valeur_+i) = *((noeud->valeur)+i);
-  }
-  valeur_[noeud->longueur] = '\0';
+  valeur_ = noeud->valeur;
 
   if(len!=NULL){
     *len = noeud->longueur;
@@ -96,13 +93,18 @@ void purgeElement(_Token **r){
 void purgeTree(void *root){
   Noeud * noeud = (Noeud*) root;
 
-  if(noeud->fils != NULL){
-    purgeTree(noeud->fils);
-  }
+  //printf("noeuds = %p\n", noeud);
   if(noeud->frere != NULL){
+    //printf("purgeTree(%p)\n",noeud->frere);
     purgeTree(noeud->frere);
   }
+  //printf("noeud->fils = (%p)\n",noeud->fils);
+  if(noeud->fils != NULL){
+    //printf("purgeTree(%p)\n",noeud->fils);
+    purgeTree(noeud->fils);
 
+  }
+  //printf("noeud->frere = (%p)\n",noeud->frere);
   free(noeud);
 }
 

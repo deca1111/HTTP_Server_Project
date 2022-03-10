@@ -71,7 +71,7 @@ int verifMessage(char* valeur, Noeud* pere){
   }
 
   if(compteur < 2){
-    //purgeTree(fils);
+    //printf("Purge\n");purgeTree(fils);
     return 0;
   }
 
@@ -94,7 +94,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    printf("Purge\n");purgeTree(fils);
     return 0;
   }
 
@@ -105,7 +105,7 @@ int verifMessage(char* valeur, Noeud* pere){
     res = 0;
     frere = frere_2;
   }else{
-    purgeTree(fils);
+    printf("Purge\n");purgeTree(fils);
     return 0;
   }
 
@@ -113,17 +113,6 @@ int verifMessage(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Message: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
@@ -181,13 +170,14 @@ int verifMot(char* valeur, Noeud* pere){
     frere = petit_frere;
     petit_frere = creerFrere(frere);
   }
-  free(petit_frere);
-  frere->frere = NULL;
 
   //verif qu'il y a au moins 1 ALPHA
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
+  }else{
+    free(petit_frere);
+    frere->frere = NULL;
   }
 
   petit_frere = creerFrere(frere);
@@ -197,7 +187,7 @@ int verifMot(char* valeur, Noeud* pere){
     taille_mot += res;
     res = 0;
   }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     return 0;//il y a un probleme
   }
 
@@ -269,14 +259,18 @@ int verifNombre(char* valeur, Noeud* pere){
     frere = petit_frere;
     petit_frere = creerFrere(frere);
   }
-  free(petit_frere);
-  frere->frere = NULL;
+
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot == 0){
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    printf("Purge\n");purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
     return 0;//il y a un probleme
+  }else{
+    free(petit_frere);
+    frere->frere = NULL;
   }
+
 
   //remplissage Noeud
   pere->tag = "nombre";
