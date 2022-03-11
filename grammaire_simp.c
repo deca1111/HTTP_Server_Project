@@ -1,7 +1,7 @@
 #include "grammaire_simp.h"
 
 /*message = debut 2*( mot ponct /nombre separateur ) [ponct] fin LF*/
-int verifMessage(char* valeur, Noeud* pere){
+int verifMessage(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot = 0;
   int res = 0;
   int res2 = 0;
@@ -13,11 +13,15 @@ int verifMessage(char* valeur, Noeud* pere){
   Noeud* frere_2;
   Noeud* frere_3;
 
-
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
+  
   //verification Debut
   fils = creerFils(pere);
   frere = fils;
-  if((res = verifDebut(valeur, frere))){
+  if((res = verifDebut(valeur, frere, index+taille_mot, len_max))){
     taille_mot += res;
     res = 0;
   }else{
@@ -32,8 +36,8 @@ int verifMessage(char* valeur, Noeud* pere){
     frere_2 = creerFrere(frere);
     frere_3 = creerFrere(frere_2);
 
-    if(((res = verifMot(valeur+taille_mot, frere_2)))){
-      if((res2 = verifPonct(valeur+taille_mot+res, frere_3))){
+    if(((res = verifMot(valeur+taille_mot, frere_2, index+taille_mot, len_max)))){
+      if((res2 = verifPonct(valeur+taille_mot+res, frere_3, index+taille_mot+res, len_max))){
         taille_mot = taille_mot + res + res2;
         res = 0;
         res2 = 0;
@@ -48,8 +52,8 @@ int verifMessage(char* valeur, Noeud* pere){
     }
 
     if(!est_mot){
-      if((res = verifNombre(valeur+taille_mot, frere_2))){
-        if((res2 = verifSeparateur(valeur+taille_mot+res, frere_3))){
+      if((res = verifNombre(valeur+taille_mot, frere_2, index+taille_mot, len_max))){
+        if((res2 = verifSeparateur(valeur+taille_mot+res, frere_3, index+taille_mot+res, len_max))){
           taille_mot = taille_mot + res + res2;
           res = 0;
           res2 = 0;
@@ -78,7 +82,7 @@ int verifMessage(char* valeur, Noeud* pere){
   //verification ponct
   frere_2 = creerFrere(frere);
 
-  if((res = verifPonct(valeur+taille_mot, frere_2))){
+  if((res = verifPonct(valeur+taille_mot, frere_2, index+taille_mot, len_max))){
     taille_mot += res;
     res = 0;
     frere = frere_2;
@@ -89,7 +93,7 @@ int verifMessage(char* valeur, Noeud* pere){
 
   //verification fin
   frere_2 = creerFrere(frere);
-  if((res = verifFin(valeur+taille_mot, frere_2))){
+  if((res = verifFin(valeur+taille_mot, frere_2, index+taille_mot, len_max))){
     taille_mot += res;
     res = 0;
     frere = frere_2;
@@ -100,7 +104,7 @@ int verifMessage(char* valeur, Noeud* pere){
 
   //verification LF
   frere_2 = creerFrere(frere);
-  if((res = verifLF(valeur+taille_mot, frere_2))){
+  if((res = verifLF(valeur+taille_mot, frere_2, index+taille_mot, len_max))){
     taille_mot += res;
     res = 0;
     frere = frere_2;
@@ -117,9 +121,14 @@ int verifMessage(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifDebut(char* valeur, Noeud* pere){
+int verifDebut(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot = 0;
   char* start = "start";
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
 
   for(int i = 0; i < 5; i++){
     if(*(valeur+i) != start[i]){
@@ -137,7 +146,7 @@ int verifDebut(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifMot(char* valeur, Noeud* pere){
+int verifMot(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot = 0;
   int res = 0;
 
@@ -149,11 +158,17 @@ int verifMot(char* valeur, Noeud* pere){
   frere = fils;
   petit_frere = fils;
 
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
+
+
   //Tant que on a des ALPHA on continu a remplir des Noeud
   //a la dernière iteration qui fait sortir de la boucle, on aura deja un petit
   // frere de cree, il faut donc le free
 
-  while((res = verifALPHA((valeur+taille_mot),petit_frere))) {
+  while((res = verifALPHA((valeur+taille_mot),petit_frere, index+taille_mot, len_max))) {
     taille_mot += res;
     res = 0;
     frere = petit_frere;
@@ -171,7 +186,7 @@ int verifMot(char* valeur, Noeud* pere){
 
   petit_frere = creerFrere(frere);
   //verif qu'il y a bien un separateur
-  if((res = verifSeparateur((valeur+taille_mot),petit_frere))){
+  if((res = verifSeparateur((valeur+taille_mot),petit_frere, index+taille_mot, len_max))){
 
     taille_mot += res;
     res = 0;
@@ -189,8 +204,14 @@ int verifMot(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifPonct(char* valeur, Noeud* pere){
+int verifPonct(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
+
   if((*(valeur)==',') || (*(valeur)=='.') || (*(valeur)=='!') || (*(valeur)=='?') || (*(valeur)==':')){
     taille_mot = 1;//est une ponctuation
   }else{
@@ -205,7 +226,7 @@ int verifPonct(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifNombre(char* valeur, Noeud* pere){
+int verifNombre(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot = 0;
   int res = 0;
   Noeud* fils;
@@ -216,11 +237,16 @@ int verifNombre(char* valeur, Noeud* pere){
   frere = fils;
   petit_frere = fils;
 
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
+
   //Tant que on a des nombres on continu a remplir des Noeud
   //a la dernière iteration qui fait sortir de la boucle, on aura deja un petit
   // frere de cree, il faut donc le free
 
-  while((res = verifDIGIT((valeur+taille_mot),petit_frere))){
+  while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, len_max))){
     taille_mot += res;
     res = 0;
     frere = petit_frere;
@@ -248,8 +274,14 @@ int verifNombre(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifSeparateur(char* valeur, Noeud* noeud){
+int verifSeparateur(char* valeur, Noeud* noeud, int index, int len_max){
   int taille_mot;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
+
   if((*(valeur)==' ') || (*(valeur)=='\t') || (*(valeur)=='-') || (*(valeur)=='_')){
     taille_mot = 1;//est un separateur
   }else{
@@ -265,9 +297,14 @@ int verifSeparateur(char* valeur, Noeud* noeud){
   return taille_mot;
 }
 
-int verifFin(char* valeur, Noeud* pere){
+int verifFin(char* valeur, Noeud* pere, int index, int len_max){
   int taille_mot = 0;
   char* fin = "fin";
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
 
   for(int i = 0; i < 3; i++){
     if(*(valeur+i) != fin[i]){
@@ -286,8 +323,13 @@ int verifFin(char* valeur, Noeud* pere){
   return taille_mot;
 }
 
-int verifLF(char* valeur, Noeud* noeud){
+int verifLF(char* valeur, Noeud* noeud, int index, int len_max){
   int taille_mot;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
 
   if(*valeur == '\n'){
     taille_mot = 1;//est un separateur
@@ -303,8 +345,13 @@ int verifLF(char* valeur, Noeud* noeud){
   return taille_mot;
 }
 
-int verifDIGIT(char* valeur, Noeud* noeud){
+int verifDIGIT(char* valeur, Noeud* noeud, int index, int len_max){
   int taille_mot;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
 
   if( ((*valeur < 58) && (*valeur > 47)) ){
     taille_mot = 1;//est un separateur
@@ -322,8 +369,13 @@ int verifDIGIT(char* valeur, Noeud* noeud){
   return taille_mot;
 }
 
-int verifALPHA(char* valeur, Noeud* noeud){
+int verifALPHA(char* valeur, Noeud* noeud, int index, int len_max){
   int taille_mot;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= len_max){
+    return 0;
+  }
 
   if( ((*valeur < 91) && (*valeur > 64)) || ((*valeur > 96) && (*valeur < 123))){
     taille_mot = 1;//est un separateur

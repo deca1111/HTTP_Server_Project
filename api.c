@@ -86,7 +86,7 @@ int parseur(char *req, int len){
   char* valeur;
   racine = creerNoeud();
   valeur = &(req[0]);
-  res = verifMessage(valeur, racine);
+  res = verifMessage(valeur, racine, 0, len);
   if(res != len){
     purgeTree(racine);
     return 0;

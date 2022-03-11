@@ -26,19 +26,16 @@ int main(int argc, char const *argv[]) {
   int res;
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
-  res = verifMessage(valeur, racine);
+  res = verifMessage(valeur, racine, 0, 20);
   printf("Mot de taille : %d\n", res);
 
   if(res){
     afficherArbre(racine);
+    premier_element = searchTree(racine, "ALPHA");
+    afficheToken(premier_element);
+    purgeTree(racine);
+    purgeElement(&premier_element);
   }
-
-  premier_element = searchTree(racine, "ALPHA");
-  afficheToken(premier_element);
-  purgeTree(racine);
-  purgeElement(&premier_element);
-
-
 
 
   return 0;
