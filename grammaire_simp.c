@@ -395,17 +395,6 @@ int verifDIGIT(char* valeur, Noeud* noeud){
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < noeud->profondeur; i++){
-    printf("\t");
-  }
-  printf("DIGIT: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }
