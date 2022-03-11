@@ -233,17 +233,6 @@ int verifPonct(char* valeur, Noeud* pere){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  /*
-  //affichage du Mot
-  for(int i = 0; i < pere->profondeur; i++){
-    printf("\t");
-  }
-  printf("Ponctuation: ");
-  for(int i = 0; i < taille_mot; i++){
-    printf("%c",*(valeur+i));
-  }
-  printf("\n");
-  */
 
   return taille_mot;
 }

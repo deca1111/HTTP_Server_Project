@@ -18,7 +18,7 @@ arbre.o :
 api.o :
 	gcc -c api.c $(OPTIONS) api.o
 
-grammaire.o : 
+grammaire.o :
 	gcc -c grammaire.c $(OPTIONS) grammaire.o
 
 clean :

@@ -5,6 +5,8 @@
 #include <stdlib.h>
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
+#include "struct.h"
+#include "api.h"
 
 int verifMessage(char* valeur, Noeud* pere);
 

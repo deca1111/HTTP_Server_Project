@@ -2,64 +2,29 @@
 
 #define false 0
 #define true 1
-/*
+/* base de chaque fonction:
+//definition des variables
+int taille_mot;
 
-verifAbsolute_path non fini
-
-
-
-
-
-
-
-
-*/
-//absolute-path = 1* ( "/" segment )
-int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max){
-  int fin = false
-  int compteur = 0;
-  int taille_mot = 0;
-  Noeud* fils;
-  Noeud* frere;
-  Noeud* frere_2;
-
-  fils = creerFils(pere);
-  frere = fils;
-
-  if(index>=long_max){
-    return 0;
-  }
-
-  while(!fin){
-    frere_2 = creerFrere(frere);
-    frere_3 = creerFrere(frere_2);
-
-    if(valeur[index+taille_mot] == "/"){
-      if((res = verifSegment(valeur+taille_mot+res, frere_3, taille_mot+res, long_max))){
-        taille_mot = taille_mot + res + res2;
-        res = 0;
-        compteur += 1;
-        frere = frere_3;
-      }else{
-        fin = true;
-      }
-    }else{
-      fin = true;
-    }
-  }
-
-
-
-
-
-  //remplissage Noeud
-  pere->tag = "absolute-path";
-  pere->valeur = valeur;
-  pere->longueur = taille_mot;
-
-
-  return taille_mot;
+//verification de la taille de la requete
+if(index>=long_max){
+  return 0;
 }
+//code
+
+
+
+
+
+//remplissage Noeud
+pere->tag = "DIGIT";
+pere->valeur = valeur;
+pere->longueur = taille_mot;
+
+
+//return taille_mot
+return taille_mot;
+*/
 
 // ALPHA = %x41-5A / %x61-7A   ; A-Z / a-z
 int verifALPHA(char* valeur, Noeud* pere, int index, int long_max){
@@ -100,10 +65,112 @@ int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  noeud->tag = "DIGIT";
-  noeud->valeur = valeur;
-  noeud->longueur = taille_mot;
+  pere->tag = "DIGIT";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
 
 
+  return taille_mot;
+}
+
+//tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
+int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int est_pere = false;
+  Noeud* fils = creerFils(pere);
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  if(
+    (*(valeur)=='!') ||
+    (*(valeur)=='#') ||
+    (*(valeur)=='$') ||
+    (*(valeur)=='%') ||
+    (*(valeur)=='&') ||
+    (*(valeur)=='\'') ||
+    (*(valeur)=='*') ||
+    (*(valeur)=='+') ||
+    (*(valeur)=='-') ||
+    (*(valeur)=='.') ||
+    (*(valeur)=='^') ||
+    (*(valeur)=='_') ||
+    (*(valeur)=='`') ||
+    (*(valeur)=='|') ||
+    (*(valeur)=='~'))
+  {
+    taille_mot = 1;
+  }else if (
+    verifALPHA(valeur, fils, index, long_max) ||
+    verifDIGIT(valeur, fils, index, long_max))
+  {
+    taille_mot = 1;
+    est_pere = true;
+  }
+  else{
+    return 0;
+  }
+
+  if(!est_pere){
+    free(fils);
+    pere->fils = NULL;
+  }
+  //remplissage Noeud
+  pere->tag = "tchar";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//token = 1* tchar
+int verifToken(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+  int fin = false;
+  int compteur = 0;
+  int res = 0;
+  Noeud* fils = creerFils(pere);
+  Noeud* frere = fils;
+  Noeud* frere2 = fils;
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  while(!fin){
+    if((res = verifTchar(valeur+taille_mot, frere2, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = frere2;
+      compteur += 1;
+    }else{
+      fin = true;
+      frere->fils = NULL;
+    }
+
+  }
+  if(compteur<1){
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }else{
+    free(frere2);
+    frere->frere = NULL;
+    frere->fils = NULL;
+
+  }
+
+  //remplissage Noeud
+  pere->tag = "token";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
   return taille_mot;
 }
