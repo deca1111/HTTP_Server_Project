@@ -1,31 +1,35 @@
-#ifndef GRAMMAIRE_SIMP_H
-#define GRAMMAIRE_SIMP_H
+#ifndef __GRAMMAIRE_SIMP_H__
+#define __GRAMMAIRE_SIMP_H__
 
 #include <stdio.h>
 #include <stdlib.h>
-//Contient toutes le fonctions decrivant la grammaire :
-//Une fonction par element
-#include "struct.h"
+
+
+#include "arbre.h"
 #include "api.h"
 
-int verifMessage(char* valeur, Noeud* pere);
+#include "struct.h"
+//Contient toutes le fonctions decrivant la grammaire :
+//Une fonction par element
 
-int verifDebut(char* valeur, Noeud* pere);
+int verifMessage(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifMot(char* valeur, Noeud* pere);
+int verifDebut(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifPonct(char* valeur, Noeud* pere);
+int verifMot(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifNombre(char* valeur, Noeud* pere);
+int verifPonct(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifSeparateur(char* valeur, Noeud* noeud);
+int verifNombre(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifFin(char* valeur, Noeud* pere);
+int verifSeparateur(char* valeur, Noeud* noeud, int index, int len_max);
 
-int verifLF(char* valeur, Noeud* noeud);
+int verifFin(char* valeur, Noeud* pere, int index, int len_max);
 
-int verifDIGIT(char* valeur, Noeud* noeud);
+int verifLF(char* valeur, Noeud* noeud, int index, int len_max);
 
-int verifALPHA(char* valeur, Noeud* noeud);
+int verifDIGIT(char* valeur, Noeud* noeud, int index, int len_max);
+
+int verifALPHA(char* valeur, Noeud* noeud, int index, int len_max);
 
 #endif

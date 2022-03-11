@@ -129,48 +129,49 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
 
 //token = 1* tchar
 int verifToken(char* valeur, Noeud* pere, int index, int long_max){
-  //definition des variables
   int taille_mot = 0;
-  int fin = false;
-  int compteur = 0;
   int res = 0;
-  Noeud* fils = creerFils(pere);
-  Noeud* frere = fils;
-  Noeud* frere2 = fils;
-  //verification de la taille de la requete
-  if(index>=long_max){
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
     return 0;
   }
-  //code
-  while(!fin){
-    if((res = verifTchar(valeur+taille_mot, frere2, index+taille_mot, long_max))){
-      taille_mot += res;
-      res = 0;
-      frere = frere2;
-      compteur += 1;
-    }else{
-      fin = true;
-      frere->fils = NULL;
-    }
 
+  //Tant que on a des nombres on continu a remplir des Noeud
+  //a la dernière iteration qui fait sortir de la boucle, on aura deja un petit
+  // frere de cree, il faut donc le free
+
+  while((res = verifTchar((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
   }
-  if(compteur<1){
-    purgeTree(fils);
+
+
+  //verif qu'il y a au moins 1 nombre
+  if(taille_mot == 0){
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     pere->fils = NULL;
-    return 0;
+    return 0;//il y a un probleme
   }else{
-    free(frere2);
+    free(petit_frere);
     frere->frere = NULL;
-    frere->fils = NULL;
-
   }
+
 
   //remplissage Noeud
-  pere->tag = "token";
+  pere->tag = "nombre";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
 
-  //return taille_mot
   return taille_mot;
 }

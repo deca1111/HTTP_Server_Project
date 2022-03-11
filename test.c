@@ -36,13 +36,13 @@ int main(int argc, char const *argv[]) {
   printf("Mot de taille : %d\n", res);
 
   if(res){
-    afficherArbre(racine);
+    premier_element = searchTree(racine, "tchar");
+    afficheToken(premier_element);
+
+    purgeElement(&premier_element);
   }
 
-  premier_element = searchTree(racine, "tchar");
-  afficheToken(premier_element);
   purgeTree(racine);
-  purgeElement(&premier_element);
 
 
 

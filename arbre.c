@@ -66,7 +66,7 @@ void afficheToken(_Token* token){
     afficheToken(token->next);
   }
   if(token->node != 0){
-    printf("[Tag]: _%s_\t[Valeur]: _[%.*s]_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
+    printf("[Tag]: _%s_\t[Valeur]: _%.*s_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
   }
 }
 
