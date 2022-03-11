@@ -424,7 +424,7 @@ int verifALPHA(char* valeur, Noeud* noeud){
   noeud->tag = "ALPHA";
   noeud->valeur = valeur;
   noeud->longueur = taille_mot;
-  
+
 
   return taille_mot;
 }

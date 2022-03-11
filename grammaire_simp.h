@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "arbre.h"
-#include "api.h"
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
 

@@ -9,24 +9,30 @@
 #include <errno.h>
 
 #include "api.h"
-#include "grammaire_simp.h"
+#include "grammaire.h"
 #include "arbre.h"
 
 int main(int argc, char const *argv[]) {
-  //char* mot = "startCoucou ,je :taime\t.69_?fin\n";
+  //========parametre de la fonction a tester=========
   char* mot = "startcou_,COU-.fin\n";
+  int index = 0;
+  int taille_max = 5;
+
+
   _Token* premier_element;
   char* valeur;
-  valeur = &(mot[0]);
-
+  int res;
   Noeud* racine;
 
+  valeur = &(mot[0]);
   racine = creerNoeud();
 
-  int res;
+
   printf("Debut du parseur\n");
   printf("Valeur = %s\n",valeur);
-  res = verifMessage(valeur, racine);
+  //modifier cette ligne pour tester une fonction en particulier
+  res = verifALPHA(valeur, racine, index, taille_max);
+
   printf("Mot de taille : %d\n", res);
 
   if(res){

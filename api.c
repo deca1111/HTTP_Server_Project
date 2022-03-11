@@ -2,8 +2,6 @@
 
 
 
-
-
 Noeud* racine;
 char* request_line;
 
@@ -22,36 +20,12 @@ _Token *searchTree(void *start,char *name){
   }else{
     temp = recursifSearchTree((Noeud*)start, name, premier_element);
   }
-  printf("premier_element = %p\n", premier_element);
   premier_element = temp->next;
-  printf("premier_element = %p\n", premier_element);
   free(temp);
   return premier_element;
 
 }
 
-_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
-
-  char* tag = getElementTag(noeud, NULL);
-  _Token* precedent = token;
-  if(strcmp(tag,name) == 0){
-    precedent = creerToken();
-    precedent->next = token;
-    token->node = (void*)noeud;
-    printf("token->next = %p, precedent = %p\n", token->next, precedent);
-
-  }
-
-  if(noeud->fils != NULL){
-    precedent = recursifSearchTree(noeud->fils, name, precedent);
-  }
-
-  if(noeud->frere != NULL){
-    precedent = recursifSearchTree(noeud->frere, name, precedent);
-  }
-
-  return precedent;
-}
 
 char *getElementTag(void *node,int *len){
   Noeud* noeud;
@@ -70,13 +44,10 @@ char *getElementTag(void *node,int *len){
 char *getElementValue(void *node,int *len){
   Noeud* noeud;
   char* valeur_;
+
   noeud = (Noeud*) node;
 
-  valeur_ = malloc(sizeof(char) * ((noeud->longueur)+ 1));
-  for(int i = 0; i < noeud->longueur; i++){
-    *(valeur_+i) = *((noeud->valeur)+i);
-  }
-  valeur_[noeud->longueur] = '\0';
+  valeur_ = noeud->valeur;
 
   if(len!=NULL){
     *len = noeud->longueur;
@@ -96,36 +67,32 @@ void purgeElement(_Token **r){
 void purgeTree(void *root){
   Noeud * noeud = (Noeud*) root;
 
-  if(noeud->fils != NULL){
-    purgeTree(noeud->fils);
-  }
+  //printf("noeuds = %p\n", noeud);
   if(noeud->frere != NULL){
+    //printf("purgeTree(%p)\n",noeud->frere);
     purgeTree(noeud->frere);
   }
+  //printf("noeud->fils = (%p)\n",noeud->fils);
+  if(noeud->fils != NULL){
+    //printf("purgeTree(%p)\n",noeud->fils);
+    purgeTree(noeud->fils);
 
+  }
+  //printf("noeud->frere = (%p)\n",noeud->frere);
   free(noeud);
 }
 
 int parseur(char *req, int len){
-
-}
-
-_Token* creerToken(){
-  _Token* token = (_Token*) malloc(sizeof(_Token));
-  token->node = NULL;
-  token->next = NULL;
-
-  return token;
-}
-
-void afficheToken(_Token* token){
-
-  if(token->next != NULL){
-    afficheToken(token->next);
-  }
-  if(token->node != 0){
-    printf("[Tag]: _%s_\t[Valeur]: _%s_\n",getElementTag(token->node, NULL), getElementValue(token->node, NULL));
-  }
-
-
+  /*int res;
+  char* valeur;
+  racine = creerNoeud();
+  valeur = &(req[0]);
+  res = verifMessage(valeur, racine, 0, len);
+  if(res != len){
+    purgeTree(racine);
+    return 0;
+  }else{
+    return res;
+  }*/
+  return 0;
 }
