@@ -103,10 +103,9 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
   {
     taille_mot = 1;
   }else if (
-    verifALPHA(valeur, fils, index, long_max) ||
-    verifDIGIT(valeur, fils, index, long_max))
+    taille_mot = verifALPHA(valeur, fils, index, long_max) ||
+    taille_mot = verifDIGIT(valeur, fils, index, long_max))
   {
-    taille_mot = 1;
     est_pere = true;
   }
   else{
