@@ -9,6 +9,7 @@
 //Contient toutes le fonctions decrivant la grammaire :
 //Une fonction par element
 
+//FAIT
 //absolute-path = 1* ( "/" segment )
 int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -16,6 +17,7 @@ int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max);
 // ALPHA = %x41-5A / %x61-7A   ; A-Z / a-z
 int verifALPHA(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //BWS = OWS
 int verifBWS(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -47,8 +49,9 @@ int verifCookie_header(char* valeur, Noeud* pere, int index, int long_max);
 
 //FAIT
 //cookie-name = token
-int veriCookie_name(char* valeur, Noeud* pere, int index, int long_max);
+int verifCookie_name(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //cookie-octet = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 int verifCookie_octet(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -72,12 +75,14 @@ int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max);
 // DIGIT = %x30-39  ; 0-9
 int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //DQUOTE%x22
 int verifDQUOTE(char* valeur, Noeud* pere, int index, int long_max);
 
 //Expect-header = "Expect" ":" OWS Expect OWS
 int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Expect = "100-continue"
 int verifExpect(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -122,9 +127,11 @@ int verifHTAB(char* valeur, Noeud* pere, int index, int long_max);
 //HTTP-message = start-line * ( header-field CRLF ) CRLF [ message-body ]
 int verifHTTP_message(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //HTTP-name = %x48.54.54.50
 int verifHTTP_name(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //HTTP-version = HTTP-name "/" DIGIT "." DIGIT
 int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -137,6 +144,7 @@ int verifIPv4address(char* valeur, Noeud* pere, int index, int long_max);
 //IPv6address = 6 ( h16 ":" ) ls32 / "::" 5 ( h16 ":" ) ls32 / [ h16 ] "::" 4 ( h16 ":" ) ls32 / [ h16 *1 ( ":" h16 ) ] "::" 3 ( h16 ":" ) ls32 / [ h16 *2 ( ":" h16 ) ] "::" 2 ( h16 ":" ) ls32 / [ h16 *3 ( ":" h16 ) ] "::" h16 ":" ls32 / [ h16 *4 ( ":" h16 ) ] "::" ls32 / [ h16 *5 ( ":" h16 ) ] "::" h16 / [ h16 *6 ( ":" h16 ) ] "::"
 int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //IPvFuture = "v" 1* HEXDIG "." 1* ( unreserved / sub-delims / ":" )
 int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -163,9 +171,11 @@ int verifObs_text(char* valeur, Noeud* pere, int index, int long_max);
 //OCTET          =  %x00-FF; 8 bits of daa
 int verifOCTET(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //origin-form = absolute-path [ "?" query ]
 int verifOrigin_form(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //OWS = * ( SP / HTAB )
 int verifOWS(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -187,6 +197,7 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max);
 //qdtext = HTAB / SP / "!" / %x23-5B / %x5D-7E / obs-text
 int verifQdtext(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //query = * ( pchar / "/" / "?" )
 int verifQuery(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -209,6 +220,7 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max);
 //request-target = origin-form
 int verifRequest_target(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //segment = * pchar
 int verifSegment(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -268,6 +280,7 @@ int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max);
 //uri-host = host
 int verifUri_host(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //VCHAR = %x21-7E
 int verifVCHAR(char* valeur, Noeud* pere, int index, int long_max);
 

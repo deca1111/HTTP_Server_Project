@@ -14,12 +14,12 @@
 
 int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
-  char* mot = "bs4525&95a!%4F";//A MODIFIER
+  char* mot = " ";//A MODIFIER
   int index = 0;
-  int taille_max = 15;
-  char *name = "reg-name";//A MODIFIER
+  int taille_max = 100;
+  char *name = "BWS";//A MODIFIER
 
-  float fct_faite = 23;
+  float fct_faite = 37;
   float fct_a_faire=78;
   int avancement = (fct_faite/fct_a_faire)*100 ;
 
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifReg_name(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifBWS(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 

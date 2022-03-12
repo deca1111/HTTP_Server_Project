@@ -117,7 +117,6 @@ int verifSP(char* valeur, Noeud* pere, int index, int long_max){
   return taille_mot;
 }
 
-
 //unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max){
   //definition des variables
@@ -325,7 +324,7 @@ int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max){
 }
 
 //cookie-name = token
-int veriCookie_name(char* valeur, Noeud* pere, int index, int long_max){
+int verifCookie_name(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   Noeud* fils;
 
@@ -733,7 +732,6 @@ int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max){
 int verifPchar(char* valeur, Noeud* pere, int index, int long_max){
   //definition des variables
   int taille_mot;
-  int est_pere = false;
 
   //verification de la taille de la requete
   if(index>=long_max){
@@ -747,22 +745,20 @@ int verifPchar(char* valeur, Noeud* pere, int index, int long_max){
     (*(valeur)=='@'))
   {
     taille_mot = 1;
+    free(fils);
+    pere->fils = NULL;
   }else if (
     (taille_mot = verifUnreserved(valeur, fils, index, long_max)) ||
     (taille_mot = verifPct_encoded(valeur, fils, index, long_max)) ||
     (taille_mot = verifSub_delims(valeur, fils, index, long_max))
   )  {
-    est_pere = true;
   }else{
     free(fils);
     pere->fils = NULL;
     return 0;
   }
 
-  if(!est_pere){
-    free(fils);
-    pere->fils = NULL;
-  }
+
   //remplissage Noeud
   pere->tag = "pchar";
   pere->valeur = valeur;
@@ -959,4 +955,572 @@ int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max){
 
   return taille_mot;
 
+}
+
+//IPvFuture = "v" 1* HEXDIG "." 1* ( unreserved / sub-delims / ":" )
+int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  if(*(valeur)=='v'){
+    taille_mot = 1;
+  }else{
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while((res = verifHEXDIG((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+
+  //verif qu'il y a au moins 1 HEXDIG
+  if(taille_mot == 0){
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }else{
+    free(petit_frere);
+    frere->frere = NULL;
+  }
+
+  if(*(valeur+taille_mot)=='.'){
+    taille_mot = 1;
+  }else{
+    return 0;
+  }
+
+  petit_frere = creerFrere(frere);
+
+  //on verifie d'abord le premier bloc obligatoire
+  if ((res = verifUnreserved(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0 ;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  } else if ((res = verifSub_delims(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }else if (*(valeur+taille_mot) == ':'){
+    taille_mot+=1;
+  } else {
+    purgeTree(fils);
+    pere -> fils = NULL;
+    return 0 ;
+  }
+
+  while (!fin){
+    if ((res = verifUnreserved(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+      taille_mot+=res;
+      res = 0 ;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    } else if ((res = verifSub_delims(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+      taille_mot+=res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else if (*(valeur+taille_mot) == ':'){
+      taille_mot+=1;
+    } else {
+      free (petit_frere);
+      frere -> frere = NULL;
+      fin = 1;
+    }
+  }
+
+  //remplissage Noeud
+  pere->tag = "IPvFuture";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+
+}
+
+//segment = * pchar
+int verifSegment(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while((res = verifPchar((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+  //verif qu'il y a au moins 1 nombre
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "segment";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+
+}
+
+//absolute-path = 1* ( "/" segment )
+int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  //on verifie d'abord le premier bloc obligatoire
+  if (*(valeur+taille_mot) == '/'){
+    taille_mot+=1;
+    res = verifSegment(valeur+taille_mot,petit_frere,index+taille_mot,long_max);//segment peut etre vide donc pas de if
+    taille_mot+=res;
+    res = 0 ;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  } else {
+    purgeTree(fils);
+    pere -> fils = NULL;
+    return 0 ;
+  }
+
+  int taille_bloc = 0;
+
+  while (!fin){
+    if (*(valeur+taille_mot) == '/'){
+      taille_bloc+=1;
+      res = verifSegment(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max);
+      taille_bloc+=res;
+      res = 0 ;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+      taille_mot += taille_bloc;
+      taille_bloc = 0;
+    } else {
+      free (petit_frere);
+      frere -> frere = NULL;
+      fin = 1;
+    }
+  }
+
+  //remplissage Noeud
+  pere->tag = "absolute-path";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+
+}
+
+//query = * ( pchar / "/" / "?" )
+int verifQuery(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while(!fin){
+    if(*(valeur+taille_mot) == '/'){
+      taille_mot += 1;
+    }else if(*(valeur+taille_mot) == '?'){
+      taille_mot += 1;
+    }else if((res = verifPchar((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else{
+      fin = 1;
+    }
+  }
+
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "query";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//origin-form = absolute-path [ "?" query ]
+int verifOrigin_form(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+  int res = 0;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  Noeud* fils = creerFils(pere);
+
+  if ((res = verifAbsolute_path(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+  } else {
+    purgeTree (fils);
+    pere -> fils = NULL;
+    return 0;
+  }
+
+  int taille_bloc = 0;
+  if(*(valeur+taille_mot) == '?'){
+    taille_bloc += 1;
+    Noeud* frere = creerFrere(fils);
+    res = verifQuery(valeur+taille_mot+taille_bloc,frere,index+taille_mot+taille_bloc,long_max);//query peut etre de longueur null attention pas de if
+    taille_bloc+=res;
+    taille_mot += taille_bloc;
+  }
+
+
+
+  //remplissage Noeud
+  pere->tag = "origin-form";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+
+}
+
+//OWS = * ( SP / HTAB )
+int verifOWS(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while(!fin){
+    if((res = verifSP((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else if((res = verifHTAB((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else{
+      fin = 1;
+    }
+  }
+
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "OWS";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+
+}
+
+//VCHAR = %x21-7E
+int verifVCHAR(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  if( (*valeur < 127) && (*valeur > 32)) {
+    taille_mot = 1;
+  }else{
+    taille_mot = 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "VCHAR";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//cookie-octet = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+int verifCookie_octet(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  if( (*valeur == 33) || ((*valeur >34 ) && (*valeur < 44)) || ((*valeur > 44) && (*valeur < 59)) || ((*valeur > 59 ) && (*valeur < 92 )) || ((*valeur > 92) && (*valeur < 127 ))){
+    taille_mot = 1;
+  }else{
+    taille_mot = 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "cookie-octet";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//DQUOTE%x22
+int verifDQUOTE(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  if (*valeur == 34) {
+    taille_mot = 1;
+  }else{
+    taille_mot = 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "DQUOTE";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//Expect = "100-continue"
+int verifExpect(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+  int est_juste = 1;
+  char* expect = "100-continue" ;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  for (int i = 0; i < 12; i++) {
+    if (*(valeur+i) != expect[i]) {
+      est_juste = 0;
+    }
+  }
+  if (est_juste) {
+    taille_mot = 12;
+  }else{
+    taille_mot = 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "Expect";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//BWS = OWS
+int verifBWS(char* valeur, Noeud* pere, int index, int long_max){
+
+  int taille_mot = 0;
+  Noeud* fils;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+
+  taille_mot = verifOWS(valeur+taille_mot, fils, index+taille_mot, long_max); //OWS peut être nul donc pas de if
+
+  //remplissage Noeud
+  pere->tag = "BWS";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//HTTP-name = %x48.54.54.50
+int verifHTTP_name(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+  int est_juste = 1;
+  char* expect = "HTTP" ;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  for (int i = 0; i < 4; i++) {
+    if (*(valeur+i) != expect[i]) {
+      est_juste = 0;
+    }
+  }
+  if (est_juste) {
+    taille_mot = 4;
+  }else{
+    taille_mot = 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "HTTP-name";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//HTTP-version = HTTP-name "/" DIGIT "." DIGIT
+int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot=0;
+  int res;
+  Noeud* fils = creerFils(pere);
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  if((res = verifHTTP_name(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  if(*(valeur+taille_mot)=='/'){
+    taille_mot += 1;
+  }else{
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+  Noeud* frere = creerFrere(fils);
+
+  if((res = verifDIGIT(valeur+taille_mot,frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else {
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+  if(*(valeur+taille_mot)=='.'){
+    taille_mot += 1;
+  }else{
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+  Noeud* petit_frere = creerFrere(frere);
+
+  if((res = verifDIGIT(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else {
+    purgeTree(fils);
+    pere -> fils = NULL ;
+    return 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "HTTP-version";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
 }
