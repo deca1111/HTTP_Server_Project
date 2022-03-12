@@ -73,6 +73,77 @@ int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max){
   return taille_mot;
 }
 
+//HEXDIG  =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int est_pere = false;
+  Noeud* fils = creerFils(pere);
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  if(
+    (*(valeur)=='A') ||
+    (*(valeur)=='B') ||
+    (*(valeur)=='C') ||
+    (*(valeur)=='D') ||
+    (*(valeur)=='E') ||
+    (*(valeur)=='F'))
+  {
+    taille_mot = 1;
+  }else if ((taille_mot = verifDIGIT(valeur, fils, index, long_max)))
+  {
+    est_pere = true;
+  }
+  else{
+    return 0;
+  }
+
+  if(!est_pere){
+    free(fils);
+    pere->fils = NULL;
+  }
+  //remplissage Noeud
+  pere->tag = "HEXDIG";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//SP =  %x20
+int verifSP(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  if(*(valeur)!=' '){
+    return 0;
+  }else{
+    taille_mot = 1;
+  }
+
+
+
+
+  //remplissage Noeud
+  pere->tag = "SP";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
 //tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
 int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
   //definition des variables
@@ -103,8 +174,8 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
   {
     taille_mot = 1;
   }else if (
-    taille_mot = verifALPHA(valeur, fils, index, long_max) ||
-    taille_mot = verifDIGIT(valeur, fils, index, long_max))
+    (taille_mot = verifALPHA(valeur, fils, index, long_max)) ||
+    (taille_mot = verifDIGIT(valeur, fils, index, long_max)))
   {
     est_pere = true;
   }
@@ -172,5 +243,47 @@ int verifToken(char* valeur, Noeud* pere, int index, int long_max){
   pere->longueur = taille_mot;
 
 
+  return taille_mot;
+}
+
+//unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int est_pere = false;
+  Noeud* fils = creerFils(pere);
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  if(
+    (*(valeur)=='-') ||
+    (*(valeur)=='.') ||
+    (*(valeur)=='_') ||
+    (*(valeur)=='~'))
+  {
+    taille_mot = 1;
+  }else if (
+    (taille_mot = verifALPHA(valeur, fils, index, long_max)) ||
+    (taille_mot = verifDIGIT(valeur, fils, index, long_max)))
+  {
+    est_pere = true;
+  }
+  else{
+    return 0;
+  }
+
+  if(!est_pere){
+    free(fils);
+    pere->fils = NULL;
+  }
+  //remplissage Noeud
+  pere->tag = "unreserved";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
   return taille_mot;
 }
