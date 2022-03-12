@@ -12,6 +12,7 @@
 //absolute-path = 1* ( "/" segment )
 int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 // ALPHA = %x41-5A / %x61-7A   ; A-Z / a-z
 int verifALPHA(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -24,6 +25,7 @@ int verifConnection(char* valeur, Noeud* pere, int index, int long_max);
 //Connection-header = "Connection" ":" OWS Connection OWS
 int verifConnection_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //connection-option = token
 int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -42,6 +44,7 @@ int verifContent_type_header(char* valeur, Noeud* pere, int index, int long_max)
 //Cookie-header = "Cookie:" OWS cookie-string OWS
 int verifCookie_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //cookie-name = token
 int veriCookie_name(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -63,6 +66,7 @@ int verifCRLF(char* valeur, Noeud* pere, int index, int long_max);
 //dec-octet = "25" %x30-35 / "2" %x30-34 DIGIT / "1" 2 DIGIT / %x31-39 DIGIT / DIGIT
 int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 // DIGIT = %x30-39  ; 0-9
 int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -78,6 +82,7 @@ int verifExpect(char* valeur, Noeud* pere, int index, int long_max);
 //field-content = field-vchar [ 1* ( SP / HTAB ) field-vchar ]
 int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-name = token
 int verifField_name(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -94,6 +99,7 @@ int verifH16(char* valeur, Noeud* pere, int index, int long_max);
 / Expect-header / Host-header / ( field-name ":" OWS field-value OWS )*/
 int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //HEXDIG  =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
 int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -139,6 +145,7 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max);
 //message-body = * OCTET
 int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //method = token
 int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -193,6 +200,7 @@ int verifRequest_target(char* valeur, Noeud* pere, int index, int long_max);
 //segment = * pchar
 int verifSegment(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //SP =  %x20
 int verifSP(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -208,12 +216,15 @@ int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max);
 //status-line = HTTP-version SP status-code SP reason-phrase CRLF
 int verifStatus_line(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //subtype = token
 int verifSubtype(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //tchar = "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
 int verifTchar(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //token = 1* tchar
 int verifToken(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -232,9 +243,11 @@ int verifTransfer_extension(char* valeur, Noeud* pere, int index, int long_max);
 //transfer-parameter = token BWS "=" BWS ( token / quoted-string )
 int verifTransfer_parameter(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //type = token
 int verifType(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max);
 

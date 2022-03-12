@@ -29,14 +29,14 @@ int main(int argc, char const *argv[]) {
 
 
   printf("Debut du parseur\n");
-  printf("Valeur = %s\n",valeur);
+  printf("Chaine a tester = %s\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifToken(valeur, racine, index, taille_max);
+  res = verifUnreserved(valeur, racine, index, taille_max);
 
   printf("Mot de taille : %d\n", res);
 
   if(res){
-    premier_element = searchTree(racine, "tchar");
+    premier_element = searchTree(racine, "unreserved");
     afficheToken(premier_element);
 
     purgeElement(&premier_element);
