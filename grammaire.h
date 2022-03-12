@@ -61,6 +61,7 @@ int verifCookie_string(char* valeur, Noeud* pere, int index, int long_max);
 //cookie-value = ( DQUOTE * cookie-octet DQUOTE ) / * cookie-octet
 int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //CRLF = %x0D %x0A
 int verifCRLF(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -114,7 +115,8 @@ int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max);
 //host = IP-literal / IPv4address / reg-name
 int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max);
 
-//Htab = %x09
+//FAIT
+//HTAB = %x09
 int verifHTAB(char* valeur, Noeud* pere, int index, int long_max);
 
 //HTTP-message = start-line * ( header-field CRLF ) CRLF [ message-body ]
@@ -151,6 +153,7 @@ int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max);
 //method = token
 int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //obs-fold = CRLF 1* ( SP / HTAB )
 int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -169,6 +172,7 @@ int verifOWS(char* valeur, Noeud* pere, int index, int long_max);
 //parameter = token "=" ( token / quoted-string )
 int verifParameter(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
 int verifPchar(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -194,6 +198,10 @@ int verifQuoted_string(char* valeur, Noeud* pere, int index, int long_max);
 
 //reason-phrase = * ( HTAB / SP / VCHAR / obs-text )
 int verifReason_phrase(char* valeur, Noeud* pere, int index, int long_max);
+
+//FAIT
+//reg-name = * ( unreserved / pct-encoded / sub-delims )
+int verifReg_name(char* valeur, Noeud* pere, int index, int long_max);
 
 //request-line = method SP request-target SP HTTP-version CRLF
 int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max);
@@ -259,9 +267,6 @@ int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max);
 
 //uri-host = host
 int verifUri_host(char* valeur, Noeud* pere, int index, int long_max);
-
-//reg-name = * ( unreserved / pct-encoded / sub-delims )
-int verifReg_name(char* valeur, Noeud* pere, int index, int long_max);
 
 //VCHAR = %x21-7E
 int verifVCHAR(char* valeur, Noeud* pere, int index, int long_max);

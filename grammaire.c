@@ -498,8 +498,6 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
   frere = fils;
   petit_frere = fils;
 
-
-
   while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
     taille_mot += res;
     res = 0;
@@ -507,11 +505,13 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
     petit_frere = creerFrere(frere);
   }
 
-
   //verif qu'il y a au moins 1 nombre
   if(taille_mot > 0){
     free(petit_frere);
     frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
   }
 
 
@@ -524,7 +524,6 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
   return taille_mot;
 
 }
-
 
 //status-code = 3 DIGIT
 int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max){
@@ -728,4 +727,236 @@ int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max){
 
 
   return taille_mot;
+}
+
+//pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+int verifPchar(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int est_pere = false;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  Noeud* fils = creerFils(pere);
+
+  //code
+  if((*(valeur)==':') ||
+    (*(valeur)=='@'))
+  {
+    taille_mot = 1;
+  }else if (
+    (taille_mot = verifUnreserved(valeur, fils, index, long_max)) ||
+    (taille_mot = verifPct_encoded(valeur, fils, index, long_max)) ||
+    (taille_mot = verifSub_delims(valeur, fils, index, long_max))
+  )  {
+    est_pere = true;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  if(!est_pere){
+    free(fils);
+    pere->fils = NULL;
+  }
+  //remplissage Noeud
+  pere->tag = "pchar";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//reg-name = * ( unreserved / pct-encoded / sub-delims )
+int verifReg_name(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while(!fin){
+    if((res = verifUnreserved((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else if((res = verifPct_encoded((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else if((res = verifSub_delims((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }else{
+      fin = 1;
+    }
+  }
+
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "reg-name";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//HTAB = %x09
+int verifHTAB(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+  //code
+  if(*(valeur)!=9){
+    return 0;
+  }else{
+    taille_mot = 1;
+  }
+
+  //remplissage Noeud
+  pere->tag = "HTAB";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//CRLF = %x0D %x0A
+int verifCRLF(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  if(*(valeur)==13){
+    taille_mot += 1;
+  }else{
+    return 0;
+  }
+
+  if(*(valeur+taille_mot)==10){
+    taille_mot+=1;
+  }else{
+    return 0;
+  }
+
+  //remplissage Noeud
+  pere->tag = "CRLF";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+}
+
+//obs-fold = CRLF 1* ( SP / HTAB )
+int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot = 0;
+  int res = 0;
+  int fin = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+
+
+  //code
+  if ((res = verifCRLF(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+  } else {
+    purgeTree (fils);
+    pere -> fils = NULL;
+    return 0;
+  }
+
+  frere = fils;
+  petit_frere = creerFrere(frere);
+
+  //on verifie d'abord le premier bloc obligatoire
+  if ((res = verifSP(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0 ;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  } else if ((res = verifHTAB(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  } else {
+    purgeTree(fils);
+    pere -> fils = NULL;
+    return 0 ;
+  }
+
+  while (!fin){
+    if ((res = verifSP(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+      taille_mot+=res;
+      res = 0 ;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    } else if ((res = verifHTAB(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+      taille_mot+=res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    } else {
+      free (petit_frere);
+      frere -> frere = NULL;
+      fin = 1;
+    }
+  }
+
+  //remplissage Noeud
+  pere->tag = "obs-fold";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+
 }
