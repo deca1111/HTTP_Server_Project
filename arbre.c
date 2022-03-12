@@ -60,17 +60,21 @@ _Token* creerToken(){
   return token;
 }
 
-void afficheToken(_Token* token){
+void afficheToken(_Token* token, char *name){
   int len;
-  if(token->next != NULL){
-    afficheToken(token->next);
-  }
-  if(token->node != 0){
-    printf("[Tag]: _%s_\t[Valeur]: _%.*s_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
+  if(token != NULL){
+    if(token->next != NULL){
+      afficheToken(token->next, name);
+    }
+    if(token->node != NULL){
+      printf("[Tag]: _%s_\t[Valeur]: _%.*s_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
+    }
+  }else{
+    printf("Liste de token vide: l'arbre ne contient aucun <%s> \n", name);
   }
 }
 
-_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
+_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token, int* nb_token){
 
   char* tag = getElementTag(noeud, NULL);
   _Token* precedent = token;
@@ -78,15 +82,15 @@ _Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token){
     precedent = creerToken();
     precedent->next = token;
     token->node = (void*)noeud;
-
+    *(nb_token) += 1;
   }
 
   if(noeud->fils != NULL){
-    precedent = recursifSearchTree(noeud->fils, name, precedent);
+    precedent = recursifSearchTree(noeud->fils, name, precedent, nb_token);
   }
 
   if(noeud->frere != NULL){
-    precedent = recursifSearchTree(noeud->frere, name, precedent);
+    precedent = recursifSearchTree(noeud->frere, name, precedent, nb_token);
   }
 
   return precedent;

@@ -15,13 +15,20 @@ _Token *searchTree(void *start,char *name){
   //premier element de la liste chainee
   _Token* premier_element = creerToken();
   _Token* temp;
+  int temp_int = 0;
+  int* nb_token = &temp_int;
   if(start == NULL){
-    temp = recursifSearchTree(getRootTree(), name, premier_element);
+    temp = recursifSearchTree(getRootTree(), name, premier_element, nb_token);
   }else{
-    temp = recursifSearchTree((Noeud*)start, name, premier_element);
+    temp = recursifSearchTree((Noeud*)start, name, premier_element, nb_token);
   }
-  premier_element = temp->next;
+  if (*(nb_token) != 0) {
+    premier_element = temp->next;
+  }else{
+    premier_element = NULL;
+  }
   free(temp);
+
   return premier_element;
 
 }
@@ -57,10 +64,12 @@ char *getElementValue(void *node,int *len){
 }
 
 void purgeElement(_Token **r){
-  if((*r)->next != NULL){
-    purgeElement(&((*r)->next));
+  if((*r) != NULL){
+    if((*r)->next != NULL){
+      purgeElement(&((*r)->next));
+    }
+    free(*r);
   }
-  free(*r);
 }
 
 
@@ -88,11 +97,7 @@ int parseur(char *req, int len){
   racine = creerNoeud();
   valeur = &(req[0]);
   res = verifMessage(valeur, racine, 0, len);
-  if(res != len){
-    purgeTree(racine);
-    return 0;
-  }else{
-    return res;
-  }*/
-  return 0;
+  return res;
+*/
+return 0;
 }

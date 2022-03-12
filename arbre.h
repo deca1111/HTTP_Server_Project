@@ -24,13 +24,13 @@ void afficherArbre(Noeud* noeud);
 
 _Token* creerToken();
 
-void afficheToken(_Token* token);
+void afficheToken(_Token* token,char *name);
 
 //noeud: noeud actuel
 //name: tag recherche
 //token: element a remplir de la liste chainee
 //return: element suivant de la liste chainee
-_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token);
+_Token *recursifSearchTree(Noeud *noeud, char *name, _Token* token, int* nb_token);
 
 
 

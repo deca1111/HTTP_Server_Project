@@ -17,6 +17,7 @@ int main(int argc, char const *argv[]) {
   char* mot = "5132fezhibf";
   int index = 0;
   int taille_max = 15;
+  char *name = "ALPHA";
 
 
   _Token* premier_element;
@@ -36,8 +37,9 @@ int main(int argc, char const *argv[]) {
   printf("Mot de taille : %d\n", res);
 
   if(res){
-    premier_element = searchTree(racine, "Content-Length");
-    afficheToken(premier_element);
+    premier_element = searchTree(racine, name);
+    //printf("%p,%p\n",premier_element->node,premier_element->next);
+    afficheToken(premier_element, name);
 
     purgeElement(&premier_element);
   }

@@ -507,3 +507,172 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
 
   return taille_mot;
 }
+
+//port = * DIGIT
+int verifPort(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+
+
+  while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+
+  //verif qu'il y a au moins 1 nombre
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "port";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+
+}
+
+
+//status-code = 3 DIGIT
+int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+
+
+  while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+
+  //verif qu'il y a 3 digits
+  if(taille_mot != 3){
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }else{
+    free(petit_frere);
+    frere->frere = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "status-code";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//h16 = 1*4 HEXDIG
+int verifH16(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  int compteur = 0;
+  int fin = 0;
+  int taille_bloc = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+  Noeud* frere_debut_bloc;
+  Noeud* grand_frere_debut_bloc;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+  frere_debut_bloc = fils;
+
+  //on verifie d'abord le premier bloc obligatoire
+  while((compteur < 4 ) && (res = verifHEXDIG((valeur+taille_mot+taille_bloc),petit_frere, index+taille_mot+taille_bloc, long_max))){
+    compteur += 1;
+    taille_bloc += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+  if(compteur !=4){
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;
+  }else{
+    compteur = 0;
+    taille_mot += taille_bloc ;
+    taille_bloc =0;
+    frere_debut_bloc = petit_frere ;
+    grand_frere_debut_bloc = frere ;
+
+  }
+
+  //on verifie les blocs optionels
+  while (!fin) {
+    while((compteur < 4 ) && (res = verifHEXDIG((valeur+taille_mot+taille_bloc),petit_frere, index+taille_mot+taille_bloc, long_max))){
+      compteur += 1;
+      taille_bloc += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+    }
+
+    if(compteur !=4){
+      purgeTree(frere_debut_bloc);//on detruit tous les noeuds eventuelement crées avant
+      grand_frere_debut_bloc->frere = NULL;
+      fin = 1;
+    }else{
+      compteur = 0;
+      taille_mot += taille_bloc ;
+      taille_bloc =0;
+      frere_debut_bloc = petit_frere ;
+      grand_frere_debut_bloc = frere ;
+    }
+
+  }
+
+  //remplissage Noeud
+  pere->tag = "h16";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
