@@ -29,15 +29,21 @@ int main(int argc, char const *argv[]) {
 
 
   printf("Debut du parseur\n");
+<<<<<<< HEAD
   printf("Valeur = %s\n",valeur);
 
   //modifier cette ligne pour tester une fonction en particulier
   res = verifHEXDIG(valeur, racine, index, taille_max);
+=======
+  printf("Chaine a tester = %s\n",valeur);
+  //modifier cette ligne pour tester une fonction en particulier
+  res = verifUnreserved(valeur, racine, index, taille_max);
+>>>>>>> de5a95e20b993fb6bc8b3e42011776b91b2eb783
 
   printf("Mot de taille : %d\n", res);
 
   if(res){
-    premier_element = searchTree(racine, "tchar");
+    premier_element = searchTree(racine, "unreserved");
     afficheToken(premier_element);
     afficherArbre(racine);
     purgeElement(&premier_element);
