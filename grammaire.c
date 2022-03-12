@@ -3,30 +3,6 @@
 #define false 0
 #define true 1
 
-/* base de chaque fonction:
-//definition des variables
-int taille_mot;
-
-//verification de la taille de la requete
-if(index>=long_max){
-  return 0;
-}
-//code
-
-
-
-
-
-//remplissage Noeud
-pere->tag = "DIGIT";
-pere->valeur = valeur;
-pere->longueur = taille_mot;
-
-
-//return taille_mot
-return taille_mot;
-*/
-
 // ALPHA = %x41-5A / %x61-7A   ; A-Z / a-z
 int verifALPHA(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot;
@@ -39,7 +15,6 @@ int verifALPHA(char* valeur, Noeud* pere, int index, int long_max){
     taille_mot = 1;//est un separateur
   }else{
     taille_mot = 0;//pas un separateur
-    return taille_mot;
   }
 
   //remplissage Noeud
@@ -478,8 +453,6 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
   frere = fils;
   petit_frere = fils;
 
-
-
   while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
     taille_mot += res;
     res = 0;
@@ -670,6 +643,86 @@ int verifH16(char* valeur, Noeud* pere, int index, int long_max){
 
   //remplissage Noeud
   pere->tag = "h16";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//pct-encoded = "%" HEXDIG HEXDIG
+int verifPct_encoded(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int res;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  if(*(valeur)=='%'){
+    taille_mot = 1;
+  }else{
+    return 0;
+  }
+
+  Noeud* fils = creerFils(pere);
+
+  if((res = verifHEXDIG(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  Noeud* frere = creerFrere(fils);
+
+  if((res = verifHEXDIG(valeur+taille_mot,frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  //remplissage Noeud
+  pere->tag = "pct-encoded";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
+
+//sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot;
+
+  if(index>=long_max){
+    return 0;
+  }
+
+  if( (*valeur == '!') ||
+  (*valeur == '$') ||
+  (*valeur == '&') ||
+  (*valeur == 39) ||
+  (*valeur == '(') ||
+  (*valeur == ')') ||
+  (*valeur == '*') ||
+  (*valeur == '+') ||
+  (*valeur == ',') ||
+  (*valeur == ';') ||
+  (*valeur == '=')
+      ){
+    taille_mot = 1;//est un separateur
+  }else{
+    taille_mot = 0;//pas un separateur
+  }
+
+  //remplissage Noeud
+  pere->tag = "sub-delims";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 

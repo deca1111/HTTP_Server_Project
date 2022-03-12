@@ -93,6 +93,7 @@ int verifField_value(char* valeur, Noeud* pere, int index, int long_max);
 //field-vchar = VCHAR / obs-text
 int verifFIeld_vchar(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //h16 = 1*4 HEXDIG
 int verifH16(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -171,9 +172,11 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max);
 //pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
 int verifPchar(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //pct-encoded = "%" HEXDIG HEXDIG
 int verifPct_encoded(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //port = * DIGIT
 int verifPort(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -205,12 +208,14 @@ int verifSegment(char* valeur, Noeud* pere, int index, int long_max);
 //SP =  %x20
 int verifSP(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max);
 
 //start-line = request-line / status-line
 int verifStart_line(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //status-code = 3 DIGIT
 int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max);
 
