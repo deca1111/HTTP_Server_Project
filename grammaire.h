@@ -29,6 +29,7 @@ int verifConnection_header(char* valeur, Noeud* pere, int index, int long_max);
 //connection-option = token
 int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Content-Length = 1* DIGIT
 int verifContent_length(char* valeur, Noeud* pere, int index, int long_max);
 

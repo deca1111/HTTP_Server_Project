@@ -14,7 +14,7 @@
 
 int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
-  char* mot = "starttcou+_";
+  char* mot = "5132fezhibf";
   int index = 0;
   int taille_max = 15;
 
@@ -31,12 +31,12 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = %s\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifUnreserved(valeur, racine, index, taille_max);
+  res = verifContent_length(valeur, racine, index, taille_max);
 
   printf("Mot de taille : %d\n", res);
 
   if(res){
-    premier_element = searchTree(racine, "unreserved");
+    premier_element = searchTree(racine, "Content-Length");
     afficheToken(premier_element);
 
     purgeElement(&premier_element);

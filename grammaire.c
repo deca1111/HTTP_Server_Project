@@ -460,3 +460,50 @@ int verifSubtype(char* valeur, Noeud* pere, int index, int long_max){
   //return taille_mot
   return taille_mot;
 }
+
+//Content-Length = 1* DIGIT
+int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+
+
+  while((res = verifDIGIT((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+
+  //verif qu'il y a au moins 1 nombre
+  if(taille_mot == 0){
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }else{
+    free(petit_frere);
+    frere->frere = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "Content-Length";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+}
