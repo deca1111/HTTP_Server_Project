@@ -2432,6 +2432,7 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int res = 0;
+  int fin = false;
   Noeud* fils;
   Noeud* frere;
   Noeud* frere2;
@@ -2528,8 +2529,8 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "parameter";
+  pere->tag = "media-type";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
-  return taille_mot
+  return taille_mot;
 }

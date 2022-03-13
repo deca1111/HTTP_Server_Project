@@ -160,6 +160,7 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max);
 //ls32 = ( h16 ":" h16 ) / IPv4address
 int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //media-type = type "/" subtype * ( OWS ";" OWS parameter )
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max);
 
