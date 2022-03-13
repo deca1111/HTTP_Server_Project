@@ -189,6 +189,7 @@ int verifOrigin_form(char* valeur, Noeud* pere, int index, int long_max);
 //OWS = * ( SP / HTAB )
 int verifOWS(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //parameter = token "=" ( token / quoted-string )
 int verifParameter(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -216,6 +217,7 @@ int verifQuery(char* valeur, Noeud* pere, int index, int long_max);
 //quoted-pair = "\" ( HTAB / SP / VCHAR / obs-text )
 int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //quoted-string = DQUOTE * ( qdtext / quoted-pair ) DQUOTE
 int verifQuoted_string(char* valeur, Noeud* pere, int index, int long_max);
 

@@ -2427,3 +2427,109 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
 
 
 }
+
+//media-type = type "/" subtype * ( OWS ";" OWS parameter )
+int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* frere2;
+
+  if(index>=long_max){
+    return 0;
+  }
+  //type
+  fils = creerFils(pere);
+  if((res = verifType(valeur, fils, index,long_max))){
+    taille_mot += res;
+    res = 0;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  //"/"
+  if(*(valeur+taille_mot) == '/'){
+    frere = creerFrere(fils);
+    frere->tag = "tag_a_changer";
+    frere->valeur = valeur+taille_mot;
+    frere->longueur = 1;
+    taille_mot += 1;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+  // verifSubtype
+  frere2 = creerFrere(frere);
+  if((res = verifSubtype((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = frere2;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  //* ( OWS ";" OWS parameter )
+  while(!fin){
+    //OWS
+    frere2 = creerFrere(frere);
+    if((res = verifOWS((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = frere2;
+      frere2 = creerFrere(frere);
+      //";"
+      if(*(valeur+taille_mot) == ';'){
+        frere2->tag = "tag_a_changer";
+        frere2->valeur = valeur+taille_mot;
+        frere2->longueur = 1;
+        taille_mot += 1;
+        frere = frere2;
+        frere2 = creerFrere(frere);
+        //OWS
+        if((res = verifOWS((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
+          taille_mot += res;
+          res = 0;
+          frere = frere2;
+          frere2 = creerFrere(frere);
+          //parameter
+          if((res = verifParameter((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
+            taille_mot += res;
+            res = 0;
+            frere = frere2;
+          }else{
+            purgeTree(fils);
+            pere->fils = NULL;
+            return 0;
+          }
+        }else{
+          purgeTree(fils);
+          pere->fils = NULL;
+          return 0;
+        }
+      }else{
+        purgeTree(fils);
+        pere->fils = NULL;
+        return 0;
+      }
+    }else{
+      fin = true;
+    }
+  }
+
+
+
+
+
+
+  //remplissage Noeud
+  pere->tag = "parameter";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+  return taille_mot
+}

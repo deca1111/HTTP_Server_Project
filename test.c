@@ -21,7 +21,7 @@ int main(int argc, char const *argv[]) {
   int taille_max = 100;
   char *name = "parameter";//A MODIFIER
 
-  float fct_faite = 51;
+  float fct_faite = 52;
   float fct_a_faire=79;
   int avancement = (fct_faite/fct_a_faire)*100 ;
 
