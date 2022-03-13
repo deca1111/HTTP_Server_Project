@@ -994,7 +994,7 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //verif qu'il y a au moins 1 HEXDIG
-  if(taille_mot == 0){
+  if(taille_mot == 1){
     purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
     pere->fils = NULL;
     return 0;//il y a un probleme
@@ -1004,7 +1004,7 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(*(valeur+taille_mot)=='.'){
-    taille_mot = 1;
+    taille_mot += 1;
   }else{
     return 0;
   }
@@ -2276,14 +2276,14 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   fils = creerFils(pere);
-  fils->tag = "\\";
+  fils->tag = "tag_a_changer";
   fils->valeur = valeur;
   fils->longueur = 1;
   frere = creerFrere(fils);
   if(
     (res = verifHTAB(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
     (res = verifSP(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
-    (res = verifVCHAR(valeur+taille_mot, frere, index+taille_mot, long_max)||
+    (res = verifVCHAR(valeur+taille_mot, frere, index+taille_mot, long_max))||
     (res = verifObs_text(valeur+taille_mot, frere, index+taille_mot, long_max))
   ){
     taille_mot += res;
@@ -2299,5 +2299,131 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
-  return taill_mot;
+  return taille_mot;
+}
+
+//quoted-string = DQUOTE * ( qdtext / quoted-pair ) DQUOTE
+int verifQuoted_string(char* valeur, Noeud* pere, int index, int long_max){
+int taille_mot = 0;
+int res = 0;
+int fin = false;
+Noeud* fils;
+Noeud* frere;
+Noeud* frere2;
+
+//verirication que l'on ne depasse pas la longueur à parser
+if(index >= long_max){
+  return 0;
+}
+fils = creerFils(pere);
+
+
+if(verifDQUOTE(valeur, fils, index, long_max)){
+  taille_mot += 1;
+}else{
+  return 0;
+}
+
+frere = creerFrere(fils);
+frere2 = frere;
+while(!fin){
+  if((res = verifQdtext(valeur+taille_mot, frere2, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = frere2;
+    frere2 = creerFrere(frere);
+  }else if((res = verifQuoted_Pair(valeur+taille_mot, frere2, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = frere2;
+    frere2 = creerFrere(frere);
+  }else{
+    fin = 1;
+  }
+}
+
+if(taille_mot > 1){
+  purgeTree(frere2);
+  frere->frere = NULL;
+  frere2 = creerFrere(frere);
+}else{
+  purgeTree(frere);
+  fils->frere = NULL;
+  frere2 = creerFrere(fils);
+}
+if(verifDQUOTE(valeur+taille_mot, frere2, index+taille_mot, long_max)){
+  taille_mot += 1;
+}else{
+  purgeTree(fils);
+  pere->fils = NULL;
+  return 0;
+}
+
+
+
+//remplissage Noeud
+pere->tag = "quoted-string";
+pere->valeur = valeur;
+pere->longueur = taille_mot;
+
+
+return taille_mot;
+}
+
+//parameter = token "=" ( token / quoted-string )
+int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* frere2;
+
+  if(index>=long_max){
+    return 0;
+  }
+  fils = creerFils(pere);
+  if((res = verifToken(valeur, fils, index, long_max))){
+    taille_mot += res;
+    res = 0;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  if(*(valeur+taille_mot) == '='){
+    frere = creerFrere(fils);
+    frere->tag = "tag_a_changer";
+    frere->valeur = valeur+taille_mot;
+    frere->longueur = 1;
+    taille_mot += 1;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  frere2 = creerFrere(frere);
+  if((res = verifToken(valeur+taille_mot, frere2, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+
+  }else if((res = verifQuoted_string(valeur+taille_mot, frere2, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+  //remplissage Noeud
+  pere->tag = "parameter";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+
+
+
 }

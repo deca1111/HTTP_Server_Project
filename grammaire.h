@@ -212,6 +212,7 @@ int verifQdtext(char* valeur, Noeud* pere, int index, int long_max);
 //query = * ( pchar / "/" / "?" )
 int verifQuery(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //quoted-pair = "\" ( HTAB / SP / VCHAR / obs-text )
 int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max);
 
