@@ -16,10 +16,10 @@ int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
   /*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
-  char* mot = "100"; //A MODIFIER
+  char* mot = "\\C"; //A MODIFIER
   int index = 0;
   int taille_max = 100;
-  char *name = "dec-octet";//A MODIFIER
+  char *name = "quoted-pair";//A MODIFIER
 
   float fct_faite = 48;
   float fct_a_faire=79;
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifDec_octet(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifQuoted_Pair(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 

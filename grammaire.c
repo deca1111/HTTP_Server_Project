@@ -1643,8 +1643,8 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max){
 
 //A REVIEW
 // obs-text = %x80-FF
-/*int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
-  int taille_mot;
+int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
+  /*int taille_mot;
 
   if(index>=long_max){
     return 0;
@@ -1662,8 +1662,9 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max){
   pere->longueur = taille_mot;
 
 
-  return taille_mot;
-}*/
+  return taille_mot;*/
+  return 0;
+}
 
 //Connection = * ( "," OWS ) connection-option * ( OWS "," [ OWS connection-option ] )
 int verifConnection(char* valeur, Noeud* pere, int index, int long_max){
@@ -2215,4 +2216,88 @@ int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max){
 
 
   return taille_mot;
+}
+
+//qdtext = HTAB / SP / "!" / %x23-5B / %x5D-7E / obs-text
+int verifQdtext(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+  int est_pere = false;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  Noeud* fils = creerFils(pere);
+
+  //code
+  if(
+    (*(valeur) == '!') ||
+    ((*(valeur) >= 35) && (*(valeur) <= 91)) ||
+    ((*(valeur) >= 93) && (*(valeur) <= 126)) )
+  {
+    taille_mot = 1;
+  }else if (
+    (taille_mot = verifHTAB(valeur, fils, index, long_max)) ||
+    (taille_mot = verifSP(valeur, fils, index, long_max)) ||
+    (taille_mot = verifObs_text(valeur, fils, index, long_max)))
+  {
+    est_pere = true;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+  if(!est_pere){
+    free(fils);
+    pere->fils = NULL;
+  }
+  //remplissage noeud
+  pere->tag = "qdtext";
+  pere->valeur = valeur;
+  pere-> longueur = taille_mot;
+
+  return taille_mot;
+}
+
+//quoted-pair = "\" ( HTAB / SP / VCHAR / obs-text )
+int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+
+  if(index>=long_max){
+    return 0;
+  }else{
+    taille_mot = 1;
+  }
+
+  fils = creerFils(pere);
+  fils->tag = "\\";
+  fils->valeur = valeur;
+  fils->longueur = 1;
+  frere = creerFrere(fils);
+  if(
+    (res = verifHTAB(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
+    (res = verifSP(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
+    (res = verifVCHAR(valeur+taille_mot, frere, index+taille_mot, long_max)||
+    (res = verifObs_text(valeur+taille_mot, frere, index+taille_mot, long_max))
+  ){
+    taille_mot += res;
+  }else{
+    free(frere);
+    fils->frere = NULL;
+    return 0;
+  }
+
+
+
+  pere->tag = "quoted-pair";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taill_mot;
 }

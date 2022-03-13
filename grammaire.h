@@ -204,6 +204,7 @@ int verifPct_encoded(char* valeur, Noeud* pere, int index, int long_max);
 //port = * DIGIT
 int verifPort(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //qdtext = HTAB / SP / "!" / %x23-5B / %x5D-7E / obs-text
 int verifQdtext(char* valeur, Noeud* pere, int index, int long_max);
 
