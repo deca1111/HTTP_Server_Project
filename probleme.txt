@@ -1,0 +1,2 @@
+-un char ne peut prendre des valeurs qu'entre -127 et 128
+->Utiliser des Unsigned char ?

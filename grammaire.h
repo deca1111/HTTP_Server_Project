@@ -21,9 +21,11 @@ int verifALPHA(char* valeur, Noeud* pere, int index, int long_max);
 //BWS = OWS
 int verifBWS(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Connection = * ( "," OWS ) connection-option * ( OWS "," [ OWS connection-option ] )
 int verifConnection(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Connection-header = "Connection" ":" OWS Connection OWS
 int verifConnection_header(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -35,6 +37,7 @@ int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max);
 //Content-Length = 1* DIGIT
 int verifContent_length(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Content-Length-header = "Content-Length" ":" OWS Content-Length OWS
 int verifContent_length_header(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -44,6 +47,7 @@ int verifContent_Type(char* valeur, Noeud* pere, int index, int long_max);
 //Content-Type-header = "Content-Type" ":" OWS Content-Type OWS
 int verifContent_type_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Cookie-header = "Cookie:" OWS cookie-string OWS
 int verifCookie_header(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -55,12 +59,15 @@ int verifCookie_name(char* valeur, Noeud* pere, int index, int long_max);
 //cookie-octet = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 int verifCookie_octet(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //cookie-pair = cookie-name "=" cookie-value
 int verifCookie_pair(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //cookie-string = cookie-pair * ( ";" SP cookie-pair )
 int verifCookie_string(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //cookie-value = ( DQUOTE * cookie-octet DQUOTE ) / * cookie-octet
 int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -68,6 +75,7 @@ int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max);
 //CRLF = %x0D %x0A
 int verifCRLF(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //dec-octet = "25" %x30-35 / "2" %x30-34 DIGIT / "1" 2 DIGIT / %x31-39 DIGIT / DIGIT
 int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -79,6 +87,7 @@ int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max);
 //DQUOTE%x22
 int verifDQUOTE(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Expect-header = "Expect" ":" OWS Expect OWS
 int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -165,6 +174,7 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 //obs-fold = CRLF 1* ( SP / HTAB )
 int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max);
 
+//A REVIEW
 // obs-text = %x80-FF
 int verifObs_text(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -214,9 +224,11 @@ int verifReason_phrase(char* valeur, Noeud* pere, int index, int long_max);
 //reg-name = * ( unreserved / pct-encoded / sub-delims )
 int verifReg_name(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //request-line = method SP request-target SP HTTP-version CRLF
 int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //request-target = origin-form
 int verifRequest_target(char* valeur, Noeud* pere, int index, int long_max);
 

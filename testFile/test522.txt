@@ -1,1 +1,0 @@
-startVdr :5	fin

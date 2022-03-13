@@ -1,1 +1,0 @@
-startRW	.L :!fin

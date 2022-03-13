@@ -14,19 +14,21 @@
 
 int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
-  char* mot = " ";//A MODIFIER
+  /*unsigned char mot[100] = "a_";//A MODIFIER
+  mot[0] = 204;*/
+  char* mot = "100"; //A MODIFIER
   int index = 0;
   int taille_max = 100;
-  char *name = "BWS";//A MODIFIER
+  char *name = "dec-octet";//A MODIFIER
 
-  float fct_faite = 37;
-  float fct_a_faire=78;
+  float fct_faite = 48;
+  float fct_a_faire=79;
   int avancement = (fct_faite/fct_a_faire)*100 ;
 
 
   _Token* premier_element;
   char* valeur;
-  int res;
+  int res = 0;
   Noeud* racine;
 
   valeur = &(mot[0]);
@@ -35,7 +37,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifBWS(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifDec_octet(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 
@@ -51,7 +53,6 @@ int main(int argc, char const *argv[]) {
   purgeTree(racine);
 
   printf("\nAvancement : %d %%\n",avancement);
-
 
   return 0;
 }
