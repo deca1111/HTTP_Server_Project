@@ -1641,15 +1641,14 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max){
   return taille_mot;
 }
 
-//A REVIEW
 // obs-text = %x80-FF
 int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
-  /*int taille_mot;
+  int taille_mot;
 
   if(index>=long_max){
     return 0;
   }
-  if( ((*valeur <= 255) && (*valeur > 127)) ){
+  if( (((unsigned char)(*valeur) <= 255) && ((unsigned char)(*valeur) > 127)) ){
     taille_mot = 1;//est un separateur
   }else{
     taille_mot = 0;//pas un separateur
@@ -1662,8 +1661,7 @@ int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
   pere->longueur = taille_mot;
 
 
-  return taille_mot;*/
-  return 0;
+  return taille_mot;
 }
 
 //Connection = * ( "," OWS ) connection-option * ( OWS "," [ OWS connection-option ] )

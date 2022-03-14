@@ -19,9 +19,11 @@ int main(int argc, char const *argv[]) {
   //media-type = type "/" subtype * ( OWS ";" OWS parameter )
 
   char* mot = "tipe/soustipe;\t test=para;\t test2="; //A MODIFIER
+  /*char mot[100];
+  mot[0] = 200;*/
   int index = 0;
   int taille_max = 100;
-  char *name = "media-type";//A MODIFIER
+  char *name = "obs-text";//A MODIFIER
 
   float fct_faite = 53;
   float fct_a_faire=79;
@@ -39,7 +41,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifMedia_type(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifObs_text(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 
