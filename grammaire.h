@@ -41,9 +41,11 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max);
 //Content-Length-header = "Content-Length" ":" OWS Content-Length OWS
 int verifContent_length_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Content-Type = media-type
 int verifContent_Type(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Content-Type-header = "Content-Type" ":" OWS Content-Type OWS
 int verifContent_type_header(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -95,6 +97,7 @@ int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max);
 //Expect = "100-continue"
 int verifExpect(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-content = field-vchar [ 1* ( SP / HTAB ) field-vchar ]
 int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -102,11 +105,13 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 //field-name = token
 int verifField_name(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-value = * ( field-content / obs-fold )
 int verifField_value(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-vchar = VCHAR / obs-text
-int verifFIeld_vchar(char* valeur, Noeud* pere, int index, int long_max);
+int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max);
 
 //FAIT
 //h16 = 1*4 HEXDIG
@@ -147,6 +152,7 @@ int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max);
 //IP-literal = "[" ( IPv6address / IPvFuture ) "]"
 int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
 int verifIPv4address(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -157,6 +163,7 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max);
 //IPvFuture = "v" 1* HEXDIG "." 1* ( unreserved / sub-delims / ":" )
 int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //ls32 = ( h16 ":" h16 ) / IPv4address
 int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -175,10 +182,11 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 //obs-fold = CRLF 1* ( SP / HTAB )
 int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max);
 
-//A REVIEW
+//FAIT
 // obs-text = %x80-FF
 int verifObs_text(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //OCTET          =  %x00-FF; 8 bits of daa
 int verifOCTET(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -222,6 +230,7 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max);
 //quoted-string = DQUOTE * ( qdtext / quoted-pair ) DQUOTE
 int verifQuoted_string(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //reason-phrase = * ( HTAB / SP / VCHAR / obs-text )
 int verifReason_phrase(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -294,6 +303,7 @@ int verifType(char* valeur, Noeud* pere, int index, int long_max);
 //unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
 int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //uri-host = host
 int verifUri_host(char* valeur, Noeud* pere, int index, int long_max);
 
