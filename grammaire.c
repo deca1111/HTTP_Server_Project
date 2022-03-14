@@ -2267,7 +2267,6 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int res = 0;
   Noeud* fils;
-  Noeud* frere;
 
   if(index>=long_max){
     return 0;
@@ -2276,19 +2275,16 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   fils = creerFils(pere);
-  fils->tag = "tag_a_changer";
-  fils->valeur = valeur;
-  fils->longueur = 1;
-  frere = creerFrere(fils);
+
   if(
-    (res = verifHTAB(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
-    (res = verifSP(valeur+taille_mot, frere, index+taille_mot, long_max)) ||
-    (res = verifVCHAR(valeur+taille_mot, frere, index+taille_mot, long_max))||
-    (res = verifObs_text(valeur+taille_mot, frere, index+taille_mot, long_max))
+    (res = verifHTAB(valeur+taille_mot, fils, index+taille_mot, long_max)) ||
+    (res = verifSP(valeur+taille_mot, fils, index+taille_mot, long_max)) ||
+    (res = verifVCHAR(valeur+taille_mot, fils, index+taille_mot, long_max))||
+    (res = verifObs_text(valeur+taille_mot, fils, index+taille_mot, long_max))
   ){
     taille_mot += res;
   }else{
-    free(frere);
+    purgeTree(fils);
     fils->frere = NULL;
     return 0;
   }
@@ -2309,50 +2305,50 @@ int res = 0;
 int fin = false;
 Noeud* fils;
 Noeud* frere;
-Noeud* frere2;
+Noeud* petit_frere;
+Noeud* frere_debut_bloc;
+Noeud* gd_frere_debut_bloc;
 
 //verirication que l'on ne depasse pas la longueur à parser
 if(index >= long_max){
   return 0;
 }
 fils = creerFils(pere);
-
-
-if(verifDQUOTE(valeur, fils, index, long_max)){
-  taille_mot += 1;
+if((res = verifDQUOTE(valeur+taille_mot, fils, index+taille_mot, long_max))){
+  taille_mot += res;
+  res = 0;
 }else{
+  purgeTree(fils);
+  pere->fils = NULL;
   return 0;
 }
 
-frere = creerFrere(fils);
-frere2 = frere;
+frere = fils;
+petit_frere = creerFrere(frere);
 while(!fin){
-  if((res = verifQdtext(valeur+taille_mot, frere2, index+taille_mot, long_max))){
-    taille_mot += res;
-    res = 0;
-    frere = frere2;
-    frere2 = creerFrere(frere);
-  }else if((res = verifQuoted_Pair(valeur+taille_mot, frere2, index+taille_mot, long_max))){
-    taille_mot += res;
-    res = 0;
-    frere = frere2;
-    frere2 = creerFrere(frere);
+  frere_debut_bloc = petit_frere;
+  gd_frere_debut_bloc = frere;
+  if((res = verifQdtext(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0 ;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }else if ((res = verifQuoted_Pair(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0 ;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
   }else{
-    fin = 1;
+    fin = true;
+    purgeTree(frere_debut_bloc);
+    gd_frere_debut_bloc->frere = NULL;
   }
-}
 
-if(taille_mot > 1){
-  purgeTree(frere2);
-  frere->frere = NULL;
-  frere2 = creerFrere(frere);
-}else{
-  purgeTree(frere);
-  fils->frere = NULL;
-  frere2 = creerFrere(fils);
 }
-if(verifDQUOTE(valeur+taille_mot, frere2, index+taille_mot, long_max)){
-  taille_mot += 1;
+frere = creerFrere(gd_frere_debut_bloc);
+if((res = verifDQUOTE(valeur+taille_mot, frere, index+taille_mot, long_max))){
+  taille_mot += res;
+  res = 0;
 }else{
   purgeTree(fils);
   pere->fils = NULL;
@@ -2375,7 +2371,6 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int res;
   Noeud* fils;
-  Noeud* frere;
   Noeud* frere2;
 
   if(index>=long_max){
@@ -2392,10 +2387,6 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(*(valeur+taille_mot) == '='){
-    frere = creerFrere(fils);
-    frere->tag = "tag_a_changer";
-    frere->valeur = valeur+taille_mot;
-    frere->longueur = 1;
     taille_mot += 1;
   }else{
     purgeTree(fils);
@@ -2403,7 +2394,7 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
 
-  frere2 = creerFrere(frere);
+  frere2 = creerFrere(fils);
   if((res = verifToken(valeur+taille_mot, frere2, index+taille_mot, long_max))){
     taille_mot += res;
     res = 0;
@@ -2428,6 +2419,7 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
 
 }
 
+//media-type = type "/" subtype * ( OWS ";" OWS parameter )
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int res = 0;
@@ -2439,8 +2431,8 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
   Noeud* petit_frere;
   Noeud* frere_debut_bloc;
   Noeud* gd_frere_debut_bloc;
-  
-  
+
+
 
   if(index>=long_max){
     return 0;
@@ -2458,10 +2450,6 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
 
   //"/"
   if(*(valeur+taille_mot) == '/'){
-    frere = creerFrere(fils);
-    frere->tag = "tag_a_changer";
-    frere->valeur = valeur+taille_mot;
-    frere->longueur = 1;
     taille_mot += 1;
   }else{
     purgeTree(fils);
@@ -2469,7 +2457,7 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
   // verifSubtype
-  frere2 = creerFrere(frere);
+  frere2 = creerFrere(fils);
   if((res = verifSubtype((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
     taille_mot += res;
     res = 0;
@@ -2480,60 +2468,41 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
 
+  frere = frere2;
+  petit_frere = creerFrere(frere);
   //* ( OWS ";" OWS parameter )
   while(!fin){
-    frere = petit_frere;
-    petit_frere = creerFrere(frere);
-
     frere_debut_bloc = petit_frere;
     gd_frere_debut_bloc = frere;
-
-    
-			if((res = verifSP(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
-			      taille_bloc+=res;
-			      res = 0 ;
-			      frere = petit_frere;
-			      petit_frere = creerFrere(frere);
-            if (*(valeur+taille_mot) == ';'){
-              taille_bloc+=1;
-			           if((res = verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
-					              taille_bloc+=res;
-		                    res = 0 ;
-	      	              taille_mot += taille_bloc;
-                        frere = petit_frere;
-            			      petit_frere = creerFrere(frere);
-                        if((res = verifparameter(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
-       					              taille_bloc+=res;
-       		                    res = 0 ;
-       	      	              taille_mot += taille_bloc;
-                        }else{
-                          purgeTree(frere_debut_bloc);
-                		      gd_frere_debut_bloc->frere = NULL;
-                		      fin = 1;
-                        }
-				          }else {
-          					purgeTree(frere_debut_bloc);
-          		      gd_frere_debut_bloc->frere = NULL;
-          		      fin = 1;
-		              }
-			       }else {
-				           purgeTree(frere_debut_bloc);
-	                 gd_frere_debut_bloc->frere = NULL;
-	                 fin = 1;
-	           }
-      }else {
+		res = verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max);
+		taille_bloc+=res;
+		res = 0 ;
+		frere = petit_frere;
+		petit_frere = creerFrere(frere);
+    if (*(valeur+taille_mot+taille_bloc) == ';'){
+      taille_bloc+=1;
+		  taille_bloc += verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max);
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+      res = 0;
+      if((res = verifParameter(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
+        taille_bloc+=res;
+        res = 0 ;
+        taille_mot += taille_bloc;
+        frere = petit_frere;
+        petit_frere = creerFrere(frere);
+      }else{
+        purgeTree(frere_debut_bloc);
+	      gd_frere_debut_bloc->frere = NULL;
+	      fin = 1;
+      }
+    }else {
 			purgeTree(frere_debut_bloc);
-      gd_frere_debut_bloc->frere = NULL;
-      fin = 1;
-    }
-		taille_bloc = 0;
+	    gd_frere_debut_bloc->frere = NULL;
+	    fin = 1;
+	  }
+	taille_bloc = 0;
   }
-
-
-
-
-
-
 
   //remplissage Noeud
   pere->tag = "media-type";

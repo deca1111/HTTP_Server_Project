@@ -16,8 +16,9 @@ int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
   /*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
-  // type "/" subtype * ( OWS ";" OWS parameter )
-  char* mot = "type/soustype ; token=toke ; token_2=toke2"; //A MODIFIER
+  //media-type = type "/" subtype * ( OWS ";" OWS parameter )
+
+  char* mot = "tipe/soustipe;\t test=para;\t test2="; //A MODIFIER
   int index = 0;
   int taille_max = 100;
   char *name = "media-type";//A MODIFIER
