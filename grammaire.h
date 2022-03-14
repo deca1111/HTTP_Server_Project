@@ -97,7 +97,6 @@ int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max);
 //Expect = "100-continue"
 int verifExpect(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
 //field-content = field-vchar [ 1* ( SP / HTAB ) field-vchar ]
 int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -105,13 +104,11 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 //field-name = token
 int verifField_name(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
 //field-value = * ( field-content / obs-fold )
 int verifField_value(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
 //field-vchar = VCHAR / obs-text
-int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max);
+int verifFIeld_vchar(char* valeur, Noeud* pere, int index, int long_max);
 
 //FAIT
 //h16 = 1*4 HEXDIG
@@ -128,6 +125,7 @@ int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max);
 //Host-header = "Host" ":" OWS Host OWS
 int verifHost_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Host = uri-host [ ":" port ]
 int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -163,7 +161,6 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max);
 //IPvFuture = "v" 1* HEXDIG "." 1* ( unreserved / sub-delims / ":" )
 int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
 //ls32 = ( h16 ":" h16 ) / IPv4address
 int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -171,6 +168,7 @@ int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 //media-type = type "/" subtype * ( OWS ";" OWS parameter )
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAT
 //message-body = * OCTET
 int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -182,7 +180,7 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 //obs-fold = CRLF 1* ( SP / HTAB )
 int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
+//A REVIEW
 // obs-text = %x80-FF
 int verifObs_text(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -258,6 +256,7 @@ int verifSP(char* valeur, Noeud* pere, int index, int long_max);
 //sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //start-line = request-line / status-line
 int verifStart_line(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -265,6 +264,7 @@ int verifStart_line(char* valeur, Noeud* pere, int index, int long_max);
 //status-code = 3 DIGIT
 int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //status-line = HTTP-version SP status-code SP reason-phrase CRLF
 int verifStatus_line(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -289,9 +289,11 @@ int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max);
 //Transfer-Encoding-header = "Transfer-Encoding" ":" OWS Transfer-Encoding OWS
 int verifTransfer_Encoding_header(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //transfer-extension = token * ( OWS ";" OWS transfer-parameter )
 int verifTransfer_extension(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //transfer-parameter = token BWS "=" BWS ( token / quoted-string )
 int verifTransfer_parameter(char* valeur, Noeud* pere, int index, int long_max);
 

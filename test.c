@@ -16,14 +16,13 @@ int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
   /*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
-  //media-type = type "/" subtype * ( OWS ";" OWS parameter )
-
-  char* mot = "4FA417B:12341"; //A MODIFIER
+//transfer-extension = token * ( OWS ";" OWS transfer-parameter )
+  char* mot = "token;toke = \"toke\"\t; toke = "; //A MODIFIER
   /*char mot[100];
   mot[0] = 200;*/
   int index = 0;
   int taille_max = 100;
-  char *name = "ls32";//A MODIFIER
+  char *name = "transfer-extension";//A MODIFIER
 
   float fct_faite = 64;
   float fct_a_faire=79;
@@ -41,7 +40,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifLs32(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifTransfer_extension(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 

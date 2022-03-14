@@ -2268,12 +2268,16 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
 
   if(index>=long_max){
     return 0;
-  }else{
-    taille_mot = 1;
   }
 
   fils = creerFils(pere);
-
+	if(*(valeur) == '\\'){
+		taille_mot += 1;
+	}else{
+		purgeTree(fils);
+		pere->fils = NULL;
+		return 0;
+	}
   if(
     (res = verifHTAB(valeur+taille_mot, fils, index+taille_mot, long_max)) ||
     (res = verifSP(valeur+taille_mot, fils, index+taille_mot, long_max)) ||
@@ -3007,4 +3011,346 @@ int verifField_value(char* valeur, Noeud* pere, int index, int long_max){
 //host = IP-literal / IPv4address / reg-name
 int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max){
 	return 0;
+}
+
+//transfer-parameter = token BWS "=" BWS ( token / quoted-string )
+int verifTransfer_parameter(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot = 0;
+	int res = 0;
+	Noeud* fils;
+	Noeud* frere;
+	Noeud* petit_frere;
+
+	//verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+	fils = creerFils(pere);
+	if((res = verifToken(valeur, fils, index, long_max))){
+		taille_mot += res;
+		res = 0;
+		frere = creerFrere(fils);
+		//verif BWS
+		res = verifBWS(valeur+taille_mot, frere, index+taille_mot, long_max);
+		taille_mot += res;
+		petit_frere = creerFrere(frere);
+		if(*(valeur+taille_mot)=='='){
+			taille_mot += 1;
+			//verif BWS
+			res = verifBWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+			taille_mot += res;
+			frere = petit_frere;
+			petit_frere = creerFrere(frere);
+			if((res = verifToken(valeur+taille_mot,petit_frere, index+taille_mot, long_max))){
+				taille_mot += res;
+			}else if((res = verifQuoted_string(valeur+taille_mot,petit_frere, index+taille_mot, long_max))){
+				taille_mot += res;
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+
+		}else{
+			purgeTree(fils);
+			pere->fils = NULL;
+			return 0;
+		}
+	//remplissage Noeud
+	pere->tag = "transfer-parameter";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
+
+
+	return taille_mot;
+
+
+
+}
+
+//transfer-extension = token * ( OWS ";" OWS transfer-parameter )
+int verifTransfer_extension(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot = 0;
+	int taille_bloc = 0;
+	int res = 0;
+	int fin = false;
+	Noeud* fils;
+	Noeud* frere;
+	Noeud* petit_frere;
+  Noeud* frere_debut_bloc;
+  Noeud* gd_frere_debut_bloc;
+	if(index>=long_max){
+		return 0;
+	}
+	fils = creerFils(pere);
+	if((res = verifToken(valeur, fils, index, long_max))){
+		taille_mot += res;
+		res = 0;
+		frere = fils;
+		petit_frere = creerFrere(frere);
+		while(!fin){
+			frere_debut_bloc = petit_frere;
+	    gd_frere_debut_bloc = frere;
+			res = verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max);
+			taille_bloc+=res;
+			res = 0 ;
+			frere = petit_frere;
+			petit_frere = creerFrere(frere);
+	    if (*(valeur+taille_mot+taille_bloc) == ';'){
+	      taille_bloc+=1;
+			  taille_bloc += verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max);
+	      frere = petit_frere;
+	      petit_frere = creerFrere(frere);
+	      res = 0;
+	      if((res = verifTransfer_parameter(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
+	        taille_bloc+=res;
+	        res = 0 ;
+	        taille_mot += taille_bloc;
+	        frere = petit_frere;
+	        petit_frere = creerFrere(frere);
+	      }else{
+	        purgeTree(frere_debut_bloc);
+		      gd_frere_debut_bloc->frere = NULL;
+		      fin = 1;
+	      }
+	    }else {
+				purgeTree(frere_debut_bloc);
+		    gd_frere_debut_bloc->frere = NULL;
+		    fin = 1;
+		  }
+		taille_bloc = 0;
+		}
+	}else{
+		purgeTree(fils);
+		pere->fils = NULL;
+		return 0;
+	}
+	//remplissage Noeud
+  pere->tag = "transfer-extension";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+  return taille_mot;
+}
+
+//message-body = * OCTET
+int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int res = 0;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+  //verirication que l'on ne depasse pas la longueur à parser
+  if(index >= long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while((res = verifOCTET((valeur+taille_mot),petit_frere, index+taille_mot, long_max))){
+    taille_mot += res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }
+
+  //verif qu'il y a au moins 1 nombre
+  if(taille_mot > 0){
+    free(petit_frere);
+    frere->frere = NULL;
+  }else{
+    free(fils);
+    pere->fils = NULL;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "message-body";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  return taille_mot;
+
+}
+
+//status-line = HTTP-version SP status-code SP reason-phrase CRLF
+int verifStatus_line(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot=0;
+  int res;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+	Noeud* fils = creerFils(pere);
+
+	if((res = verifHTTP_version(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  Noeud* frere = creerFrere(fils);
+
+  if((res = verifSP(valeur+taille_mot,frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0 ;
+  }else {
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+  Noeud* petit_frere = creerFrere(frere);
+
+  if((res = verifStatus_code(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }else {
+    purgeTree(fils);
+    pere -> fils = NULL ;
+    return 0;
+  }
+
+  if((res = verifSP(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+  }else {
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+  res = verifReason_phrase(valeur+taille_mot,petit_frere,index+taille_mot,long_max);
+  taille_mot+=res;
+  res = 0;
+  frere = petit_frere;
+  petit_frere = creerFrere(frere);
+
+  if((res = verifCRLF(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+    res = 0;
+  }else {
+    purgeTree(fils);
+    pere -> fils =NULL;
+    return 0;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "status-line";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+}
+
+//start-line = request-line / status-line
+int verifStart_line(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  Noeud* fils = creerFils(pere);
+
+  //code
+  if( (taille_mot = verifRequest_line(valeur, fils, index, long_max)) || (taille_mot = verifStatus_line(valeur, fils, index, long_max))){
+  }else{
+    purgeTree(fils);
+    pere->fils = NULL;
+    return 0;
+  }
+
+
+  //remplissage Noeud
+  pere->tag = "start-line";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+
+  //return taille_mot
+  return taille_mot;
+}
+
+//Host = uri-host [ ":" port ]    A TESTER
+int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
+  //definition des variables
+  int taille_mot=0;
+  int res;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  fils = creerFils(pere);
+
+  if((res = verifUri_host(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  //option
+  Noeud* frere_debut_bloc;
+	Noeud* gd_frere_debut_bloc;
+	int taille_bloc = 0;
+	petit_frere = fils;
+
+	frere = petit_frere;
+  petit_frere = creerFrere(frere);
+
+  frere_debut_bloc = petit_frere;
+  gd_frere_debut_bloc = frere;
+
+  if (*(valeur+taille_mot+taille_bloc) == ':'){
+    taille_bloc+=1;
+  }else{
+    purgeTree(frere_debut_bloc);
+    gd_frere_debut_bloc -> frere = NULL;
+  }
+
+  if((res = verifPort(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
+    taille_bloc += res;
+    res = 0;
+    taille_mot+=taille_bloc;
+  }else{
+    purgeTree(frere_debut_bloc);
+    gd_frere_debut_bloc -> frere = NULL;
+  }
+
+  //remplissage Noeud
+  pere->tag = "Host";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
+
 }
