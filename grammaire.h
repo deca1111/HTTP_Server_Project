@@ -284,6 +284,7 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max);
 //token = 1* tchar
 int verifToken(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //transfer-coding = "chunked" / "compress" / "deflate" / "gzip" / transfer-extension
 int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max);
 

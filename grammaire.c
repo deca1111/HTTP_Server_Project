@@ -3363,71 +3363,224 @@ int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max){
 	char * gzip = "gzip";
 	int taille_mot = 0;
 	int res = 0;
-	int est_egale;
+	int est_egale = true;
+	int mot = 0;
 	Noeud* fils;
 
 	if(index >= long_max){
-		return 0
+		return 0;
 	}
 	//chunked
-	est_egale = true;
 	for(int i = 0; i < 7; i ++){
 		if(*(valeur+i) != chunked[i]){
 			est_egale = false;
 		}
 	}
 	if(est_egale){
-		taille_mot += 7;
+		mot = 1;
 	}
+	est_egale = true;
 	//compress
-	est_egale = true;
 	for(int i = 0; i < 8; i ++){
-		if(*(valeur+i) != chunked[i]){
+		if(*(valeur+i) != compress[i]){
 			est_egale = false;
 		}
 	}
 	if(est_egale){
-		taille_mot += 8;
+		mot = 2;
 	}
-	//deflate
 	est_egale = true;
+	//deflate
 	for(int i = 0; i < 7; i ++){
-		if(*(valeur+i) != chunked[i]){
+		if(*(valeur+i) != deflate[i]){
 			est_egale = false;
 		}
 	}
 	if(est_egale){
-		taille_mot += 7;
+		mot = 3;
 	}
+	est_egale = true;
 	//gzip
 	est_egale = true;
 	for(int i = 0; i < 4; i ++){
-		if(*(valeur+i) != chunked[i]){
+		if(*(valeur+i) != gzip[i]){
 			est_egale = false;
 		}
 	}
 	if(est_egale){
-		taille_mot += 4;
+		mot = 4;
 	}
-	fils = creerFils(pere);
-	if((res = verifTransfer_extension(valeur, fils, index, )))
+	est_egale = true;
+	switch(mot){
+		case 1:
+			taille_mot = 7;
+			break;
+		case 2:
+			taille_mot = 8;
+			break;
+		case 3:
+			taille_mot = 7;
+			break;
+		case 4:
+			taille_mot = 4;
+			break;
+		default:
+			fils = creerFils(pere);
+			if((res = verifTransfer_extension(valeur, fils, index, long_max))){
+				taille_mot = res;
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+	}
 
+	//remplissage Noeud
+	pere->tag = "transfer-coding";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return taille_mot;
 
 }
+
+//A CONTINUER
+//Transfer-Encoding = * ( "," OWS ) transfer-coding * ( OWS "," [ OWS transfer-coding ] )
+/*int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot = 0;
+	int res = 0;
+	Noeud* fils;
+	Noeud* frere;
+
+	if(index>=long_max){
+		return 0;
+	}
+	fils = creerFils(pere);
+  frere = fils;
+  petit_frere = fils;
+
+  while(!fin){
+    if(*(valeur+taille_mot)==','){
+			taille_mot += 1;
+			res = verifOWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+			taille_mot += res;
+			res = 0;
+			frere = petit_frere;
+			petit_frere = creerFrere(frere);
+    }else{
+      fin = 1;
+    }
+  }
+
+
+
+}*/
+
+
+//A CONTINUER
+//IPv6address = 6 ( h16 ":" ) ls32 / "::" 5 ( h16 ":" ) ls32 / [ h16 ] "::" 4 ( h16 ":" ) ls32
+// / [ h16 *1 ( ":" h16 ) ] "::" 3 ( h16 ":" ) ls32 / [ h16 *2 ( ":" h16 ) ] "::" 2 ( h16 ":" ) ls32
+// / [ h16 *3 ( ":" h16 ) ] "::" h16 ":" ls32 / [ h16 *4 ( ":" h16 ) ] "::" ls32
+// / [ h16 *5 ( ":" h16 ) ] "::" h16 / [ h16 6 ( ":" h16 ) ] "::"
+/*int verifIPv6address(char valeur, Noeud* pere, int index, int long_max){
+    int taille_mot=0;
+  int res;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+    int est_true = 1;
+
+    //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+    fils = creerFils(pere);
+    frere = fils;
+    petit_frere = fils;
+
+    for(int i = 0; i < 6; i++){
+
+        if((res = verifH16(valeur+taille_mot,petit_frere,index+taille_mot,long_max)) && (*(valeur + taille_mot) == ':')){
+            taille_mot += res + 1;
+            res = 0;
+            frere = petit_frere;
+            petit_frere = creerFrere(frere);
+        }else{
+            est_true = 0;
+        }
+    }
+    purgeTree(petit_frere);
+    frere->frere = NULL;
+
+
+    //remplissage Noeud
+    pere->tag = "IPv6address";
+    pere->valeur = valeur;
+    pere->longueur = taille_mot;
+
+    return taille_mot;
+}*/
+
+
+//A TESTER
+//Host-header = "Host" ":" OWS Host OWS A TESTER
+/*int verifHost_header(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot=0;
+  int res;
+  char* expect = "Host:" ;
+  int est_juste =1;
+
+  //verification de la taille de la requete
+  if(index>=long_max){
+    return 0;
+  }
+
+  for (int i = 0; i < 5; i++) {
+    if ((valeur+i) != expect[i]) {
+      est_juste = 0;
+    }
+  }
+
+  if (est_juste) {
+    taille_mot = 5;
+  }else{
+    return 0;
+  }
+
+  Noeud fils = creerFils(pere);
+
+  if((res = verifOWS(valeur+taille_mot,fils,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+  Noeud* frere = creerFrere(fils);
+
+
+  if((res = verifHost_Maj(valeur+taille_mot,frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+
+  Noeud* petit_frere = creerFrere(frere);
+
+  if((res = verifOWS(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+    taille_mot+=res;
+  }else{
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    pere->fils = NULL;
+    return 0;//il y a un probleme
+  }
+    //remplissage Noeud
+    pere->tag = "Host-header";
+    pere->valeur = valeur;
+    pere->longueur = taille_mot;
+
+    return taille_mot;
+}*/
