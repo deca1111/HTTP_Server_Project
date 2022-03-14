@@ -2428,14 +2428,19 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
 
 }
 
-//media-type = type "/" subtype * ( OWS ";" OWS parameter )
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int res = 0;
   int fin = false;
+  int taille_bloc = 0;
   Noeud* fils;
   Noeud* frere;
   Noeud* frere2;
+  Noeud* petit_frere;
+  Noeud* frere_debut_bloc;
+  Noeud* gd_frere_debut_bloc;
+  
+  
 
   if(index>=long_max){
     return 0;
@@ -2477,51 +2482,53 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
 
   //* ( OWS ";" OWS parameter )
   while(!fin){
-    //OWS
-    frere2 = creerFrere(frere);
-    if((res = verifOWS((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
-      taille_mot += res;
-      res = 0;
-      frere = frere2;
-      frere2 = creerFrere(frere);
-      //";"
-      if(*(valeur+taille_mot) == ';'){
-        frere2->tag = "tag_a_changer";
-        frere2->valeur = valeur+taille_mot;
-        frere2->longueur = 1;
-        taille_mot += 1;
-        frere = frere2;
-        frere2 = creerFrere(frere);
-        //OWS
-        if((res = verifOWS((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
-          taille_mot += res;
-          res = 0;
-          frere = frere2;
-          frere2 = creerFrere(frere);
-          //parameter
-          if((res = verifParameter((valeur+taille_mot), frere2, (index+taille_mot), long_max))){
-            taille_mot += res;
-            res = 0;
-            frere = frere2;
-          }else{
-            purgeTree(fils);
-            pere->fils = NULL;
-            return 0;
-          }
-        }else{
-          purgeTree(fils);
-          pere->fils = NULL;
-          return 0;
-        }
-      }else{
-        purgeTree(fils);
-        pere->fils = NULL;
-        return 0;
-      }
-    }else{
-      fin = true;
+    frere = petit_frere;
+    petit_frere = creerFrere(frere);
+
+    frere_debut_bloc = petit_frere;
+    gd_frere_debut_bloc = frere;
+
+    
+			if((res = verifSP(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
+			      taille_bloc+=res;
+			      res = 0 ;
+			      frere = petit_frere;
+			      petit_frere = creerFrere(frere);
+            if (*(valeur+taille_mot) == ';'){
+              taille_bloc+=1;
+			           if((res = verifOWS(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
+					              taille_bloc+=res;
+		                    res = 0 ;
+	      	              taille_mot += taille_bloc;
+                        frere = petit_frere;
+            			      petit_frere = creerFrere(frere);
+                        if((res = verifparameter(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
+       					              taille_bloc+=res;
+       		                    res = 0 ;
+       	      	              taille_mot += taille_bloc;
+                        }else{
+                          purgeTree(frere_debut_bloc);
+                		      gd_frere_debut_bloc->frere = NULL;
+                		      fin = 1;
+                        }
+				          }else {
+          					purgeTree(frere_debut_bloc);
+          		      gd_frere_debut_bloc->frere = NULL;
+          		      fin = 1;
+		              }
+			       }else {
+				           purgeTree(frere_debut_bloc);
+	                 gd_frere_debut_bloc->frere = NULL;
+	                 fin = 1;
+	           }
+      }else {
+			purgeTree(frere_debut_bloc);
+      gd_frere_debut_bloc->frere = NULL;
+      fin = 1;
     }
+		taille_bloc = 0;
   }
+
 
 
 
