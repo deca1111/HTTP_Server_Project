@@ -3354,3 +3354,80 @@ int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
   return taille_mot;
 
 }
+
+//transfer-coding = "chunked" / "compress" / "deflate" / "gzip" / transfer-extension
+int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max){
+	char * chunked = "chunked";
+	char * compress = "compress";
+	char * deflate = "deflate";
+	char * gzip = "gzip";
+	int taille_mot = 0;
+	int res = 0;
+	int est_egale;
+	Noeud* fils;
+
+	if(index >= long_max){
+		return 0
+	}
+	//chunked
+	est_egale = true;
+	for(int i = 0; i < 7; i ++){
+		if(*(valeur+i) != chunked[i]){
+			est_egale = false;
+		}
+	}
+	if(est_egale){
+		taille_mot += 7;
+	}
+	//compress
+	est_egale = true;
+	for(int i = 0; i < 8; i ++){
+		if(*(valeur+i) != chunked[i]){
+			est_egale = false;
+		}
+	}
+	if(est_egale){
+		taille_mot += 8;
+	}
+	//deflate
+	est_egale = true;
+	for(int i = 0; i < 7; i ++){
+		if(*(valeur+i) != chunked[i]){
+			est_egale = false;
+		}
+	}
+	if(est_egale){
+		taille_mot += 7;
+	}
+	//gzip
+	est_egale = true;
+	for(int i = 0; i < 4; i ++){
+		if(*(valeur+i) != chunked[i]){
+			est_egale = false;
+		}
+	}
+	if(est_egale){
+		taille_mot += 4;
+	}
+	fils = creerFils(pere);
+	if((res = verifTransfer_extension(valeur, fils, index, )))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

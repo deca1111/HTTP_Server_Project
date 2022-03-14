@@ -97,6 +97,7 @@ int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max);
 //Expect = "100-continue"
 int verifExpect(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-content = field-vchar [ 1* ( SP / HTAB ) field-vchar ]
 int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -104,11 +105,13 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max);
 //field-name = token
 int verifField_name(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-value = * ( field-content / obs-fold )
 int verifField_value(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //field-vchar = VCHAR / obs-text
-int verifFIeld_vchar(char* valeur, Noeud* pere, int index, int long_max);
+int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max);
 
 //FAIT
 //h16 = 1*4 HEXDIG
@@ -161,6 +164,7 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max);
 //IPvFuture = "v" 1* HEXDIG "." 1* ( unreserved / sub-delims / ":" )
 int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //ls32 = ( h16 ":" h16 ) / IPv4address
 int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -168,7 +172,7 @@ int verifLs32(char* valeur, Noeud* pere, int index, int long_max);
 //media-type = type "/" subtype * ( OWS ";" OWS parameter )
 int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAT
+//FAIT
 //message-body = * OCTET
 int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -180,7 +184,7 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max);
 //obs-fold = CRLF 1* ( SP / HTAB )
 int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max);
 
-//A REVIEW
+//FAIT
 // obs-text = %x80-FF
 int verifObs_text(char* valeur, Noeud* pere, int index, int long_max);
 
