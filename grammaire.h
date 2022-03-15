@@ -128,7 +128,7 @@ int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max);
 //Host-header = "Host" ":" OWS Host OWS
 int verifHost_header(char* valeur, Noeud* pere, int index, int long_max);
 
-//FAIT
+//A TESTER
 //Host = uri-host [ ":" port ]
 int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -157,6 +157,7 @@ int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max);
 //IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
 int verifIPv4address(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //IPv6address = 6 ( h16 ":" ) ls32 / "::" 5 ( h16 ":" ) ls32 / [ h16 ] "::" 4 ( h16 ":" ) ls32 / [ h16 *1 ( ":" h16 ) ] "::" 3 ( h16 ":" ) ls32 / [ h16 *2 ( ":" h16 ) ] "::" 2 ( h16 ":" ) ls32 / [ h16 *3 ( ":" h16 ) ] "::" h16 ":" ls32 / [ h16 *4 ( ":" h16 ) ] "::" ls32 / [ h16 *5 ( ":" h16 ) ] "::" h16 / [ h16 *6 ( ":" h16 ) ] "::"
 int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max);
 

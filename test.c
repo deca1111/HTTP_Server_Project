@@ -14,16 +14,18 @@
 
 int main(int argc, char const *argv[]) {
   //========parametre de la fonction a tester=========
-  /*unsigned char mot[100] = "a_";//A MODIFIER
+
+	/*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
-  char* mot = "gzip"; //A MODIFIER
+
+  char* mot = "4567:1234:1234:1234:1234:1340:1234:__"; //A MODIFIER
   /*char mot[100];
   mot[0] = 200;*/
   int index = 0;
   int taille_max = 100;
-  char *name = "transfer-coding";//A MODIFIER
+  char *name = "IPv6address";//A MODIFIER
 
-  float fct_faite = 64;
+  float fct_faite = 71;
   float fct_a_faire=79;
   int avancement = (fct_faite/fct_a_faire)*100 ;
 
@@ -39,7 +41,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifTransfer_coding(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifIPv6address(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 
