@@ -3321,6 +3321,8 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
   Noeud* fils;
   Noeud* frere;
   Noeud* petit_frere;
+	Noeud* frere_debut_bloc;
+	Noeud* grand_frere_debut_bloc;
 
 
   //verification de la taille de la requete
@@ -3339,36 +3341,14 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //option
-  Noeud* frere_debut_bloc;
-	Noeud* gd_frere_debut_bloc;
 	int taille_bloc = 0;
 	petit_frere = fils;
 
 	frere = petit_frere;
+	grand_frere_debut_bloc = frere;
   petit_frere = creerFrere(frere);
-
-  frere_debut_bloc = petit_frere;
-  gd_frere_debut_bloc = frere;
-
+	frere_debut_bloc = petit_frere;
   //1*
-
-  //on verifie d'abord le premier bloc obligatoire
-  if ((res = verifSP(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
-    taille_bloc+=res;
-    res = 0 ;
-    frere = petit_frere;
-    petit_frere = creerFrere(frere);
-  } else if ((res = verifHTAB(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
-    taille_bloc+=res;
-    res = 0;
-    frere = petit_frere;
-    petit_frere = creerFrere(frere);
-  } else {
-    purgeTree(frere_debut_bloc);
-    gd_frere_debut_bloc -> frere = NULL;
-		fin = 1;
-  }
-
   while (!fin){
     if ((res = verifSP(valeur+taille_mot+taille_bloc,petit_frere,index+taille_mot+taille_bloc,long_max))){
       taille_bloc+=res;
@@ -3391,7 +3371,7 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
     taille_mot+=taille_bloc;
   }else{
     purgeTree(frere_debut_bloc);
-    gd_frere_debut_bloc -> frere = NULL;
+    grand_frere_debut_bloc -> frere = NULL;
   }
 
   //remplissage Noeud

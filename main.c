@@ -62,7 +62,7 @@ int main(int argc,char *argv[])
 			printf("FOUND [%.*s]\n",l,s);
 			tok=tok->next;
 		}
-		//afficherArbre(getRootTree());
+		afficherArbre(getRootTree());
 		purgeElement(&r);
 		purgeTree(root);
 	}else{

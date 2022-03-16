@@ -50,7 +50,7 @@ int main(int argc, char const *argv[]) {
   if(res){
     premier_element = searchTree(racine, name);
     afficheToken(premier_element, name);
-
+		afficherArbre(racine);
     purgeElement(&premier_element);
   }
 
