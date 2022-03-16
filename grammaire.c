@@ -3913,41 +3913,122 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
 	return taille_mot;
 	}
 
-//A CONTINUER
 //Transfer-Encoding = * ( "," OWS ) transfer-coding * ( OWS "," [ OWS transfer-coding ] )
-/*int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max){
-	int taille_mot = 0;
-	int res = 0;
-	Noeud* fils;
-	Noeud* frere;
+int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max){
+    int taille_mot = 0;
+    int taille_temp;
+    int taille_option;
+    int res = 0;
+    int fin = false;
+    Noeud* fils;
+    Noeud* frere;
+    Noeud* petit_frere;
+    Noeud* frere_bloc;
+    Noeud* grand_frere_bloc;
+    Noeud* frere_option;
+    Noeud* grand_frere_option;
 
-	if(index>=long_max){
-		return 0;
-	}
-	fils = creerFils(pere);
+    if(index>=long_max){
+        return 0;
+    }
+    fils = creerFils(pere);
   frere = fils;
   petit_frere = fils;
-
+    //* ( "," OWS )
   while(!fin){
-    if(*(valeur+taille_mot)==','){
-			taille_mot += 1;
-			res = verifOWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
-			taille_mot += res;
-			res = 0;
-			frere = petit_frere;
-			petit_frere = creerFrere(frere);
+        frere_bloc = petit_frere;
+        grand_frere_bloc = frere;
+        if(*(valeur+taille_mot)==','){
+            taille_mot += 1;
+            res = verifOWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+            taille_mot += res;
+            res = 0;
+            frere = petit_frere;
+            petit_frere = creerFrere(frere);
     }else{
-      fin = 1;
+      fin = true;
     }
   }
+    if(taille_mot == 0){
+        purgeTree(fils);
+        pere->fils = NULL;
+        fils = creerFils(pere);
+      frere = fils;
+      petit_frere = fils;
+    }else{
+        purgeTree(frere_bloc);
+        grand_frere_bloc->frere = NULL;
+        petit_frere = creerFrere(grand_frere_bloc);
+        frere = grand_frere_bloc;
+    }
+    //transfer-coding
+    if((res = verifTransfer_coding(valeur+taille_mot, petit_frere, index+taille_mot, long_max ))){
+        taille_mot += res;
+        res = 0;
+        frere = petit_frere;
+    }else{
+        purgeTree(fils);
+        pere->fils = NULL;
+        return 0;
+    }
+    //* ( OWS "," [ OWS transfer-coding ] )
+    fin = false;
 
 
 
-}*/
+    while(!fin){
+        petit_frere = creerFrere(frere);
+        //sauvegarde de l'arbre avant le bloc
+        taille_temp = taille_mot;
+        grand_frere_bloc = frere;
+        frere_bloc = petit_frere;
+        //OWS
+        res = verifOWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+        taille_mot += res;
+        res = 0;
+        frere = petit_frere;
+        petit_frere = creerFrere(frere);
+        if(*(valeur+taille_mot)==','){
+            taille_mot += 1;
+            //debut option
+            //sauvegarde de l'arbre avant l'option
+            grand_frere_option = frere;
+            frere_option = petit_frere;
+            taille_option = taille_mot;
+            //OWS
+            res = verifOWS(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+            taille_mot += res;
+            res = 0;
+            frere = petit_frere;
+            petit_frere = creerFrere(frere);
+            if((res = verifTransfer_coding(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
+                taille_mot += res;
+                res = 0;
+                frere = petit_frere;
+            }else{
+                purgeTree(frere_option);
+                grand_frere_option->frere = NULL;
+                frere = grand_frere_option;
+                taille_mot = taille_option;
+            }
+        }else{
+            purgeTree(frere_bloc);
+            grand_frere_bloc->frere = NULL;
+            taille_mot = taille_temp;
+            fin = true;
+        }
+    }
 
-//A TESTER
+    //remplissage Noeud
+    pere->tag = "Transfer-Encoding";
+    pere->valeur = valeur;
+    pere->longueur = taille_mot;
+
+    return taille_mot;
+}
+
 //Host-header = "Host" ":" OWS Host OWS A TESTER
-/*int verifHost_header(char* valeur, Noeud* pere, int index, int long_max){
+int verifHost_header(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot=0;
   int res;
   char* expect = "Host:" ;
@@ -3959,7 +4040,7 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   for (int i = 0; i < 5; i++) {
-    if ((valeur+i) != expect[i]) {
+    if (*(valeur+i) != expect[i]) {
       est_juste = 0;
     }
   }
@@ -3970,7 +4051,7 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
 
-  Noeud fils = creerFils(pere);
+  Noeud* fils = creerFils(pere);
 
   if((res = verifOWS(valeur+taille_mot,fils,index+taille_mot,long_max))){
     taille_mot+=res;
@@ -4005,11 +4086,10 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
     pere->longueur = taille_mot;
 
     return taille_mot;
-}*/
+}
 
-//A TESTER
 //Host = uri-host [ ":" port ]
-/*int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
+int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
   //definition des variables
   int taille_mot=0;
   int res;
@@ -4068,10 +4148,142 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
 
   return taille_mot;
 
-}*/
+}
 
-//A FAIRE
 //host = IP-literal / IPv4address / reg-name
 int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max){
-	return 0;
+	int taille_mot=0;
+	int res;
+	Noeud* fils;
+
+	if(index >= long_max){
+		return 0;
+	}
+
+
+	fils = creerFils(pere);
+
+	if((res = verifIP_literal(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot += res;
+		res = 0;
+	}else if((res = verifIPv4address(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot += res;
+		res = 0;
+	}else if((res = verifReg_name(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot += res;
+		res = 0;
+	}else{
+		purgeTree(fils);
+		pere->fils = NULL;
+		return 0;
+	}
+
+
+	//remplissage Noeud
+	pere->tag = "host";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
+
+	return taille_mot;
+}
+
+//IP-literal = "[" ( IPv6address / IPvFuture ) "]"
+int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot=0;
+	int res;
+	Noeud* fils;
+
+	if(index >= long_max){
+		return 0;
+	}
+
+
+	if(*(valeur) == '['){
+		taille_mot += 1;
+
+		fils = creerFils(pere);
+
+		if((res = verifIPv6address(valeur+taille_mot,fils,index+taille_mot,long_max))){
+			taille_mot += res;
+			if(*(valeur+taille_mot) == ']'){
+				taille_mot += 1;
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+		}else if((res = verifIPvFuture(valeur+taille_mot,fils,index+taille_mot,long_max))){
+			taille_mot += res;
+			if(*(valeur+taille_mot) == ']'){
+				taille_mot += 1;
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+		}else{
+			purgeTree(fils);
+			pere->fils = NULL;
+			return 0;
+		}
+	}else{
+
+		return 0;
+	}
+
+	//remplissage Noeud
+	pere->tag = "IP-literal";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
+
+	return taille_mot;
+}
+
+//Transfer-Encoding-header = "Transfer-Encoding" ":" OWS Transfer-Encoding OWS
+int verifTransfer_Encoding_header(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot = 0;
+	int est_juste = 1;
+	int res;
+	char* expect = "Transfer-Encoding:" ;
+
+	if(index>=long_max){
+		return 0;
+	}
+
+	for (int i = 0; i < 18; i++) {
+		if (*(valeur+i) != expect[i]) {
+			est_juste = 0;
+		}
+	}
+	if (est_juste) {
+		taille_mot = 18;
+	}else{
+		return 0;
+	}
+
+
+	Noeud* fils = creerFils(pere);
+	res = verifOWS(valeur+taille_mot,fils,index+taille_mot,long_max);
+	taille_mot += res;
+
+	Noeud* frere = creerFrere(fils);
+	if((res = verifTransfer_Encoding(valeur+taille_mot,frere,index+taille_mot,long_max))){
+		taille_mot+=res;
+	}else{
+		purgeTree(fils);//on detruit tous les noeuds eventuelement crÃ©es avant
+		pere->fils = NULL;
+		return 0;//il y a un probleme
+	}
+
+	frere = creerFrere(frere);
+	res = verifOWS(valeur+taille_mot,frere,index+taille_mot,long_max);
+	taille_mot += res;
+
+	//remplissage Noeud
+	pere->tag = "Transfer-Encoding";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
+
+
+	return taille_mot;
 }

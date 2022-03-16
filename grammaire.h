@@ -125,13 +125,15 @@ int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max);
 //HEXDIG  =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
 int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Host-header = "Host" ":" OWS Host OWS
 int verifHost_header(char* valeur, Noeud* pere, int index, int long_max);
 
-//A TESTER
+//FAIT
 //Host = uri-host [ ":" port ]
 int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //host = IP-literal / IPv4address / reg-name
 int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -150,6 +152,7 @@ int verifHTTP_name(char* valeur, Noeud* pere, int index, int long_max);
 //HTTP-version = HTTP-name "/" DIGIT "." DIGIT
 int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //IP-literal = "[" ( IPv6address / IPvFuture ) "]"
 int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max);
 
@@ -289,9 +292,11 @@ int verifToken(char* valeur, Noeud* pere, int index, int long_max);
 //transfer-coding = "chunked" / "compress" / "deflate" / "gzip" / transfer-extension
 int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Transfer-Encoding = * ( "," OWS ) transfer-coding * ( OWS "," [ OWS transfer-coding ] )
 int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 //Transfer-Encoding-header = "Transfer-Encoding" ":" OWS Transfer-Encoding OWS
 int verifTransfer_Encoding_header(char* valeur, Noeud* pere, int index, int long_max);
 
