@@ -96,7 +96,7 @@ int parseur(char *req, int len){
   char* valeur;
   racine = creerNoeud();
   valeur = &(req[0]);
-  res = verifHTTP_message(valeur, racine, 0, len);
+  res = verifHTTP_message(valeur, racine, 0, len+1);
   return res;
 
 return 0;
