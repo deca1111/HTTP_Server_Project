@@ -92,12 +92,12 @@ void purgeTree(void *root){
 }
 
 int parseur(char *req, int len){
-  /*int res;
+  int res;
   char* valeur;
   racine = creerNoeud();
   valeur = &(req[0]);
-  res = verifMessage(valeur, racine, 0, len);
+  res = verifHTTP_message(valeur, racine, 0, len);
   return res;
-*/
+
 return 0;
 }

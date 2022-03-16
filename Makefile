@@ -1,5 +1,5 @@
 #parseur
-PROGRAMME = test
+PROGRAMME = main
 OBJECTS = $(PROGRAMME).o arbre.o api.o grammaire.o
 EXEC = parseur
 OPTIONS = -Wall -g -o

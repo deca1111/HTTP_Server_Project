@@ -24,7 +24,7 @@ int verifALPHA(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "ALPHA";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -52,7 +52,7 @@ int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "DIGIT";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -84,13 +84,13 @@ int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max){
   }else if ((taille_mot = verifDIGIT(valeur, fils, index, long_max))){
     est_pere = true;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
     return 0;
   }
 
   if(!est_pere){
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -105,7 +105,7 @@ int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "HEXDIG";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   //return taille_mot
   return taille_mot;
@@ -134,7 +134,7 @@ int verifSP(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "SP";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -168,13 +168,13 @@ int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max){
   {
     est_pere = true;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
     return 0;
   }
 
   if(!est_pere){
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
   //remplissage Noeud
@@ -188,7 +188,7 @@ int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "unreserved";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -233,13 +233,13 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
   {
     est_pere = true;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
     return 0;
   }
 
   if(!est_pere){
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
   //remplissage Noeud
@@ -253,7 +253,7 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "tchar";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -293,7 +293,7 @@ int verifToken(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
     return 0;//il y a un probleme
   }else{
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }
 
@@ -309,7 +309,7 @@ int verifToken(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "token";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -344,7 +344,7 @@ int verifType(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "type";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -380,7 +380,7 @@ int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "connection-option";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -416,7 +416,7 @@ int verifCookie_name(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "cookie-name";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -452,7 +452,7 @@ int verifField_name(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "field-name";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -488,7 +488,7 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "method";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -524,7 +524,7 @@ int verifSubtype(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "subtype";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -562,7 +562,7 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
     return 0;//il y a un probleme
   }else{
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }
 
@@ -578,7 +578,7 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Content-Length";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -610,10 +610,10 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -629,7 +629,7 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "port";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -669,7 +669,7 @@ int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
     return 0;//il y a un probleme
   }else{
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }
 
@@ -685,7 +685,7 @@ int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "status-code";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -770,7 +770,7 @@ int verifH16(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "h16";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -824,7 +824,7 @@ int verifPct_encoded(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "pct-encoded";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -862,7 +862,7 @@ int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "sub-delims";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -910,7 +910,7 @@ int verifPchar(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "pchar";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -957,10 +957,10 @@ int verifReg_name(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -976,7 +976,7 @@ int verifReg_name(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "reg-name";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1005,7 +1005,7 @@ int verifHTAB(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "HTAB";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -1041,7 +1041,7 @@ int verifCRLF(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "CRLF";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -1123,7 +1123,7 @@ int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "obs-fold";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -1168,7 +1168,7 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
     return 0;//il y a un probleme
   }else{
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }
 
@@ -1230,7 +1230,7 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "IPvFuture";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -1262,10 +1262,10 @@ int verifSegment(char* valeur, Noeud* pere, int index, int long_max){
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -1281,7 +1281,7 @@ int verifSegment(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "segment";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1351,7 +1351,7 @@ int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "absolute-path";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -1391,10 +1391,10 @@ int verifQuery(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -1410,7 +1410,7 @@ int verifQuery(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "query";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1460,7 +1460,7 @@ int verifOrigin_form(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "origin-form";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -1501,10 +1501,10 @@ int verifOWS(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
@@ -1520,7 +1520,7 @@ int verifOWS(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "OWS";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1548,7 +1548,7 @@ int verifVCHAR(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "VCHAR";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1575,7 +1575,7 @@ int verifCookie_octet(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "cookie-octet";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1602,7 +1602,7 @@ int verifDQUOTE(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "DQUOTE";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1636,7 +1636,7 @@ int verifExpect(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "Expect";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1668,7 +1668,7 @@ int verifBWS(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "BWS";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -1703,7 +1703,7 @@ int verifHTTP_name(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "HTTP-name";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -1777,7 +1777,7 @@ int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "HTTP-version";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -1811,7 +1811,7 @@ int verifRequest_target(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "request-target";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -1903,7 +1903,7 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "request-line";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -1931,7 +1931,7 @@ int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "obs-text";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2048,7 +2048,7 @@ int verifConnection(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Connection";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -2107,7 +2107,7 @@ int verifConnection_header(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Connection-header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2163,7 +2163,7 @@ int verifContent_length_header(char* valeur, Noeud* pere, int index, int long_ma
 
 pere->tag = "Content-Length-header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2223,10 +2223,10 @@ int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max){
 	 }
 
 	 if(taille_mot > 0){
-     free(petit_frere);
+     purgeTree(petit_frere);
      frere->frere = NULL;
    }else{
-     free(fils);
+     purgeTree(fils);
      pere->fils = NULL;
    }
 
@@ -2243,7 +2243,7 @@ int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "cookie-value";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2299,7 +2299,7 @@ int verifCookie_pair(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "cookie-pair";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -2387,7 +2387,7 @@ int verifCookie_string(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "cookie-string";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -2444,7 +2444,7 @@ int verifCookie_header(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Cookie-header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2501,7 +2501,7 @@ int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Expect-header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2555,7 +2555,7 @@ int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "dec-octet";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2588,13 +2588,13 @@ int verifQdtext(char* valeur, Noeud* pere, int index, int long_max){
   {
     est_pere = true;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
     return 0;
   }
 
   if(!est_pere){
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
   //remplissage noeud
@@ -2608,7 +2608,7 @@ int verifQdtext(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "qdtext";
   pere->valeur = valeur;
-  pere-> longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -2656,7 +2656,7 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "quoted-pair";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -2731,7 +2731,7 @@ if(index+taille_mot>=long_max){
 
 pere->tag = "quoted-string";
 pere->valeur = valeur;
-pere->longueur = taille_mot;
+pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
 return taille_mot;
@@ -2789,7 +2789,7 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "parameter";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -2895,7 +2895,7 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "media-type";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
   return taille_mot;
 }
 
@@ -2985,7 +2985,7 @@ int verifIPv4address(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "IPv4address";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -3054,7 +3054,7 @@ int verifLs32(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "ls32";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -3085,7 +3085,7 @@ int verifContent_Type(char* valeur, Noeud* pere, int index, int long_max){
 }
 
 pere->tag = "Content-Type";
-    pere->longueur = taille_mot;
+    pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
     pere->valeur = valeur;
     return taille_mot;
 
@@ -3144,7 +3144,7 @@ int verifContent_type_header(char* valeur, Noeud* pere, int index, int long_max)
 
 pere->tag = "Content-Type-Header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -3169,7 +3169,7 @@ int verifOCTET(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "OCTET";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -3235,7 +3235,7 @@ int verifReason_phrase(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "reason-phrase";
     pere->valeur = valeur;
-    pere->longueur = taille_mot;
+    pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
     return taille_mot;
@@ -3267,7 +3267,7 @@ int verifUri_host(char* valeur, Noeud* pere, int index, int long_max){
 }
 
 pere->tag = "uri-host";
-    pere->longueur = taille_mot;
+    pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
     pere->valeur = valeur;
 
     return taille_mot;
@@ -3305,7 +3305,7 @@ int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "field-vchar";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -3366,6 +3366,7 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
   } else {
     purgeTree(frere_debut_bloc);
     gd_frere_debut_bloc -> frere = NULL;
+		fin = 1;
   }
 
   while (!fin){
@@ -3404,7 +3405,7 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "field-content";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -3445,26 +3446,26 @@ int verifField_value(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
 
   //remplissage Noeud
   if(index+taille_mot>=long_max){
-	if(pere->fils != NULL){
-		purgeTree(fils);
-		pere->fils = NULL;
+		if(pere->fils != NULL){
+			purgeTree(fils);
+			pere->fils = NULL;
+		}
+		return 0;
 	}
-	return 0;
-}
 
-pere->tag = "field-value";
+	pere->tag = "field-value";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -3530,7 +3531,7 @@ int verifTransfer_parameter(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "transfer-parameter";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
 	return taille_mot;
@@ -3607,7 +3608,7 @@ int verifTransfer_extension(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "transfer-extension";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
   return taille_mot;
 }
 
@@ -3656,7 +3657,7 @@ int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "message-body";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   return taille_mot;
@@ -3746,7 +3747,7 @@ int verifStatus_line(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "status-line";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -3783,7 +3784,7 @@ int verifStart_line(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "start-line";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
   //return taille_mot
@@ -3881,7 +3882,7 @@ int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "transfer-coding";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 	return taille_mot;
 
@@ -4426,7 +4427,7 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
 
 	pere->tag = "IPv6address";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 	return taille_mot;
 	}
@@ -4548,7 +4549,7 @@ int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Transfer-Encoding";
     pere->valeur = valeur;
-    pere->longueur = taille_mot;
+    pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
     return taille_mot;
 }
@@ -4605,7 +4606,7 @@ int verifHost_header(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Host-header";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }
@@ -4649,14 +4650,10 @@ int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
 
   if (*(valeur+taille_mot+taille_bloc) == ':'){
     taille_bloc+=1;
-		if((res = verifPort(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
-	    taille_bloc += res;
-	    res = 0;
-	    taille_mot+=taille_bloc;
-	  }else{
-	    purgeTree(frere_debut_bloc);
-	    gd_frere_debut_bloc -> frere = NULL;
-	  }
+		res = verifPort(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max);
+    taille_bloc += res;
+    res = 0;
+    taille_mot+=taille_bloc;
   }else{
     purgeTree(frere_debut_bloc);
     gd_frere_debut_bloc -> frere = NULL;
@@ -4675,7 +4672,7 @@ int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "Host";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 
@@ -4721,7 +4718,7 @@ int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "host";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 	return taille_mot;
 }
@@ -4781,7 +4778,7 @@ int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "IP-literal";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 	return taille_mot;
 }
@@ -4837,7 +4834,7 @@ int verifTransfer_Encoding_header(char* valeur, Noeud* pere, int index, int long
 
 pere->tag = "Transfer-Encoding";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
 	return taille_mot;
@@ -4882,13 +4879,8 @@ int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max){
 			taille_mot += res;
 
 			petit_frere = creerFrere(frere);
-			if((res = verifField_value(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
-				taille_mot+=res;
-			}else{
-				purgeTree(fils);
-				pere->fils = NULL;
-				return 0;
-			}
+			res = verifField_value(valeur+taille_mot,petit_frere,index+taille_mot,long_max);
+			taille_mot+=res;
 
 			frere = petit_frere;
 			petit_frere = creerFrere(frere);
@@ -4919,7 +4911,7 @@ int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max){
 
 pere->tag = "header-field";
 	pere->valeur = valeur;
-	pere->longueur = taille_mot;
+	pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
 
 	return taille_mot;
@@ -4929,7 +4921,7 @@ pere->tag = "header-field";
 int verifHTTP_message(char* valeur, Noeud* pere, int index, int long_max){
   int taille_mot = 0;
   int fin = false;
-  int taille_bloc;
+  int taille_bloc = 0;
   int res;
   Noeud* fils;
   Noeud* frere;
@@ -4950,44 +4942,46 @@ int verifHTTP_message(char* valeur, Noeud* pere, int index, int long_max){
       pere->fils = NULL;
       return 0;
   }
-
   frere = fils;
   while(!fin){
           petit_frere = creerFrere(frere);
           //sauvegarde de l'arbre avant le bloc
-          taille_bloc = taille_mot;
+          taille_bloc = 0;
           grand_frere_bloc = frere;
           frere_bloc = petit_frere;
           //Header_field
-          if((res = verifHeader_field(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
-              taille_mot += res;
+          if((res = verifHeader_field(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
+              taille_bloc += res;
               res = 0;
               frere = petit_frere;
               petit_frere = creerFrere(frere);
-              if((res = verifCRLF(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
-                  taille_mot += res;
-                  res = 0;
-                  frere = petit_frere;
+              if((res = verifCRLF(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
+                taille_bloc += res;
+                res = 0;
+                frere = petit_frere;
+								taille_mot+=taille_bloc;
               }else{
-                  purgeTree(frere_bloc);
-                  grand_frere_bloc->frere = NULL;
-                  taille_mot = taille_bloc;
-                  fin = true;
+                purgeTree(frere_bloc);
+                grand_frere_bloc->frere = NULL;
+                fin = true;
               }
           }else{
-                  purgeTree(frere_bloc);
-                  grand_frere_bloc->frere = NULL;
-                  taille_mot = taille_bloc;
-                  fin = true;
+            purgeTree(frere_bloc);
+            grand_frere_bloc->frere = NULL;
+            fin = true;
           }
   }
-  petit_frere = creerFrere(frere);
+
+	//printf("Taille Mot : %d, valeur : %x\n",taille_mot, *(valeur+taille_mot));
+  petit_frere = creerFrere(grand_frere_bloc);
+
   if((res = verifCRLF(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
       taille_mot += res;
       res = 0;
       frere = petit_frere;
       petit_frere = creerFrere(frere);
   }else{
+		printf("WSHHHHHHHHHHHHHHHHHHH---------------------------\n");
       purgeTree(fils);
       pere->fils = NULL;
       return 0;
@@ -4999,16 +4993,16 @@ int verifHTTP_message(char* valeur, Noeud* pere, int index, int long_max){
 
   //remplissage Noeud
   if(index+taille_mot>=long_max){
-	if(pere->fils != NULL){
-		purgeTree(fils);
-		pere->fils = NULL;
+		if(pere->fils != NULL){
+			purgeTree(fils);
+			pere->fils = NULL;
+		}
+		return 0;
 	}
-	return 0;
-}
 
-pere->tag = "HTTP-message";
+	pere->tag = "HTTP-message";
   pere->valeur = valeur;
-  pere->longueur = taille_mot;
+  pere->longueur = taille_mot;printf("Fonction effectue Tag : [%s], longueur : [%d]\n",pere->tag,pere->longueur);
 
   return taille_mot;
 }

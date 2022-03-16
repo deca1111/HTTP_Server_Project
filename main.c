@@ -45,8 +45,11 @@ int main(int argc,char *argv[])
 		}
 		p=argv[2];
 	}
+
+	printf("Message à analyser : [%.*s]\n",((int) st.st_size),addr );
+
 	// call parser and get results.
-	if (res=parseur(addr,st.st_size)) {
+	if (res=parseur(addr,st.st_size+1)) {
 		_Token *r,*tok;
 		void *root=NULL;
 		root=getRootTree();
@@ -59,9 +62,14 @@ int main(int argc,char *argv[])
 			printf("FOUND [%.*s]\n",l,s);
 			tok=tok->next;
 		}
+		//afficherArbre(getRootTree());
 		purgeElement(&r);
 		purgeTree(root);
+	}else{
+		printf("Resultat du parseur : %d\n",res );
+		afficherArbre(getRootTree());
 	}
+
 	close(fi);
 	return(res);
 }

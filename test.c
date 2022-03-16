@@ -18,11 +18,11 @@ int main(int argc, char const *argv[]) {
 	/*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
 
-  char* mot = "GET /test.txt HTTP/1.0\r\nHost: abcd	\r\n\r\n"; //A MODIFIER
+  char* mot = "S.G /.//M)_+/4*L/%49/%7C7/N%8A?'r HTTP/1.7\r\nHost:eG7r1K%C99%D3':   	 \r\n\r\n"; //A MODIFIER
   /*char mot[100];
   mot[0] = 200;*/
   int index = 0;
-  int taille_max = 40;
+  int taille_max = 73;
   char *name = "message-body";//A MODIFIER
 
   float fct_faite = 79;
