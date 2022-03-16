@@ -117,6 +117,7 @@ int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max);
 //h16 = 1*4 HEXDIG
 int verifH16(char* valeur, Noeud* pere, int index, int long_max);
 
+//FAIT
 /*header-field = Connection-header / Content-Length-header / Content-Type-header / Cookie-header / Transfer-Encoding-header
 / Expect-header / Host-header / ( field-name ":" OWS field-value OWS )*/
 int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max);

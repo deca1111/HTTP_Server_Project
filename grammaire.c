@@ -18,7 +18,11 @@ int verifALPHA(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "ALPHA";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "ALPHA";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -41,7 +45,12 @@ int verifDIGIT(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "DIGIT";
+  if(index+taille_mot>=long_max){
+
+		return 0;
+	}
+
+	pere->tag = "DIGIT";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -86,7 +95,15 @@ int verifHEXDIG(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "HEXDIG";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "HEXDIG";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -111,7 +128,11 @@ int verifSP(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "SP";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "SP";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -157,7 +178,15 @@ int verifUnreserved(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
   }
   //remplissage Noeud
-  pere->tag = "unreserved";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "unreserved";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -214,7 +243,15 @@ int verifTchar(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
   }
   //remplissage Noeud
-  pere->tag = "tchar";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "tchar";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -262,7 +299,15 @@ int verifToken(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "token";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "token";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -289,7 +334,15 @@ int verifType(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "type";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "type";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -317,7 +370,15 @@ int verifConnection_option(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "connection-option";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "connection-option";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -345,7 +406,15 @@ int verifCookie_name(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "cookie-name";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "cookie-name";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -373,7 +442,15 @@ int verifField_name(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "field-name";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "field-name";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -401,7 +478,15 @@ int verifMethod(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "method";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "method";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -429,7 +514,15 @@ int verifSubtype(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "subtype";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "subtype";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -475,7 +568,15 @@ int verifContent_length(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "Content-Length";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Content-Length";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -518,7 +619,15 @@ int verifPort(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "port";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "port";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -566,7 +675,15 @@ int verifStatus_code(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "status-code";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "status-code";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -643,7 +760,15 @@ int verifH16(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "h16";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "h16";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -689,7 +814,15 @@ int verifPct_encoded(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "pct-encoded";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "pct-encoded";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -723,7 +856,11 @@ int verifSub_delims(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "sub-delims";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "sub-delims";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -763,7 +900,15 @@ int verifPchar(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "pchar";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "pchar";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -821,7 +966,15 @@ int verifReg_name(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "reg-name";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "reg-name";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -846,7 +999,11 @@ int verifHTAB(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "HTAB";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "HTAB";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -878,7 +1035,11 @@ int verifCRLF(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "CRLF";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "CRLF";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -952,7 +1113,15 @@ int verifObs_fold(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "obs-fold";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "obs-fold";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1051,7 +1220,15 @@ int verifIPvFuture(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "IPvFuture";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "IPvFuture";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1094,7 +1271,15 @@ int verifSegment(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "segment";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "segment";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1156,7 +1341,15 @@ int verifAbsolute_path(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "absolute-path";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "absolute-path";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1207,7 +1400,15 @@ int verifQuery(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "query";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "query";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1249,7 +1450,15 @@ int verifOrigin_form(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "origin-form";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "origin-form";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1301,7 +1510,15 @@ int verifOWS(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "OWS";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "OWS";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1325,7 +1542,11 @@ int verifVCHAR(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "VCHAR";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "VCHAR";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1348,7 +1569,11 @@ int verifCookie_octet(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "cookie-octet";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "cookie-octet";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1371,7 +1596,11 @@ int verifDQUOTE(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "DQUOTE";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "DQUOTE";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1401,7 +1630,11 @@ int verifExpect(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "Expect";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "Expect";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1425,7 +1658,15 @@ int verifBWS(char* valeur, Noeud* pere, int index, int long_max){
   taille_mot = verifOWS(valeur+taille_mot, fils, index+taille_mot, long_max); //OWS peut être nul donc pas de if
 
   //remplissage Noeud
-  pere->tag = "BWS";
+  if(index+taille_mot>=long_max){
+		if(pere->fils != NULL){
+			purgeTree(fils);
+			pere->fils = NULL;
+		}
+		return 0;
+	}
+
+	pere->tag = "BWS";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1456,7 +1697,11 @@ int verifHTTP_name(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "HTTP-name";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "HTTP-name";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1522,7 +1767,15 @@ int verifHTTP_version(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "HTTP-version";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "HTTP-version";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1548,7 +1801,15 @@ int verifRequest_target(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "request-target";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "request-target";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1632,7 +1893,15 @@ int verifRequest_line(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "request-line";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "request-line";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1656,7 +1925,11 @@ int verifObs_text(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "obs-text";
+  if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "obs-text";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1765,7 +2038,15 @@ int verifConnection(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "Connection";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Connection";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1816,7 +2097,15 @@ int verifConnection_header(char* valeur, Noeud* pere, int index, int long_max){
   taille_mot += res;
 
   //remplissage Noeud
-  pere->tag = "Connection-header";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Connection-header";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1864,7 +2153,15 @@ int verifContent_length_header(char* valeur, Noeud* pere, int index, int long_ma
   taille_mot += res;
 
   //remplissage Noeud
-  pere->tag = "Content-Length-header";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Content-Length-header";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1936,7 +2233,15 @@ int verifCookie_value(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-  pere->tag = "cookie-value";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "cookie-value";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -1984,7 +2289,15 @@ int verifCookie_pair(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-  pere->tag = "cookie-pair";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "cookie-pair";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2064,7 +2377,15 @@ int verifCookie_string(char* valeur, Noeud* pere, int index, int long_max){
   }
 
 	//remplissage Noeud
-  pere->tag = "cookie-string";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "cookie-string";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2113,7 +2434,15 @@ int verifCookie_header(char* valeur, Noeud* pere, int index, int long_max){
   taille_mot += res;
 
   //remplissage Noeud
-  pere->tag = "Cookie-header";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Cookie-header";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2162,7 +2491,15 @@ int verifExpect_header(char* valeur, Noeud* pere, int index, int long_max){
   taille_mot += res;
 
   //remplissage Noeud
-  pere->tag = "Expect-header";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Expect-header";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2208,7 +2545,15 @@ int verifDec_octet(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-  pere->tag = "dec-octet";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "dec-octet";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2253,7 +2598,15 @@ int verifQdtext(char* valeur, Noeud* pere, int index, int long_max){
     pere->fils = NULL;
   }
   //remplissage noeud
-  pere->tag = "qdtext";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "qdtext";
   pere->valeur = valeur;
   pere-> longueur = taille_mot;
 
@@ -2293,7 +2646,15 @@ int verifQuoted_Pair(char* valeur, Noeud* pere, int index, int long_max){
 
 
 
-  pere->tag = "quoted-pair";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "quoted-pair";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2360,6 +2721,14 @@ if((res = verifDQUOTE(valeur+taille_mot, frere, index+taille_mot, long_max))){
 
 
 //remplissage Noeud
+if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
 pere->tag = "quoted-string";
 pere->valeur = valeur;
 pere->longueur = taille_mot;
@@ -2410,7 +2779,15 @@ int verifParameter(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
   //remplissage Noeud
-  pere->tag = "parameter";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "parameter";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2508,7 +2885,15 @@ int verifMedia_type(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "media-type";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "media-type";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
   return taille_mot;
@@ -2590,7 +2975,15 @@ int verifIPv4address(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-  pere->tag = "IPv4address";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "IPv4address";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2651,7 +3044,15 @@ int verifLs32(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
   //remplissage Noeud
-  pere->tag = "ls32";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "ls32";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2675,7 +3076,15 @@ int verifContent_Type(char* valeur, Noeud* pere, int index, int long_max){
         pere->fils = NULL;
         return 0;
     }
-    pere->tag = "Content-Type";
+    if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Content-Type";
     pere->longueur = taille_mot;
     pere->valeur = valeur;
     return taille_mot;
@@ -2725,7 +3134,15 @@ int verifContent_type_header(char* valeur, Noeud* pere, int index, int long_max)
   taille_mot += res;
 
   //remplissage Noeud
-  pere->tag = "Content-Type-Header";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Content-Type-Header";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2740,16 +3157,21 @@ int verifOCTET(char* valeur, Noeud* pere, int index, int long_max){
     if(index>=long_max){
     return 0;
   }
-    if(((unsigned char)(*valeur)>=0) &&((unsigned char)(*valeur)<=255)){
-        taille_mot += 1;
-    }else{
-        return 0;
-    }
-    pere->tag = "OCTET";
-    pere->valeur = valeur;
-    pere->longueur = taille_mot;
+  if(((unsigned char)(*valeur)>=0) &&((unsigned char)(*valeur)<=255)){
+      taille_mot += 1;
+  }else{
+      return 0;
+  }
 
-    return taille_mot;
+	if(index+taille_mot>=long_max){
+		return 0;
+	}
+
+	pere->tag = "OCTET";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
 }
 
 //reason-phrase = * ( HTAB / SP / VCHAR / obs-text )
@@ -2803,7 +3225,15 @@ int verifReason_phrase(char* valeur, Noeud* pere, int index, int long_max){
 
     }
     //remplissage Noeud
-    pere->tag = "reason-phrase";
+    if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "reason-phrase";
     pere->valeur = valeur;
     pere->longueur = taille_mot;
 
@@ -2828,7 +3258,15 @@ int verifUri_host(char* valeur, Noeud* pere, int index, int long_max){
         pere->fils = NULL;
         return 0;
     }
-    pere->tag = "uri-host";
+    if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "uri-host";
     pere->longueur = taille_mot;
     pere->valeur = valeur;
 
@@ -2857,7 +3295,15 @@ int verifField_vchar(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "field-vchar";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "field-vchar";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -2948,7 +3394,15 @@ int verifField_content(char* valeur, Noeud* pere, int index, int long_max){
   }
 
   //remplissage Noeud
-  pere->tag = "field-content";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "field-content";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -3000,7 +3454,15 @@ int verifField_value(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "field-value";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "field-value";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -3058,7 +3520,15 @@ int verifTransfer_parameter(char* valeur, Noeud* pere, int index, int long_max){
 			return 0;
 		}
 	//remplissage Noeud
-	pere->tag = "transfer-parameter";
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "transfer-parameter";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
 
@@ -3127,7 +3597,15 @@ int verifTransfer_extension(char* valeur, Noeud* pere, int index, int long_max){
 		return 0;
 	}
 	//remplissage Noeud
-  pere->tag = "transfer-extension";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "transfer-extension";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
   return taille_mot;
@@ -3159,16 +3637,24 @@ int verifMessage_body(char* valeur, Noeud* pere, int index, int long_max){
 
   //verif qu'il y a au moins 1 nombre
   if(taille_mot > 0){
-    free(petit_frere);
+    purgeTree(petit_frere);
     frere->frere = NULL;
   }else{
-    free(fils);
+    purgeTree(fils);
     pere->fils = NULL;
   }
 
 
   //remplissage Noeud
-  pere->tag = "message-body";
+  if(index+taille_mot>=long_max){
+		if(pere->fils != NULL){
+			purgeTree(fils);
+			pere->fils = NULL;
+		}
+		return 0;
+	}
+
+	pere->tag = "message-body";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -3250,7 +3736,15 @@ int verifStatus_line(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "status-line";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "status-line";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -3279,7 +3773,15 @@ int verifStart_line(char* valeur, Noeud* pere, int index, int long_max){
 
 
   //remplissage Noeud
-  pere->tag = "start-line";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "start-line";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -3369,7 +3871,15 @@ int verifTransfer_coding(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-	pere->tag = "transfer-coding";
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "transfer-coding";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
 
@@ -3906,6 +4416,14 @@ int verifIPv6address(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
+	if(index+taille_mot>=long_max){
+		if(pere->fils != NULL){
+			purgeTree(fils);
+			pere->fils = NULL;
+		}
+		return 0;
+	}
+
 	pere->tag = "IPv6address";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
@@ -4020,7 +4538,15 @@ int verifTransfer_Encoding(char* valeur, Noeud* pere, int index, int long_max){
     }
 
     //remplissage Noeud
-    pere->tag = "Transfer-Encoding";
+    if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Transfer-Encoding";
     pere->valeur = valeur;
     pere->longueur = taille_mot;
 
@@ -4051,41 +4577,37 @@ int verifHost_header(char* valeur, Noeud* pere, int index, int long_max){
     return 0;
   }
 
-  Noeud* fils = creerFils(pere);
+	Noeud* fils = creerFils(pere);
+  res = verifOWS(valeur+taille_mot,fils,index+taille_mot,long_max);
+  taille_mot += res;
 
-  if((res = verifOWS(valeur+taille_mot,fils,index+taille_mot,long_max))){
-    taille_mot+=res;
-  }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
-    pere->fils = NULL;
-    return 0;//il y a un probleme
-  }
   Noeud* frere = creerFrere(fils);
-
-
   if((res = verifHost_Maj(valeur+taille_mot,frere,index+taille_mot,long_max))){
     taille_mot+=res;
   }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
+    purgeTree(fils);//on detruit tous les noeuds eventuelement crÃ©es avant
     pere->fils = NULL;
     return 0;//il y a un probleme
   }
 
-  Noeud* petit_frere = creerFrere(frere);
+  frere = creerFrere(frere);
+  res = verifOWS(valeur+taille_mot,frere,index+taille_mot,long_max);
+  taille_mot += res;
 
-  if((res = verifOWS(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
-    taille_mot+=res;
-  }else{
-    purgeTree(fils);//on detruit tous les noeuds eventuelement crées avant
-    pere->fils = NULL;
-    return 0;//il y a un probleme
-  }
-    //remplissage Noeud
-    pere->tag = "Host-header";
-    pere->valeur = valeur;
-    pere->longueur = taille_mot;
+  //remplissage Noeud
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
 
-    return taille_mot;
+pere->tag = "Host-header";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
 }
 
 //Host = uri-host [ ":" port ]
@@ -4127,22 +4649,31 @@ int verifHost_Maj(char* valeur, Noeud* pere, int index, int long_max){
 
   if (*(valeur+taille_mot+taille_bloc) == ':'){
     taille_bloc+=1;
+		if((res = verifPort(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
+	    taille_bloc += res;
+	    res = 0;
+	    taille_mot+=taille_bloc;
+	  }else{
+	    purgeTree(frere_debut_bloc);
+	    gd_frere_debut_bloc -> frere = NULL;
+	  }
   }else{
     purgeTree(frere_debut_bloc);
     gd_frere_debut_bloc -> frere = NULL;
   }
 
-  if((res = verifPort(valeur+taille_mot+taille_bloc, petit_frere, index+taille_mot+taille_bloc, long_max))){
-    taille_bloc += res;
-    res = 0;
-    taille_mot+=taille_bloc;
-  }else{
-    purgeTree(frere_debut_bloc);
-    gd_frere_debut_bloc -> frere = NULL;
-  }
+
 
   //remplissage Noeud
-  pere->tag = "Host";
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Host";
   pere->valeur = valeur;
   pere->longueur = taille_mot;
 
@@ -4180,7 +4711,15 @@ int verifHost_Min(char* valeur, Noeud* pere, int index, int long_max){
 
 
 	//remplissage Noeud
-	pere->tag = "host";
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "host";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
 
@@ -4232,7 +4771,15 @@ int verifIP_literal(char* valeur, Noeud* pere, int index, int long_max){
 	}
 
 	//remplissage Noeud
-	pere->tag = "IP-literal";
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "IP-literal";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
 
@@ -4280,10 +4827,188 @@ int verifTransfer_Encoding_header(char* valeur, Noeud* pere, int index, int long
 	taille_mot += res;
 
 	//remplissage Noeud
-	pere->tag = "Transfer-Encoding";
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "Transfer-Encoding";
 	pere->valeur = valeur;
 	pere->longueur = taille_mot;
 
 
 	return taille_mot;
+}
+
+/*header-field = Connection-header / Content-Length-header / Content-Type-header / Cookie-header / Transfer-Encoding-header
+/ Expect-header / Host-header / ( field-name ":" OWS field-value OWS )*/
+int verifHeader_field(char* valeur, Noeud* pere, int index, int long_max){
+	int taille_mot = 0;
+	int res;
+	Noeud* fils;
+	Noeud* frere;
+	Noeud* petit_frere;
+
+	if(index >= long_max){
+		return 0;
+	}
+
+	fils = creerFils(pere);
+	if((res = verifConnection_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifContent_length_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifContent_type_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifCookie_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifTransfer_Encoding_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifExpect_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifHost_header(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+	}else if((res = verifField_name(valeur+taille_mot,fils,index+taille_mot,long_max))){
+		taille_mot+= res;
+		res = 0;
+
+		if(*(valeur+taille_mot)==':'){
+			taille_mot += 1;
+			frere = creerFrere(fils);
+			res = verifOWS(valeur+taille_mot,frere,index+taille_mot,long_max);
+			taille_mot += res;
+
+			petit_frere = creerFrere(frere);
+			if((res = verifField_value(valeur+taille_mot,petit_frere,index+taille_mot,long_max))){
+				taille_mot+=res;
+			}else{
+				purgeTree(fils);
+				pere->fils = NULL;
+				return 0;
+			}
+
+			frere = petit_frere;
+			petit_frere = creerFrere(frere);
+
+			res = verifOWS(valeur+taille_mot,petit_frere,index+taille_mot,long_max);
+			taille_mot += res;
+
+		}else{
+			purgeTree(fils);
+			pere->fils = NULL;
+			return 0;
+		}
+
+	}else{
+		purgeTree(fils);
+		pere->fils = NULL;
+		return 0;
+	}
+
+	//remplissage Noeud
+	if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "header-field";
+	pere->valeur = valeur;
+	pere->longueur = taille_mot;
+
+
+	return taille_mot;
+}
+
+//HTTP-message = start-line * ( header-field CRLF ) CRLF [ message-body ]
+int verifHTTP_message(char* valeur, Noeud* pere, int index, int long_max){
+  int taille_mot = 0;
+  int fin = false;
+  int taille_bloc;
+  int res;
+  Noeud* fils;
+  Noeud* frere;
+  Noeud* petit_frere;
+  Noeud* frere_bloc;
+  Noeud* grand_frere_bloc;
+
+  if(index>=long_max){
+      return 0;
+  }
+
+  fils = creerFils(pere);
+  if((res = verifStart_line(valeur, fils, index, long_max))){
+      taille_mot += res;
+      res = 0;
+  }else{
+      purgeTree(fils);
+      pere->fils = NULL;
+      return 0;
+  }
+
+  frere = fils;
+  while(!fin){
+          petit_frere = creerFrere(frere);
+          //sauvegarde de l'arbre avant le bloc
+          taille_bloc = taille_mot;
+          grand_frere_bloc = frere;
+          frere_bloc = petit_frere;
+          //Header_field
+          if((res = verifHeader_field(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
+              taille_mot += res;
+              res = 0;
+              frere = petit_frere;
+              petit_frere = creerFrere(frere);
+              if((res = verifCRLF(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
+                  taille_mot += res;
+                  res = 0;
+                  frere = petit_frere;
+              }else{
+                  purgeTree(frere_bloc);
+                  grand_frere_bloc->frere = NULL;
+                  taille_mot = taille_bloc;
+                  fin = true;
+              }
+          }else{
+                  purgeTree(frere_bloc);
+                  grand_frere_bloc->frere = NULL;
+                  taille_mot = taille_bloc;
+                  fin = true;
+          }
+  }
+  petit_frere = creerFrere(frere);
+  if((res = verifCRLF(valeur+taille_mot, petit_frere, index+taille_mot, long_max))){
+      taille_mot += res;
+      res = 0;
+      frere = petit_frere;
+      petit_frere = creerFrere(frere);
+  }else{
+      purgeTree(fils);
+      pere->fils = NULL;
+      return 0;
+  }
+
+  res = verifMessage_body(valeur+taille_mot, petit_frere, index+taille_mot, long_max);
+  taille_mot += res;
+
+
+  //remplissage Noeud
+  if(index+taille_mot>=long_max){
+	if(pere->fils != NULL){
+		purgeTree(fils);
+		pere->fils = NULL;
+	}
+	return 0;
+}
+
+pere->tag = "HTTP-message";
+  pere->valeur = valeur;
+  pere->longueur = taille_mot;
+
+  return taille_mot;
 }

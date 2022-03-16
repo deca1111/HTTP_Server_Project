@@ -33,15 +33,12 @@ void setNoeud(Noeud* noeud_, char* tag_, char* valeur_, int longueur_){
 }
 
 void afficherArbre(Noeud* noeud){
-
+	int len;
   for(int i = 0; i < noeud->profondeur; i++){
     printf("\t");
   }
-  printf("[%d] - [%s] : {",noeud->profondeur,noeud->tag);
-  for(int i = 0; i < noeud->longueur; i++){
-    printf("%c",*(noeud->valeur + i));
-  }
-  printf("}\n");
+  printf("[%d] - [%s] : ",noeud->profondeur,noeud->tag);
+  printf("{%.*s}\n",len, getElementValue(noeud, &len));
 
   if(noeud->fils != NULL){
     afficherArbre(noeud->fils);
@@ -67,7 +64,7 @@ void afficheToken(_Token* token, char *name){
       afficheToken(token->next, name);
     }
     if(token->node != NULL){
-      printf("[Tag]: _%s_\t[Valeur]: _%.*s_\n",getElementTag(token->node, &len), len, getElementValue(token->node, &len));
+      printf("[Tag]: _%.*s_\t[Valeur]: _%.*s_\n",len ,getElementTag(token->node, &len), len, getElementValue(token->node, &len));
     }
   }else{
     printf("Liste de token vide: l'arbre ne contient aucun <%s> \n", name);

@@ -18,14 +18,14 @@ int main(int argc, char const *argv[]) {
 	/*unsigned char mot[100] = "a_";//A MODIFIER
   mot[0] = 204;*/
 
-  char* mot = "chunked , chunked\t,"; //A MODIFIER
+  char* mot = "GET /test.txt HTTP/1.0\r\nHost: abcd	\r\n\r\n"; //A MODIFIER
   /*char mot[100];
   mot[0] = 200;*/
   int index = 0;
-  int taille_max = 100;
-  char *name = "Transfer-Encoding";//A MODIFIER
+  int taille_max = 40;
+  char *name = "message-body";//A MODIFIER
 
-  float fct_faite = 77;
+  float fct_faite = 79;
   float fct_a_faire=79;
   int avancement = (fct_faite/fct_a_faire)*100 ;
 
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]) {
   printf("Debut du parseur\n");
   printf("Chaine a tester = _%s_\n",valeur);
   //modifier cette ligne pour tester une fonction en particulier
-  res = verifTransfer_Encoding(valeur, racine, index, taille_max);//A MODIFIER
+  res = verifHTTP_message(valeur, racine, index, taille_max);//A MODIFIER
 
   printf("Mot de taille : %d\n", res);
 
