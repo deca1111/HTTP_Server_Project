@@ -1,35 +1,17 @@
 # **Projet serveur HTTP**
 
-## **Étape Parseur**
+## **Main Branch**
 
 _VALETTE Léo - SERPOLLET Romain - THOMAS Marine_
 
-### Utilisation du parseur :
+### Différents dossier :
 
-Pour compiler le projet, utiliser la ligne de commande suivante :
+Chaque dossier contient les rendus des différents sprints du projet Serveur_HTTP
 
-```bash
-make
-```
+Ils ont chacun un README explicitant l'utilisation des differents outils.
 
-Pour lancer le parseur, utiliser la ligne de commande suivante :
+### Différentes branches :
 
-```bash
-./httpparseur <adresse fichier test> "<tag recherché>"
-```
+Les branches secondaires (autre que _main_) sont des branches de développement.
 
-Le tag recherché peut contenir le caractère ‘-’ ou bien ‘_’ au choix (ils sont interchangeables). Le tag est sensible à la casse.
-
-En cas de doute, se référer à la grammaire suivante :
-
-[allrfc.html](doc_README/allrfc.html)
-
-### Pas implémenté :
-
-Nous n’avons implémenté que les tags descendant de “HTTP-message”.
-
-Les caractères terminaux non utiles pour l’analyse sémantique ne sont pas sauvegardé en tant que tel dans l’arbre.
-
-### Bugs connus :
-
-Pas de bugs connus.
+Le code source présent dans ces branches peut être incomplet et non fonctionnel.
