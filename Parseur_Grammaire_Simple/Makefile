@@ -2,7 +2,7 @@
 #parseur
 PROGRAMME = main
 OBJECTS = $(PROGRAMME).o arbre.o api.o grammaire_simp.o
-EXEC = parseur
+EXEC = httpparseur
 OPTIONS = -Wall -g -o
 
 all : clean main

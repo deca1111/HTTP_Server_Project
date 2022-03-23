@@ -1,0 +1,6 @@
+-un char ne peut prendre des valeurs qu'entre -127 et 128
+->Utiliser des Unsigned char ?
+
+Accept-Language:				   ,,		,,	,,POqvVi-emI-n-Sh-a-l-qgo-bP	 ; 	      	 	q=0.	  	,tO-FV4X-oi5-i	;q=1.000
+
+Transfer-Encoding:, 	,  ,  ,  qQ_S8Rm;	  |		= 			A9$	 		; 4J="¥\¡K"		;p2="7"	 ;-xt		  =	 SFZ   				  ,
