@@ -16,7 +16,7 @@
 
 int main(int argc,char *argv[])
 {
-	int res,i,fi;
+	int res,fi;
 	char *p=NULL,*addr;
 
 
@@ -37,7 +37,7 @@ int main(int argc,char *argv[])
 
 	if (argc == 3 ) {
 		p=argv[2];
-		printf("searching for %s\n",p);
+		//printf("searching for %s\n",p);
 		while (*p) {
 			if (*p=='-') { *p='_'; }
 			p++;
@@ -48,7 +48,7 @@ int main(int argc,char *argv[])
 	printf("\n******************************************************\nMessage à analyser : [%.*s]\n******************************************************\n\n",((int) st.st_size),addr );
 
 	// call parser and get results.
-	if (res=parseur(addr,st.st_size)) {
+	if ((res=parseur(addr,st.st_size))) {
 		printf("Retour du parseur : %d\n\n",res);
 		_Token *r,*tok;
 		void *root=NULL;
