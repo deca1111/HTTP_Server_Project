@@ -22,7 +22,7 @@ Le tag recherché peut contenir le caractère ‘-’ ou bien ‘_’ au choix (
 
 En cas de doute, se référer à la grammaire suivante :
 
-[allrfc.html](readMe_ren%206e6e4/allrfc.html)
+[allrfc.html](doc_README/allrfc.html)
 
 ### Pas implémenté :
 
