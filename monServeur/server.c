@@ -36,16 +36,15 @@ int main(int argc, char *argv[])
 			//void *root;
 			writeDirectClient(requete->clientId,REPONSE,strlen(REPONSE));
 			root=getRootTree();
-			r=searchTree(root,"HTTP_message");
-			tok=r;
-			while (tok) {
-				int l;
-				char *s;
-				// node is no longer opaque
+			r=searchTree(root,"method");
+			if (r != NULL){
 				Lnode *node;
-				node=(Lnode *)tok->node;
-				writeDirectClient(requete->clientId,node->value,node->len);
-				tok=tok->next;
+				node=(Lnode *)r->node;
+				if(strcmp(node->value,"GET") == 0){
+					printf("test\n");
+					char* msg = "La mathode est GET";
+					writeDirectClient(requete->clientId,msg,strlen(msg));
+				}
 			}
 			purgeElement(&r);
 			purgeTree(root);
