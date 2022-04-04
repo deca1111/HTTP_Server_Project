@@ -1,2 +1,2 @@
-GET /images/benz.jpg HTTP/1.0
+GET /pageImage.html HTTP/1.0
 

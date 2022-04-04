@@ -137,13 +137,13 @@ int main(int argc, char *argv[])
 						char* type = mimeType(add);
 						char* header_type = NULL;
 						header_type = (char*) malloc((strlen(REPONSE_CONTENT_TYPE)*sizeof(char))+(strlen(type)*sizeof(char))+2);
-						printf("header_type(%s)", header_type);
-						strcat(header_type,REPONSE_CONTENT_TYPE);
-						printf("header_type(%s)", header_type);
+						printf("header_type(%s)\n", header_type);
+						strcatLen(header_type,REPONSE_CONTENT_TYPE,0,strlen(REPONSE_CONTENT_TYPE));
+						printf("header_type(%s)\n", header_type);
 						strcat(header_type,type);
-						printf("header_type(%s)", header_type);
+						printf("header_type(%s)\n", header_type);
 						strcat(header_type,"\r\n");
-						printf("header_type(%s)", header_type);
+						printf("header_type(%s)\n", header_type);
 
 						printf("(%s)", header_type);
 						writeDirectClient(requete->clientId,header_type,strlen(header_type));
