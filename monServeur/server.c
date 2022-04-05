@@ -5,7 +5,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include<sys/stat.h>
-
+#include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h>
 // for librequest
 #include "request.h"
 
@@ -110,7 +112,7 @@ int main(int argc, char *argv[])
 				node=(Lnode *)r->node;
 
 				//recherche du fichier demandé dans le serveur
-				char* add = malloc(strlen(DIR_DATA)*sizeof(char)+(node->len)*sizeof(char));
+				char* add = calloc(strlen(DIR_DATA) + (node->len), sizeof(char));
 				strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
 				strcatLen(add,node->value,strlen(add),node->len);
 
@@ -120,42 +122,38 @@ int main(int argc, char *argv[])
 
 				if ((taille_fich = checkIfFileExists(add)) != -1) {
 
-					char * contenu = malloc(taille_fich);
-					int char_actuel;
 					//ouverture du fichier
-					FILE *fichier = fopen(add, "r");
+					int fichier = open(add, O_RDONLY);
 
-					if(fichier != NULL){
-						int index = 0;
-						while ((char_actuel = fgetc(fichier)) != EOF) {
-							contenu[index++] = char_actuel;
-						}
+					if(fichier != -1){
+						int compteur = taille_fich;
+						int taille_temp;
+
 
 						printf("(%s)", REPONSE_STATUS);
 						writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
 						//on gere le type :
 						char* type = mimeType(add);
 						char* header_type = NULL;
-						header_type = (char*) malloc((strlen(REPONSE_CONTENT_TYPE)*sizeof(char))+(strlen(type)*sizeof(char))+2);
-						printf("header_type(%s)\n", header_type);
+						header_type = (char*) calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type) + 4, sizeof(char));
 						strcatLen(header_type,REPONSE_CONTENT_TYPE,0,strlen(REPONSE_CONTENT_TYPE));
-						printf("header_type(%s)\n", header_type);
 						strcat(header_type,type);
-						printf("header_type(%s)\n", header_type);
-						strcat(header_type,"\r\n");
-						printf("header_type(%s)\n", header_type);
-
-						printf("(%s)", header_type);
+						strcat(header_type,"\r\n\r\n");
 						writeDirectClient(requete->clientId,header_type,strlen(header_type));
 
-						writeDirectClient(requete->clientId,contenu,taille_fich);
-
+						//recopie du fichier dans la reponse
+						while(compteur > 0){
+							char * contenu = calloc(compteur, sizeof(char));
+							taille_temp = read(fichier, contenu, compteur);
+							writeDirectClient(requete->clientId,contenu,taille_temp);
+							compteur -= taille_temp;
+							free(contenu);
+						}
 						free(header_type);
 					}else{
 						perror("Probleme dans l'ouverture du fichier");
 						exit(1);
 					}
-					free(contenu);
 				}else{
 					//sinon : fichier non trouvé
 					printf("(%s)",ERROR_404);
