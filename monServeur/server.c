@@ -24,15 +24,16 @@
 #define ERROR_404 "HTTP/1.0 404 Not Found\r\n\r\n"
 #define REPONSE_STATUS "HTTP/1.0 200 OK\r\n"
 #define REPONSE_CONTENT_TYPE "Content-type: "
+#define SAUT_DE_LIGNE "\r\n"
 #define SIZE_MIME 7
 char* matrice_type[SIZE_MIME][2]={
-		{"html","text/html"},
-		{"css","text/css"},
-		{"javascript","text/javascript"},
-		{"txt","text/plain"},
-		{"png","image/png"},
-		{"gif","image/gif"},
-		{"jpg","image/jpeg"}
+		{"html","text/html\r\n"},
+		{"css","text/css\r\n"},
+		{"js","application/javascript\r\n"},
+		{"txt","text/plain\r\n"},
+		{"png","image/png\r\n"},
+		{"gif","image/gif\r\n"},
+		{"jpg","image/jpeg\r\n"}
 	};
 
 //renvoi 0 si les chaines sont identique sur la longueur l
@@ -113,12 +114,12 @@ int main(int argc, char *argv[])
 
 				//recherche du fichier demandé dans le serveur
 				char* add = calloc(strlen(DIR_DATA) + (node->len), sizeof(char));
+
 				strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
 				strcatLen(add,node->value,strlen(add),node->len);
 
 				int taille_fich;
 
-				printf("Recherche du fichier : __%s__\n", add);
 
 				if ((taille_fich = checkIfFileExists(add)) != -1) {
 
@@ -130,25 +131,27 @@ int main(int argc, char *argv[])
 						int taille_temp;
 
 
-						printf("(%s)", REPONSE_STATUS);
+						printf("(%s)\n", REPONSE_STATUS);
 						writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
 						//on gere le type :
+
 						char* type = mimeType(add);
-						char* header_type = NULL;
-						header_type = (char*) calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type) + 4, sizeof(char));
-						strcatLen(header_type,REPONSE_CONTENT_TYPE,0,strlen(REPONSE_CONTENT_TYPE));
+						char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
+						strcat(header_type,REPONSE_CONTENT_TYPE);
 						strcat(header_type,type);
-						strcat(header_type,"\r\n\r\n");
+						printf("(%s)", header_type);
 						writeDirectClient(requete->clientId,header_type,strlen(header_type));
 
+
+						writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 						//recopie du fichier dans la reponse
+						char * contenu = calloc(compteur, sizeof(char));
 						while(compteur > 0){
-							char * contenu = calloc(compteur, sizeof(char));
 							taille_temp = read(fichier, contenu, compteur);
 							writeDirectClient(requete->clientId,contenu,taille_temp);
 							compteur -= taille_temp;
-							free(contenu);
 						}
+						free(contenu);
 						free(header_type);
 					}else{
 						perror("Probleme dans l'ouverture du fichier");
