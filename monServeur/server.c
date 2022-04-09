@@ -20,13 +20,13 @@
 
 
 #define DIR_DATA "./dataServeur"
-#define ERROR_400 "HTTP/1.0 400 SUCKA\r\n\r\n"
-#define ERROR_405 "HTTP/1.0 405 Method Not Allowed\r\nAccepted Method : GET\r\n"
+#define ERROR_400 "HTTP/1.0 400 Bad Request\r\n\r\n"
 #define ERROR_404 "HTTP/1.0 404 Not Found\r\n\r\n"
+#define ERROR_415 "HTTP/1.0 415 Unsupported Media Type\r\n\r\n"
 #define REPONSE_STATUS "HTTP/1.0 200 OK\r\n"
 #define REPONSE_CONTENT_TYPE "Content-type: "
 #define SAUT_DE_LIGNE "\r\n"
-#define SIZE_MIME 7
+#define SIZE_MIME 30
 char* matrice_type[SIZE_MIME][2]={
 		{"html","text/html\r\n"},
 		{"css","text/css\r\n"},
@@ -34,7 +34,30 @@ char* matrice_type[SIZE_MIME][2]={
 		{"txt","text/plain\r\n"},
 		{"png","image/png\r\n"},
 		{"gif","image/gif\r\n"},
-		{"jpg","image/jpeg\r\n"}
+		{"jpg","image/jpeg\r\n"},
+		{"mp4","audio/mp4\r\n"},
+		{"collection","font/collection\r\n"},
+		{"bmp","image/bmp\r\n"},
+		{"arc","application/octet-stream\r\n"},
+		{"avi","video/x-msvideo\r\n"},
+		{"bin","application/octet-stream\r\n"},
+		{"sh","application/x-sh\r\n"},
+		{"csv","text/csv\r\n"},
+		{"epub","application/epub+zip\r\n"},
+		{"ico","image/x-icon\r\n"},
+		{"jar","application/java-archive\r\n"},
+		{"jpeg","image/jpeg\r\n"},
+		{"json","application/json\r\n"},
+		{"mpeg","video/mpeg\r\n"},
+		{"otf","font/otf\r\n"},
+		{"pdf","application/pdf\r\n"},
+		{"rar","application/x-rar-compressed\r\n"},
+		{"swf","application/x-shockwave-flash\r\n"},
+		{"tar","application/x-tar\r\n"},
+		{"wav","audio/x-wav\r\n"},
+		{"xml","application/xml\r\n"},
+		{"zip","application/zip\r\n"},
+		{"7z","application/x-7z-compressed\r\n"}
 	};
 
 //renvoi 0 si les chaines sont identique sur la longueur l
@@ -106,8 +129,9 @@ int main(int argc, char *argv[])
 			Lnode *node;
 			node=(Lnode *)r->node;
 
-			//cas ou la methode est GET
-			if(strcmpLen(node->value,"GET",node->len) == 0){
+			//cas ou la methode est GET ou HEAD
+			if((strcmpLen(node->value,"GET",node->len) == 0) || (strcmpLen(node->value,"HEAD",node->len) == 0)){
+				int methodIsHead = (strcmpLen(node->value,"HEAD",node->len) == 0);
 				r=searchTree(root,"request_target");
 				node=(Lnode *)r->node;
 
@@ -118,42 +142,46 @@ int main(int argc, char *argv[])
 				strcatLen(add,node->value,strlen(add),node->len);
 
 				int taille_fich;
-
-
 				if ((taille_fich = checkIfFileExists(add)) != -1) {
 
 					//ouverture du fichier
 					int fichier = open(add, O_RDONLY);
 
 					if(fichier != -1){
-						printf("Taille fichier %d\n", taille_fich);
-						int compteur = taille_fich;
-						int taille_temp;
 
-
-						printf("(%s)\n", REPONSE_STATUS);
-						writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
 						//on gere le type :
-
 						char* type = mimeType(add);
-						char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
-						strcat(header_type,REPONSE_CONTENT_TYPE);
-						strcat(header_type,type);
-						printf("(%s)\n", header_type);
-						writeDirectClient(requete->clientId,header_type,strlen(header_type));
+						if(type == NULL){
+							//le type est inconnu, erreur 415
+							printf("(%s)",ERROR_415);
+							writeDirectClient(requete->clientId,ERROR_415,strlen(ERROR_415));
+						}else{
+							//le type est connu
+							printf("(%s)\n", REPONSE_STATUS);
+							writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
+
+							char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
+							strcat(header_type,REPONSE_CONTENT_TYPE);
+							strcat(header_type,type);
+							printf("(%s)\n", header_type);
 
 
-						free(header_type);
+							writeDirectClient(requete->clientId,header_type,strlen(header_type));
+							free(header_type);
 
-						writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+							writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 
-						//recopie du fichier
-						char * pointeur;
-						if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
-							printf("Probleme mmap\n");
-							exit(1);
+							if(!methodIsHead){
+								//recopie du fichier
+								char * pointeur;
+								if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
+									printf("Probleme mmap\n");
+									exit(1);
+								}
+								writeDirectClient(requete->clientId,pointeur,taille_fich);
+							}
+
 						}
-						writeDirectClient(requete->clientId,pointeur,taille_fich);
 
 					}else{
 						perror("Probleme dans l'ouverture du fichier");
@@ -166,11 +194,11 @@ int main(int argc, char *argv[])
 					writeDirectClient(requete->clientId,ERROR_404,strlen(ERROR_404));
 				}
 				free(add);
-				//writeDirectClient(requete->clientId,node->value,node->len);
+
 			}else{
 				//sinon : method not allowed
-				printf("(%s)",ERROR_405);
-				writeDirectClient(requete->clientId,ERROR_405,strlen(ERROR_405));
+				printf("(%s)",ERROR_400);
+				writeDirectClient(requete->clientId,ERROR_400,strlen(ERROR_400));
 			}
 			purgeElement(&r);
 			purgeTree(root);
