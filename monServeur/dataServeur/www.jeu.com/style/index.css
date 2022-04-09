@@ -14,14 +14,11 @@ p{
   text-align: justify;
 }
 .body_index{
-  background-image: url("images/esisar.jpg");
+  background-image: url("../images/esisar.jpg");
   background-repeat: no-repeat;
   background-position: top right;
   float: top right;
 }
-
-
-
 
 .titre_bobble{
   color = red;
