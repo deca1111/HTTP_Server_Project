@@ -35,7 +35,7 @@ char* matrice_type[SIZE_MIME][2]={
 		{"png","image/png\r\n"},
 		{"gif","image/gif\r\n"},
 		{"jpg","image/jpeg\r\n"},
-		{"mp4","audio/mp4\r\n"},
+		{"mp4","video/mp4\r\n"},
 		{"collection","font/collection\r\n"},
 		{"bmp","image/bmp\r\n"},
 		{"arc","application/octet-stream\r\n"},
