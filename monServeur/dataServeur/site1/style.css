@@ -13,9 +13,17 @@ p{
   font-style: oblique;
   text-align: justify;
 }
-body{
+.body_index{
   background-image: url("images/esisar.jpg");
   background-repeat: no-repeat;
   background-position: top right;
   float: top right;
+}
+
+
+
+
+.titre_bobble{
+  color = red;
+  font-size: xx-large;
 }
