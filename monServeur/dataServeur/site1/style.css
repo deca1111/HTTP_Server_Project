@@ -1,0 +1,21 @@
+.titre{
+  color: red;
+
+  font-size: xx-large;
+  font-style: italic;
+  clear: left;
+}
+.paragraphe{
+  color: blue;
+}
+p{
+  color: blue;
+  font-style: oblique;
+  text-align: justify;
+}
+body{
+  background-image: url("images/esisar.jpg");
+  background-repeat: no-repeat;
+  background-position: top right;
+  float: top right;
+}
