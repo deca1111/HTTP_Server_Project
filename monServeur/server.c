@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 // for librequest
 #include "request.h"
 
@@ -93,7 +94,7 @@ int main(int argc, char *argv[])
 		printf("Contenu de la demande %.*s\n\n",requete->len,requete->buf);
 		printf("ENVOI DE LA REPONSE SUIVANTE : [\n");
 
-		if (res=parseur(requete->buf,requete->len)) {
+		if ((res=parseur(requete->buf,requete->len))) {
 			_Token *r = NULL,*root = NULL;
 
 			// get the root of the tree this is no longer opaque since we know the internal type with httpparser.h
@@ -101,8 +102,6 @@ int main(int argc, char *argv[])
 			//writeDirectClient(requete->clientId,REPONSE,strlen(REPONSE));
 			root=getRootTree();
 			r=searchTree(root,"method");
-			int l;
-			char *s;
 			// node is no longer opaque
 			Lnode *node;
 			node=(Lnode *)r->node;
@@ -127,6 +126,7 @@ int main(int argc, char *argv[])
 					int fichier = open(add, O_RDONLY);
 
 					if(fichier != -1){
+						printf("Taille fichier %d\n", taille_fich);
 						int compteur = taille_fich;
 						int taille_temp;
 
@@ -139,24 +139,27 @@ int main(int argc, char *argv[])
 						char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
 						strcat(header_type,REPONSE_CONTENT_TYPE);
 						strcat(header_type,type);
-						printf("(%s)", header_type);
+						printf("(%s)\n", header_type);
 						writeDirectClient(requete->clientId,header_type,strlen(header_type));
 
 
-						writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
-						//recopie du fichier dans la reponse
-						char * contenu = calloc(compteur, sizeof(char));
-						while(compteur > 0){
-							taille_temp = read(fichier, contenu, compteur);
-							writeDirectClient(requete->clientId,contenu,taille_temp);
-							compteur -= taille_temp;
-						}
-						free(contenu);
 						free(header_type);
+
+						writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+
+						//recopie du fichier
+						char * pointeur;
+						if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
+							printf("Probleme mmap\n");
+							exit(1);
+						}
+						writeDirectClient(requete->clientId,pointeur,taille_fich);
+
 					}else{
 						perror("Probleme dans l'ouverture du fichier");
 						exit(1);
 					}
+
 				}else{
 					//sinon : fichier non trouvé
 					printf("(%s)",ERROR_404);

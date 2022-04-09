@@ -134,21 +134,12 @@ function drawPaddle() {
     ctx.closePath();
 }
 
-function drawFondEcran(){
-	let img = new Image();
-  img.onload = function() {
-    ctx.drawImage(img, canvas.width, canvas.height, 100, 100);
-  };
-  img.src = '/images/logo_poulpi.png';
-}
-
 function updateColor(){
 	couleur = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-		drawFondEcran();
     drawBricks();
     drawBall();
     drawPaddle();
