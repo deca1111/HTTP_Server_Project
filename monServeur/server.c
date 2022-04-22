@@ -9,6 +9,8 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <time.h>
+
 // for librequest
 #include "request.h"
 
@@ -25,8 +27,11 @@
 #define ERROR_415 "HTTP/1.0 415 Unsupported Media Type\r\n\r\n"
 #define REPONSE_STATUS "HTTP/1.0 200 OK\r\n"
 #define REPONSE_CONTENT_TYPE "Content-type: "
+#define REPONSE_DATE "Date: "
 #define SAUT_DE_LIGNE "\r\n"
+#define MAX_SIZE 80
 #define SIZE_MIME 30
+
 char* matrice_type[SIZE_MIME][2]={
 		{"html","text/html\r\n"},
 		{"css","text/css\r\n"},
@@ -105,6 +110,9 @@ char* mimeType(char* nom_fichier){
 
 int main(int argc, char *argv[])
 {
+
+
+
 	message *requete;
 	int res;
 	while ( 1 ) {
@@ -163,11 +171,27 @@ int main(int argc, char *argv[])
 							char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
 							strcat(header_type,REPONSE_CONTENT_TYPE);
 							strcat(header_type,type);
-							printf("(%s)\n", header_type);
+							printf("(%s)", header_type);
 
 
 							writeDirectClient(requete->clientId,header_type,strlen(header_type));
 							free(header_type);
+
+							//header date
+							time_t timestamp = time( NULL );
+						  struct tm * gmtTime = gmtime( & timestamp );
+
+						  char date[MAX_SIZE];
+						  strftime( date, MAX_SIZE, " %a, %d %b %Y %H:%M:%S GMT", gmtTime );
+
+							char* header_date = calloc(strlen(REPONSE_DATE) + strlen(date), sizeof(char));
+							strcat(header_date,REPONSE_DATE);
+							strcat(header_date,date);
+							printf("(%s)", header_date);
+
+							writeDirectClient(requete->clientId,header_date,strlen(header_date));
+							free(header_date);
+							writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 
 							writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 
