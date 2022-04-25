@@ -26,7 +26,8 @@
 #define ERROR_404 "HTTP/1.0 404 Not Found\r\n\r\n"
 #define ERROR_415 "HTTP/1.0 415 Unsupported Media Type\r\n\r\n"
 #define REPONSE_STATUS "HTTP/1.0 200 OK\r\n"
-#define REPONSE_CONTENT_TYPE "Content-type: "
+#define REPONSE_CONTENT_TYPE "Content-Type: "
+#define REPONSE_CONTENT_LENGTH "Content-Length: "
 #define REPONSE_DATE "Date: "
 #define SAUT_DE_LIGNE "\r\n"
 #define MAX_SIZE 80
@@ -140,7 +141,9 @@ int main(int argc, char *argv[])
 			//cas ou la methode est GET ou HEAD
 			if((strcmpLen(node->value,"GET",node->len) == 0) || (strcmpLen(node->value,"HEAD",node->len) == 0)){
 				int methodIsHead = (strcmpLen(node->value,"HEAD",node->len) == 0);
-				r=searchTree(root,"request_target");
+
+				//pour l'instant pas de prise en compte de la query
+				r=searchTree(root,"absolute_path");
 				node=(Lnode *)r->node;
 
 				//recherche du fichier demandé dans le serveur
@@ -182,7 +185,7 @@ int main(int argc, char *argv[])
 						  struct tm * gmtTime = gmtime( & timestamp );
 
 						  char date[MAX_SIZE];
-						  strftime( date, MAX_SIZE, " %a, %d %b %Y %H:%M:%S GMT", gmtTime );
+						  strftime( date, MAX_SIZE, " %a, %d %b %Y %H:%M:%S GMT\r\n", gmtTime );
 
 							char* header_date = calloc(strlen(REPONSE_DATE) + strlen(date), sizeof(char));
 							strcat(header_date,REPONSE_DATE);
@@ -191,12 +194,23 @@ int main(int argc, char *argv[])
 
 							writeDirectClient(requete->clientId,header_date,strlen(header_date));
 							free(header_date);
-							writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 
-							writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+
 
 							if(!methodIsHead){
+								//Header Length
+								char length [20];
+								snprintf (length,20, "%d\r\n", taille_fich);
+								char* header_length = calloc(strlen(REPONSE_CONTENT_LENGTH) + strlen(length), sizeof(char));
+								strcat(header_length,REPONSE_CONTENT_LENGTH);
+								strcat(header_length,length);
+								printf("(%s)", header_length);
+
+								writeDirectClient(requete->clientId,header_length,strlen(header_length));
+								free(header_length);
+
 								//recopie du fichier
+								writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 								char * pointeur;
 								if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
 									printf("Probleme mmap\n");
