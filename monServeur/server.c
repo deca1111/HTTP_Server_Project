@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 							free(header_type);
 
 							//header date
-							time_t timestamp = time( NULL );
+							/*time_t timestamp = time( NULL );
 						  struct tm * gmtTime = gmtime( & timestamp );
 
 						  char date[MAX_SIZE];
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
 							printf("(%s)", header_date);
 
 							writeDirectClient(requete->clientId,header_date,strlen(header_date));
-							free(header_date);
+							free(header_date);*/
 
 
 
