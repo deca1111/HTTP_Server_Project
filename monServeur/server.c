@@ -25,6 +25,7 @@
 #define ERROR_400 "HTTP/1.0 400 Bad Request\r\n\r\n"
 #define ERROR_404 "HTTP/1.0 404 Not Found\r\n\r\n"
 #define ERROR_415 "HTTP/1.0 415 Unsupported Media Type\r\n\r\n"
+#define ERROR_505 "HTTP/1.0 505 HTTP Version Not Supported\r\n\r\n"
 #define REPONSE_STATUS "HTTP/1.0 200 OK\r\n"
 #define REPONSE_CONTENT_TYPE "Content-Type: "
 #define REPONSE_CONTENT_LENGTH "Content-Length: "
@@ -68,11 +69,12 @@ char* matrice_type[SIZE_MIME][2]={
 
 //renvoi 0 si les chaines sont identique sur la longueur l
 int strcmpLen(char* c1, char* c2, int l){
-	int result = 0;
 	for(int i=0;i<l;i++){
-		result+=c1[i]-c2[i];
+		if(c1[i] != c2[i]){
+			return 1;
+		}
 	}
-	return result;
+	return 0;
 }
 
 //concatene c2 dans c1, il faut que c1 soit assez grand
@@ -123,7 +125,7 @@ int main(int argc, char *argv[])
 		// Affichage de debug
 		printf("#########################################\nDemande recue depuis le client %d\n",requete->clientId);
 		printf("Client [%d] [%s:%d]\n",requete->clientId,inet_ntoa(requete->clientAddress->sin_addr),htons(requete->clientAddress->sin_port));
-		printf("Contenu de la demande %.*s\n\n",requete->len,requete->buf);
+		printf("Contenu de la demande [%.*s]\n\n",requete->len,requete->buf);
 		printf("ENVOI DE LA REPONSE SUIVANTE : [\n");
 
 		if ((res=parseur(requete->buf,requete->len))) {
@@ -132,116 +134,142 @@ int main(int argc, char *argv[])
 			// get the root of the tree this is no longer opaque since we know the internal type with httpparser.h
 			//void *root;
 			//writeDirectClient(requete->clientId,REPONSE,strlen(REPONSE));
-			root=getRootTree();
-			r=searchTree(root,"method");
-			// node is no longer opaque
 			Lnode *node;
+			root=getRootTree();
+
+			r=searchTree(root,"HTTP_version");
 			node=(Lnode *)r->node;
+			int isHTTP11 = 0;
 
-			//cas ou la methode est GET ou HEAD
-			if((strcmpLen(node->value,"GET",node->len) == 0) || (strcmpLen(node->value,"HEAD",node->len) == 0)){
-				int methodIsHead = (strcmpLen(node->value,"HEAD",node->len) == 0);
+			//version http valide
+			if((strcmpLen(node->value,"HTTP/1.1",node->len) == 0) || (strcmpLen(node->value,"HTTP/1.0",node->len) == 0)){
 
-				//pour l'instant pas de prise en compte de la query
-				r=searchTree(root,"absolute_path");
+				isHTTP11 = (strcmpLen(node->value,"HTTP/1.1",node->len) == 0)?1:0;
+
+				r=searchTree(root,"method");
+				// node is no longer opaque
+
 				node=(Lnode *)r->node;
 
-				//recherche du fichier demandé dans le serveur
-				char* add = calloc(strlen(DIR_DATA) + (node->len), sizeof(char));
+				//cas ou la methode est GET ou HEAD
+				if((strcmpLen(node->value,"GET",node->len) == 0) || (strcmpLen(node->value,"HEAD",node->len) == 0)){
+					int methodIsHead = (strcmpLen(node->value,"HEAD",node->len) == 0);
 
-				strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
-				strcatLen(add,node->value,strlen(add),node->len);
-
-				int taille_fich;
-				if ((taille_fich = checkIfFileExists(add)) != -1) {
-
-					//ouverture du fichier
-					int fichier = open(add, O_RDONLY);
-
-					if(fichier != -1){
-
-						//on gere le type :
-						char* type = mimeType(add);
-						if(type == NULL){
-							//le type est inconnu, erreur 415
-							printf("(%s)",ERROR_415);
-							writeDirectClient(requete->clientId,ERROR_415,strlen(ERROR_415));
+					if(isHTTP11){
+						if((r = searchTree(root,"Host_header")) == NULL){
+							printf("PAS DE HOST\n");
 						}else{
-							//le type est connu
-							printf("(%s)\n", REPONSE_STATUS);
-							writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
+							node=(Lnode *)r->node;
+							printf("Host Header : [%.*s]\n", node->len, node->value);
+						}
+					}
 
-							char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
-							strcat(header_type,REPONSE_CONTENT_TYPE);
-							strcat(header_type,type);
-							printf("(%s)", header_type);
+					//pour l'instant pas de prise en compte de la query
+					r=searchTree(root,"absolute_path");
+					node=(Lnode *)r->node;
+
+					//recherche du fichier demandé dans le serveur
+					char* add = calloc(strlen(DIR_DATA) + (node->len), sizeof(char));
+
+					strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
+					strcatLen(add,node->value,strlen(add),node->len);
+
+					int taille_fich;
+					if ((taille_fich = checkIfFileExists(add)) != -1) {
+
+						//ouverture du fichier
+						int fichier = open(add, O_RDONLY);
+
+						if(fichier != -1){
+
+							//on gere le type :
+							char* type = mimeType(add);
+							if(type == NULL){
+								//le type est inconnu, erreur 415
+								printf("(%s)",ERROR_415);
+								writeDirectClient(requete->clientId,ERROR_415,strlen(ERROR_415));
+							}else{
+								//le type est connu
+								printf("(%s)\n", REPONSE_STATUS);
+								writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
+
+								char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
+								strcat(header_type,REPONSE_CONTENT_TYPE);
+								strcat(header_type,type);
+								printf("(%s)", header_type);
 
 
-							writeDirectClient(requete->clientId,header_type,strlen(header_type));
-							free(header_type);
+								writeDirectClient(requete->clientId,header_type,strlen(header_type));
+								free(header_type);
 
-							//header date
-							/*time_t timestamp = time( NULL );
-						  struct tm * gmtTime = gmtime( & timestamp );
+								//header date
+								/*time_t timestamp = time( NULL );
+								struct tm * gmtTime = gmtime( & timestamp );
 
-						  char date[MAX_SIZE];
-						  strftime( date, MAX_SIZE, " %a, %d %b %Y %H:%M:%S GMT\r\n", gmtTime );
+								char date[MAX_SIZE];
+								strftime( date, MAX_SIZE, " %a, %d %b %Y %H:%M:%S GMT\r\n", gmtTime );
 
-							char* header_date = calloc(strlen(REPONSE_DATE) + strlen(date), sizeof(char));
-							strcat(header_date,REPONSE_DATE);
-							strcat(header_date,date);
-							printf("(%s)", header_date);
+								char* header_date = calloc(strlen(REPONSE_DATE) + strlen(date), sizeof(char));
+								strcat(header_date,REPONSE_DATE);
+								strcat(header_date,date);
+								printf("(%s)", header_date);
 
-							writeDirectClient(requete->clientId,header_date,strlen(header_date));
-							free(header_date);*/
+								writeDirectClient(requete->clientId,header_date,strlen(header_date));
+								free(header_date);*/
 
 
 
-							if(!methodIsHead){
-								//Header Length
-								char length [20];
-								snprintf (length,20, "%d\r\n", taille_fich);
-								char* header_length = calloc(strlen(REPONSE_CONTENT_LENGTH) + strlen(length), sizeof(char));
-								strcat(header_length,REPONSE_CONTENT_LENGTH);
-								strcat(header_length,length);
-								printf("(%s)", header_length);
+								if(!methodIsHead){
+									//Header Length
+									char length [20];
+									snprintf (length,20, "%d\r\n", taille_fich);
+									char* header_length = calloc(strlen(REPONSE_CONTENT_LENGTH) + strlen(length), sizeof(char));
+									strcat(header_length,REPONSE_CONTENT_LENGTH);
+									strcat(header_length,length);
+									printf("(%s)", header_length);
 
-								writeDirectClient(requete->clientId,header_length,strlen(header_length));
-								free(header_length);
+									writeDirectClient(requete->clientId,header_length,strlen(header_length));
+									free(header_length);
 
-								//recopie du fichier
-								writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
-								char * pointeur;
-								if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
-									printf("Probleme mmap\n");
-									exit(1);
+									//recopie du fichier
+									writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+									char * pointeur;
+									if ((pointeur = mmap(NULL, taille_fich, PROT_WRITE, MAP_PRIVATE, fichier, 0)) == NULL){
+										printf("Probleme mmap\n");
+										exit(1);
+									}
+									writeDirectClient(requete->clientId,pointeur,taille_fich);
 								}
-								writeDirectClient(requete->clientId,pointeur,taille_fich);
+
 							}
 
+						}else{
+							perror("Probleme dans l'ouverture du fichier");
+							exit(1);
 						}
 
 					}else{
-						perror("Probleme dans l'ouverture du fichier");
-						exit(1);
+						//sinon : fichier non trouvé
+						printf("(%s)",ERROR_404);
+						writeDirectClient(requete->clientId,ERROR_404,strlen(ERROR_404));
 					}
+					free(add);
 
 				}else{
-					//sinon : fichier non trouvé
-					printf("(%s)",ERROR_404);
-					writeDirectClient(requete->clientId,ERROR_404,strlen(ERROR_404));
+					//sinon bad request car pas bonne methode
+					printf("Coucou1(%s)",ERROR_400);
+					writeDirectClient(requete->clientId,ERROR_400,strlen(ERROR_400));
 				}
-				free(add);
-
+				purgeElement(&r);
+				purgeTree(root);
 			}else{
-				//sinon : method not allowed
-				printf("(%s)",ERROR_400);
-				writeDirectClient(requete->clientId,ERROR_400,strlen(ERROR_400));
+				//version http non valide
+				printf("(%s)",ERROR_505);
+				writeDirectClient(requete->clientId,ERROR_505,strlen(ERROR_505));
 			}
-			purgeElement(&r);
-			purgeTree(root);
 		} else {
-		printf("(%s)",ERROR_400);
+			//bad request
+			printf("Coucou2(%s)",ERROR_400);
 			writeDirectClient(requete->clientId,ERROR_400,strlen(ERROR_400));
 		}
 
