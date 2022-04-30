@@ -1,3 +1,6 @@
+#ifndef __FONCTION_H__
+#define __FONCTION_H__
+
 #include "annexe.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,3 +22,5 @@ void strcatLen(char* c1, char* c2, int l1, int l2);
 int checkIfFileExists(const char* filename);
 char *get_filename_ext(char *filename);
 char* mimeType(char* nom_fichier);
+
+#endif

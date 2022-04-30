@@ -1,3 +1,6 @@
+#ifndef __ANNEXE_H__
+#define __ANNEXE_H__
+
 #define DIR_DATA "./dataServeur"
 #define ERROR_400 "HTTP/1.0 400 Bad Request\r\n\r\n"
 #define ERROR_404 "HTTP/1.0 404 Not Found\r\n\r\n"
@@ -10,3 +13,5 @@
 #define SAUT_DE_LIGNE "\r\n"
 #define MAX_SIZE 80
 #define SIZE_MIME 30
+
+#endif
