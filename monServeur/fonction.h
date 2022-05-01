@@ -3,6 +3,7 @@
 
 #include "request.h"
 #include "annexe.h"
+#include "api.h"
 #include "httpparser.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,9 +25,10 @@ void strcatLen(char* c1, char* c2, int l1, int l2);
 int checkIfFileExists(const char* filename);
 char *get_filename_ext(char *filename);
 char* mimeType(char* nom_fichier);
-int version(Lnode *node);
-int calculer_Header(char * buffer, char *header_content, int type);
-int methode(Lnode *node);
+int version(_Token * root);
+int methode(_Token * root);
+int connexion(_Token * root);
+char* decodePercent(char* src, int len, char* buffer);
 
 void sendLengthHeader(int taille_fich, unsigned int clientID);
 void sendFichier(int fichier, int taille_fich, unsigned int clientID);

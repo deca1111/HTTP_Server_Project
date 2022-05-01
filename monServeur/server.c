@@ -4,6 +4,7 @@ int main()
 {
 	message *requete;
 	int res;
+	int connection_status = CLOSE;
 	while ( 1 ) {
 		// on attend la reception d'une requete HTTP requete pointera vers une ressource allouée par librequest.
 		if ((requete=getRequest(8080)) == NULL ) return -1;
@@ -25,9 +26,8 @@ int main()
 		int hasHost = 0;
 		root=getRootTree();
 
-		r=searchTree(root,"HTTP_version");
-		node=(Lnode *)r->node;
-		int HTTP_version = version(node);
+
+		int HTTP_version = version(root);
 
 
 		if(!(HTTP_version == HTTP1_0 || HTTP_version == HTTP1_1)){
@@ -37,10 +37,7 @@ int main()
 		}
 		//version http valide
 
-		r=searchTree(root,"method");
-		node=(Lnode *)r->node;
-		int method = methode(node);
-
+		int method = methode(root);
 
 		if(!(method == GET_METHODE || method == HEAD_METHODE)){
 			//Method not implemented
@@ -53,7 +50,6 @@ int main()
 
 		if((HTTP_version == HTTP1_1) && (!hasHost)){
 			//pas de host alors que http1.1, bad request
-			printf("Coucou\n");
 			sendError400(requete->clientId);
 			goto ENDWHILE_purge;
 		}
@@ -62,9 +58,11 @@ int main()
 		r=searchTree(root,"absolute_path");
 		node=(Lnode *)r->node;
 
+		char* buffer = calloc(40, sizeof(char)), *tmp;
+		tmp = decodePercent(node->value, node->len, buffer);
 
 		//recherche du fichier demandé dans le serveur
-		char* add = calloc(strlen(DIR_DATA) + (node->len) + (size_t) MAX_SIZE, sizeof(char));
+		char* add = calloc(strlen(DIR_DATA) + (strlen(tmp)) + (size_t) MAX_SIZE, sizeof(char));
 		strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
 
 		if(hasHost){
@@ -73,10 +71,10 @@ int main()
 			strcatLen(add,node_host->value,strlen(add),node_host->len);
 		}
 
-		strcatLen(add,node->value,strlen(add),node->len);
+		strcatLen(add,tmp,strlen(add),strlen(tmp));
 
-		printf("Addresse [%s]\n",add);
-
+		free(tmp);
+		
 		int taille_fich;
 		if ((taille_fich = checkIfFileExists(add)) == -1) {
 			//fichier non trouvé
@@ -92,17 +90,15 @@ int main()
 			exit(1);
 		}
 
-		//on gere le type :
-		char* type = mimeType(add);
-
 		//debut du message avec le 200...
-		printf("(%s)\n", REPONSE_STATUS);
+		printf("(%s)", REPONSE_STATUS);
 		writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
 
+		//on gere le type :
+		char* type = mimeType(add);
 		sendTypeHeader(type, requete->clientId);
 
-		//sendDateHeader(requete->clientId);
-
+		sendDateHeader(requete->clientId);
 
 		if(method == GET_METHODE){
 			sendLengthHeader(taille_fich, requete->clientId);
@@ -112,6 +108,8 @@ int main()
 		}
 
 		close(fichier);
+
+		connection_status = connexion(root);
 
 		ENDWHILE_add:
 		free(add);
@@ -126,7 +124,11 @@ int main()
 		printf("]\n");
 
 		endWriteDirectClient(requete->clientId);
-		requestShutdownSocket(requete->clientId);
+
+		if(((connection_status == NO_HEADER) && (HTTP_version == HTTP1_0))||(connection_status == CLOSE)){
+			requestShutdownSocket(requete->clientId);
+		}
+
 		// on ne se sert plus de requete a partir de maintenant, on peut donc liberer...
 		freeRequest(requete);
 	}

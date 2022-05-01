@@ -77,7 +77,11 @@ char* mimeType(char* nom_fichier){
 		return result;
 	}
 
-int version (Lnode * node){
+int version (_Token * root){
+	_Token *r = NULL;
+	Lnode *node;
+	r=searchTree(root,"HTTP_version");
+	node=(Lnode *)r->node;
 	int result;
 	if(strcmpLen(node->value,"HTTP/1.1",node->len) == 0){
 		result = HTTP1_1;
@@ -86,10 +90,15 @@ int version (Lnode * node){
 	}else{
 		result = EXIT_FAILURE;
 	}
+	purgeElement(&r);
 	return result;
 }
 
-int methode(Lnode *node){
+int methode(_Token * root){
+	_Token *r = NULL;
+	Lnode *node;
+	r=searchTree(root,"method");
+	node=(Lnode *)r->node;
 	int result;
 	if(strcmpLen(node->value,"GET",node->len) == 0){
 		result = GET_METHODE;
@@ -98,18 +107,55 @@ int methode(Lnode *node){
 	}else{
 		result = EXIT_FAILURE;
 	}
+	purgeElement(&r);
 	return result;
+}
+
+int connexion(_Token * root){
+	_Token *r = NULL;
+	Lnode *node;
+	r=searchTree(root,"connection_option");
+	int result;
+	if(r == NULL){
+		result = NO_HEADER;
+	}else{
+		node=(Lnode *)r->node;
+		if(strcmpLen(node->value,"close",node->len) == 0){
+			result = CLOSE;
+		}else if(strcmpLen(node->value,"keep-alive",node->len) == 0){
+			result = KEEP_ALIVE;
+		}else{
+			result = WRONG_SYNTAX;
+		}
+	}
+	purgeElement(&r);
+	return result;
+}
+
+char* decodePercent(char* src, int len, char* buffer){
+	int j = 0, value;
+	char petit_buffer[2];
+	for(int i = 0; i < len; i++){
+		if(src[i] == '%'){
+			petit_buffer[0] = src[i+1];
+			petit_buffer[1] = src[i+2];
+			value = (int) strtol(petit_buffer,NULL,16);
+			buffer[j++] = (char) value;
+			i+=2;
+		}else{
+			buffer[j++] = src[i];
+		}
+	}
+	return buffer;
 }
 
 void sendLengthHeader(int taille_fich, unsigned int clientID){
 	//Header Length
-	int longueur;
-	char length [40];
-	longueur = snprintf (length,40, "%d\r\n", taille_fich);
-	printf("Taille : [%s], longueur : %d",length,longueur);
-	char* header_length = calloc(strlen(REPONSE_CONTENT_LENGTH) + strlen(length), sizeof(char));
+	char length [40];snprintf (length,40, "%d\r\n", taille_fich);
+	char* header_length = calloc(strlen(REPONSE_CONTENT_LENGTH) + strlen(length) + 1, sizeof(char));
 	if(header_length == NULL){
 		printf("Probleme calloc\n");
+		exit(1);
 	}
 	strcat(header_length,REPONSE_CONTENT_LENGTH);
 	strcat(header_length,length);
@@ -130,7 +176,7 @@ void sendFichier(int fichier, int taille_fich, unsigned int clientID){
 }
 
 void sendTypeHeader(char* type, unsigned int clientID){
-	char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type), sizeof(char));
+	char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type) + 1, sizeof(char));
 	strcat(header_type,REPONSE_CONTENT_TYPE);
 	strcat(header_type,type);
 	printf("(%s)", header_type);
@@ -145,8 +191,7 @@ void sendDateHeader(unsigned int clientID){
 	char date[MAX_SIZE];
 	int longueur;
 	longueur = strftime( date, MAX_SIZE, "%a, %d %b %Y %H:%M:%S GMT\r\n", gmtTime );
-	printf("Date : [%s], longueur : %d\n",date, longueur);
-	char* header_date = calloc(strlen(REPONSE_DATE) + longueur, sizeof(char));
+	char* header_date = calloc(strlen(REPONSE_DATE) + longueur + 1, sizeof(char));
 	strcat(header_date,REPONSE_DATE);
 	strcat(header_date,date);
 	printf("(%s)", header_date);
@@ -173,24 +218,4 @@ void sendError505(unsigned int clientID){
 void sendError501(unsigned int clientID){
 	printf("(%s)",ERROR_501);
 	writeDirectClient(clientID,ERROR_501,strlen(ERROR_501));
-}
-
-int calculer_Header(char * buffer, char *header_content, int type){
-	int result = 1;
-	switch(type){
-		case HEADER_TYPE:
-			strcat(buffer,REPONSE_CONTENT_TYPE);
-			strcat(buffer,header_content);
-			printf("(%s)", buffer);
-
-			break;
-		case HEADER_LENGTH:
-			strcat(buffer,REPONSE_CONTENT_LENGTH);
-			strcat(buffer,header_content);
-			printf("(%s)", buffer);
-			break;
-		default:
-			result = EXIT_FAILURE;
-	}
-	return result;
 }

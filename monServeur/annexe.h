@@ -20,5 +20,9 @@
 #define HEAD_METHODE 1003
 #define HEADER_TYPE 1004
 #define HEADER_LENGTH 1005
+#define NO_HEADER 1006
+#define CLOSE 1007
+#define KEEP_ALIVE 1008
+#define WRONG_SYNTAX 1009
 
 #endif
