@@ -48,6 +48,7 @@ GET /monFichierExemple.txt HTTP/1.0
 
 - Gestion des méthodes GET et HEAD.
 - Gestions de tous les types de fichiers locaux (html,js,css,images (gif,jpg, etc..),les  pdf, etc...)
+- Gestion des requetes HTTP/1.0 et HTTP1.1.
 - Service de virtualhost/multisite (Plusieurs sites sur un seul serveur) grâce au header Host (/!\ En HTTP/1.1 le header Host est obligatoire).
 - Gestions du header Connection (HTTP/1.0 et HTTP/1.1)
 - Envois des headers Date, Content-Type, Content-Length.
