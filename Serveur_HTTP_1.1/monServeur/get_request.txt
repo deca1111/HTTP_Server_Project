@@ -1,4 +1,2 @@
-GET /index.html HTTP/1.1
-Host: projetne.sisar
-Connexion: close
+GET /monFichierExemple.txt HTTP/1.0
 
