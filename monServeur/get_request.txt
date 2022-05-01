@@ -1,1 +1,3 @@
-GET /pageImage.html HTTP/1.1
+GET /projetne.sisar/index.html HTTP/1.0
+
+
