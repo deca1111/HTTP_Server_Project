@@ -12,7 +12,7 @@
 #define REPONSE_DATE "Date: "
 #define SAUT_DE_LIGNE "\r\n"
 #define MAX_SIZE 100
-#define SIZE_MIME 30
+#define SIZE_MIME 31
 
 #define HTTP1_1 1000
 #define HTTP1_0 1001
@@ -24,5 +24,6 @@
 #define CLOSE 1007
 #define KEEP_ALIVE 1008
 #define WRONG_SYNTAX 1009
+#define POST_METHODE 1010
 
 #endif

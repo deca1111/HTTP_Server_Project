@@ -21,9 +21,11 @@ int main()
 			goto ENDWHILE;
 		}
 
-		_Token *r = NULL,*h = NULL,*root = NULL;
-		Lnode *node, *node_host;
+		_Token *r = NULL,*h = NULL,*q = NULL,*root = NULL;
+		Lnode *node, *node_host, *node_query;
 		int hasHost = 0;
+		int hasQuery = 0;
+		int isPHP = 0;
 		root=getRootTree();
 
 
@@ -39,12 +41,25 @@ int main()
 
 		int method = methode(root);
 
-		if(!(method == GET_METHODE || method == HEAD_METHODE)){
-			//Method not implemented
+		if((method == GET_METHODE || method == HEAD_METHODE)){
+			goto METHOD_GET_ou_HEAD;
+		}else if(method == POST_METHODE){
+			goto METHOD_POST;
+		}else{	//Method not implemented
 			sendError501(requete->clientId);
 			goto ENDWHILE_purge;
 		}
-		//cas ou la methode est GET ou HEAD
+
+
+		METHOD_POST:
+		//==============================Debut partie POST==========================================================
+
+		//==============================Fin partie POST========================================================
+
+
+
+		METHOD_GET_ou_HEAD:
+		//==============================Debut partie GET ou HEAD==========================================================
 
 		hasHost = ((h = searchTree(root,"uri_host")) == NULL)?0:1;
 
@@ -54,10 +69,23 @@ int main()
 			goto ENDWHILE_purge;
 		}
 
-		//pour l'instant pas de prise en compte de la query
+
+
+
+		/*
+		hasQuery = ((q = searchTree(root,"query")) == NULL)?0:1;
+
+		printf("Il y a une query : %d\n", hasQuery);
+		if(hasQuery){
+			node_query=(Lnode *)q->node;
+			printf("La query est : [%.*s]\n", node_query->len, node_query->value);
+		}*/
+
+
 		r=searchTree(root,"absolute_path");
 		node=(Lnode *)r->node;
 
+		//decodage du percent encoding sur l'@ du fichier
 		char* buffer = calloc(40, sizeof(char)), *tmp;
 		tmp = decodePercent(node->value, node->len, buffer);
 
@@ -74,7 +102,7 @@ int main()
 		strcatLen(add,tmp,strlen(add),strlen(tmp));
 
 		free(tmp);
-		
+
 		int taille_fich;
 		if ((taille_fich = checkIfFileExists(add)) == -1) {
 			//fichier non trouvé
@@ -109,14 +137,23 @@ int main()
 
 		close(fichier);
 
-		connection_status = connexion(root);
-
 		ENDWHILE_add:
 		free(add);
 
+		goto ENDWHILE_purge;
+
+		//==============================Fin partie GET ou HEAD========================================================
+
+
+
+
+
 		ENDWHILE_purge:
+		connection_status = connexion(root);
+
 		purgeElement(&r);
 		purgeElement(&h);
+		purgeElement(&q);
 
 		purgeTree(root);
 

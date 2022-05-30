@@ -30,7 +30,8 @@ char* matrice_type[SIZE_MIME][2]={
 		{"wav","audio/x-wav\r\n"},
 		{"xml","application/xml\r\n"},
 		{"zip","application/zip\r\n"},
-		{"7z","application/x-7z-compressed\r\n"}
+		{"7z","application/x-7z-compressed\r\n"},
+		{"php","application/text-php\r\n"}
 	};
 
 	//renvoi 0 si les chaines sont identique sur la longueur l
@@ -104,6 +105,8 @@ int methode(_Token * root){
 		result = GET_METHODE;
 	}else if(strcmpLen(node->value,"HEAD",node->len) == 0){
 		result = HEAD_METHODE;
+	}else if(strcmpLen(node->value,"POST",node->len) == 0){
+		result = POST_METHODE;
 	}else{
 		result = EXIT_FAILURE;
 	}
