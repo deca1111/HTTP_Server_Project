@@ -6,9 +6,11 @@
 #define ERROR_404 "HTTP/1.1 404 Not Found\r\n\r\n"
 #define ERROR_505 "HTTP/1.1 505 HTTP Version Not Supported\r\n\r\n"
 #define ERROR_501 "HTTP/1.1 501 Not Implemented\r\n\r\n"
+#define ERROR_405 "HTTP/1.1 405 Method Not Allowed\r\n"
 #define REPONSE_STATUS "HTTP/1.1 200 OK\r\n"
 #define REPONSE_CONTENT_TYPE "Content-Type: "
 #define REPONSE_CONTENT_LENGTH "Content-Length: "
+#define REPONSE_ALLOW "Allow: "
 #define REPONSE_DATE "Date: "
 #define SAUT_DE_LIGNE "\r\n"
 #define MAX_SIZE 100

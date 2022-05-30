@@ -34,10 +34,13 @@ void sendLengthHeader(int taille_fich, unsigned int clientID);
 void sendFichier(int fichier, int taille_fich, unsigned int clientID);
 void sendTypeHeader(char* type, unsigned int clientID);
 void sendDateHeader(unsigned int clientID);
+void sendAllowHeader(char* method_allowed, unsigned int clientID);
+
 
 void sendError400(unsigned int clientID);
 void sendError404(unsigned int clientID);
 void sendError505(unsigned int clientID);
 void sendError501(unsigned int clientID);
+void sendError405(unsigned int clientID);
 
 #endif

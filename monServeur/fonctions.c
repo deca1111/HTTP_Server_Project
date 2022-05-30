@@ -31,7 +31,7 @@ char* matrice_type[SIZE_MIME][2]={
 		{"xml","application/xml\r\n"},
 		{"zip","application/zip\r\n"},
 		{"7z","application/x-7z-compressed\r\n"},
-		{"php","application/text-php\r\n"}
+		{"php","isPHP"}
 	};
 
 	//renvoi 0 si les chaines sont identique sur la longueur l
@@ -203,6 +203,16 @@ void sendDateHeader(unsigned int clientID){
 	free(header_date);
 }
 
+void sendAllowHeader(char* method_allowed, unsigned int clientID){
+	char* header_allow = calloc(strlen(REPONSE_ALLOW) + strlen(method_allowed) + 1, sizeof(char));
+	strcat(header_allow,REPONSE_ALLOW);
+	strcat(header_allow,method_allowed);
+	printf("(%s)", header_allow);
+	writeDirectClient(clientID,header_allow,strlen(header_allow));
+	free(header_allow);
+}
+
+
 void sendError400(unsigned int clientID){
 	printf("(%s)",ERROR_400);
 	writeDirectClient(clientID,ERROR_400,strlen(ERROR_400));
@@ -221,4 +231,9 @@ void sendError505(unsigned int clientID){
 void sendError501(unsigned int clientID){
 	printf("(%s)",ERROR_501);
 	writeDirectClient(clientID,ERROR_501,strlen(ERROR_501));
+}
+
+void sendError405(unsigned int clientID){
+	printf("(%s)",ERROR_405);
+	writeDirectClient(clientID,ERROR_405,strlen(ERROR_405));
 }

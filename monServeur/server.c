@@ -21,15 +21,32 @@ int main()
 			goto ENDWHILE;
 		}
 
-		_Token *r = NULL,*h = NULL,*q = NULL,*root = NULL;
-		Lnode *node, *node_host, *node_query;
-		int hasHost = 0;
-		int hasQuery = 0;
-		int isPHP = 0;
+		_Token *token_host = NULL,*token_query = NULL,*root = NULL,*token_path = NULL;
+		Lnode *node_path, *node_host, *node_query;
+
 		root=getRootTree();
+
+		//initialisation des donnés parsées
+		token_host = searchTree(root,"uri_host");
+		token_path = searchTree(root,"absolute_path");
+		token_query = searchTree(root,"query");
+
+		int hasHost = (token_host== NULL)?0:1;
+		int hasQuery = (token_query== NULL)?0:1;
+
+		if(hasHost){
+			node_host = (Lnode *)token_host->node;
+		}
+
+		if(hasQuery){
+			node_query = (Lnode *)token_query->node;
+		}
+
+		node_path = (Lnode *)token_path->node;
 
 
 		int HTTP_version = version(root);
+		int method = methode(root);
 
 
 		if(!(HTTP_version == HTTP1_0 || HTTP_version == HTTP1_1)){
@@ -39,29 +56,6 @@ int main()
 		}
 		//version http valide
 
-		int method = methode(root);
-
-		if((method == GET_METHODE || method == HEAD_METHODE)){
-			goto METHOD_GET_ou_HEAD;
-		}else if(method == POST_METHODE){
-			goto METHOD_POST;
-		}else{	//Method not implemented
-			sendError501(requete->clientId);
-			goto ENDWHILE_purge;
-		}
-
-
-		METHOD_POST:
-		//==============================Debut partie POST==========================================================
-
-		//==============================Fin partie POST========================================================
-
-
-
-		METHOD_GET_ou_HEAD:
-		//==============================Debut partie GET ou HEAD==========================================================
-
-		hasHost = ((h = searchTree(root,"uri_host")) == NULL)?0:1;
 
 		if((HTTP_version == HTTP1_1) && (!hasHost)){
 			//pas de host alors que http1.1, bad request
@@ -70,48 +64,63 @@ int main()
 		}
 
 
+		if(!(method == GET_METHODE || method == HEAD_METHODE || method == POST_METHODE)){
+			//Method not implemented
+			sendError501(requete->clientId);
+			goto ENDWHILE_purge;
+		}
 
 
-		/*
-		hasQuery = ((q = searchTree(root,"query")) == NULL)?0:1;
-
-		printf("Il y a une query : %d\n", hasQuery);
-		if(hasQuery){
-			node_query=(Lnode *)q->node;
-			printf("La query est : [%.*s]\n", node_query->len, node_query->value);
-		}*/
-
-
-		r=searchTree(root,"absolute_path");
-		node=(Lnode *)r->node;
 
 		//decodage du percent encoding sur l'@ du fichier
 		char* buffer = calloc(40, sizeof(char)), *tmp;
-		tmp = decodePercent(node->value, node->len, buffer);
+		tmp = decodePercent(node_path->value, node_path->len, buffer);
+
+		char* type = mimeType(tmp);
+
+		int isPHP = (strcmp(type,"isPHP"))?0:1;
 
 		//recherche du fichier demandé dans le serveur
-		char* add = calloc(strlen(DIR_DATA) + (strlen(tmp)) + (size_t) MAX_SIZE, sizeof(char));
-		strcatLen(add,DIR_DATA,0,strlen(DIR_DATA));
+		char* add_serv_http = calloc(strlen(DIR_DATA) + (strlen(tmp)) + (size_t) MAX_SIZE, sizeof(char));
+		char* add_serv_php = calloc((strlen(tmp)) + (size_t) MAX_SIZE, sizeof(char));
+		strcatLen(add_serv_http,DIR_DATA,0,strlen(DIR_DATA));
 
 		if(hasHost){
-			node_host = (Lnode *)h->node;
-			strcat(add,"/");
-			strcatLen(add,node_host->value,strlen(add),node_host->len);
+			strcat(add_serv_http,"/");
+			strcatLen(add_serv_http,node_host->value,strlen(add_serv_http),node_host->len);
+			strcatLen(add_serv_php,node_host->value,strlen(add_serv_php),node_host->len);
 		}
 
-		strcatLen(add,tmp,strlen(add),strlen(tmp));
+		strcatLen(add_serv_http,tmp,strlen(add_serv_http),strlen(tmp));
+		strcatLen(add_serv_php,tmp,strlen(add_serv_php),strlen(tmp));
 
 		free(tmp);
 
+		if((method == POST_METHODE && !isPHP) || (method == HEAD_METHODE && isPHP)){
+			//fichier php et methode HEAD ou methode POST et pas de fichier php
+			sendError405(requete->clientId);
+			if (method == POST_METHODE){
+				sendAllowHeader("GET, HEAD\r\n", requete->clientId);
+			}else{
+				sendAllowHeader("GET, POST\r\n", requete->clientId);
+			}
+			writeDirectClient(requete->clientId,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+			goto ENDWHILE_add;
+		}
+
+		if (isPHP) {
+			
+		}
+
 		int taille_fich;
-		if ((taille_fich = checkIfFileExists(add)) == -1) {
+		if ((taille_fich = checkIfFileExists(add_serv_http)) == -1) {
 			//fichier non trouvé
 			sendError404(requete->clientId);
 			goto ENDWHILE_add;
 		}
 
 		//ouverture du fichier
-		int fichier = open(add, O_RDONLY);
+		int fichier = open(add_serv_http, O_RDONLY);
 
 		if(fichier == -1){
 			perror("Probleme dans l'ouverture du fichier");
@@ -123,7 +132,6 @@ int main()
 		writeDirectClient(requete->clientId,REPONSE_STATUS,strlen(REPONSE_STATUS));
 
 		//on gere le type :
-		char* type = mimeType(add);
 		sendTypeHeader(type, requete->clientId);
 
 		sendDateHeader(requete->clientId);
@@ -137,23 +145,20 @@ int main()
 
 		close(fichier);
 
+
+
 		ENDWHILE_add:
-		free(add);
-
-		goto ENDWHILE_purge;
-
-		//==============================Fin partie GET ou HEAD========================================================
-
-
+		free(add_serv_http);
+		free(add_serv_php);
 
 
 
 		ENDWHILE_purge:
 		connection_status = connexion(root);
 
-		purgeElement(&r);
-		purgeElement(&h);
-		purgeElement(&q);
+		purgeElement(&token_host);
+		purgeElement(&token_path);
+		purgeElement(&token_query);
 
 		purgeTree(root);
 
