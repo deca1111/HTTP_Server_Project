@@ -1,9 +1,0 @@
-GET /dev/userir/test.txt HTTP/2.4
-Connection:   jeSuisunToken0   ,   jeSuisunTokenOptionnel1    ,
-Cookie:JeSuisLeTokenDUCookieName="!!!"; JeSuisLeTokenDUCookieName2="###"
-HeaderFaitMaison:       JeSuisUnVChar$ OptionVCHAR
-
-JesuisUnMessageBodydfghj,kl
-higbuy
-
-    rfygvgvyy
