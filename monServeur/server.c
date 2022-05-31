@@ -93,6 +93,7 @@ int main()
 
 		if(hasHost){
 			strcat(add_serv_http,"/");
+			strcat(add_serv_php,"/");
 			strcatLen(add_serv_http,node_host->value,strlen(add_serv_http),node_host->len);
 			strcatLen(add_serv_php,node_host->value,strlen(add_serv_php),node_host->len);
 		}
@@ -118,37 +119,26 @@ int main()
 		if (isPHP) {
 
 			//initialisation communication PHP
+			FCGI_Header header;
+			bzero(&header, sizeof(header));
 			int fd = createSocket(9000);
 			sendBeginRequest(fd,10,FCGI_RESPONDER,FCGI_KEEP_CONN);
 
-			close(fd);
+			char *query;
 			//on gere les query
 			if(hasQuery){
-				char *tab_query[500][2];
-				//initialisation à NULL
-				for(int i = 0; i<500; i++) tab_query[i][0]=tab_query[i][1]=NULL;
-				//on copy les query car cutQuery est destructive
-				char* copy = calloc(node_query->len + 1, sizeof(char));
-				strncpy(copy,node_query->value,node_query->len);
-
-				cutQuery(tab_query, copy);
-				for(int i = 0; i<500; i++){
-					if(tab_query[i][0]!=NULL) printf("Ligne %d [%s]",i,tab_query[i][0]);
-					if(tab_query[i][1]!=NULL) printf(" [%s]\n",tab_query[i][1]);
-				}
-				printf("La query a été coupé\n");
-
-				//free du tableau
-				for(int i = 0; i<1000; i++) if(tab_query[i/2][i%2]!=NULL) free(tab_query[i/2][i%2]);
-				free(copy);
-			}else{
-				//pas de probleme, au pire i n'y a pas de params à mettre
-				printf("Il n'y a pas de query\n");
+				query = calloc(node_query->len + 1, sizeof(char));
+				strncpy(query, node_query->value, node_query->len);
+				addNameValuePair(&header, "QUERY_STRING", query);
 			}
-
+			//completion et envoie du header fcgi
+			completeParamsConst(&header);
+			addNameValuePair(&header, "SCRIPT_NAME", add_serv_php);
+			addNameValuePair(&header, "REQUEST_METHOD", (method == POST_METHODE)?"POST":"GET");
+			sendParams(fd, 10, header.contentData, header.contentLength);
+			if(hasQuery) free(query);
 			//on gere le message body
 			if(method == POST_METHODE){
-				printf("Je suis la\n");
 				token_courant = searchTree(root,"Content_Length");
 				if(token_courant==NULL){
 					//bad request, Content-Lenght-Header obligatoire
@@ -159,9 +149,36 @@ int main()
 				char* buffer = calloc(node_courant->len + 1 , sizeof(char));
 				strncpy(buffer,node_courant->value,node_courant->len);
 				int longueur_MB = atoi(buffer);
-				printf("Longeuur : String [%s], Int, [%d]\n",buffer,longueur_MB);
 				free(buffer);
+				printf("envoi du message body\n");
+				//envoi du message body
+				if(longueur_MB == 0){
+					printf("envoi du message body: 0\n");
+					sendStdin(fd, 10, "hello world", 11);
+				}else{
+					purgeElement(&token_courant);
+					token_courant = searchTree(root,"message-body");
+					if(token_courant==NULL){
+						//bad request, pas de message body
+						sendError400(requete->clientId);
+						goto ENDWHILE_add;
+					}
+					node_courant = (Lnode *)token_courant->node;
+					printf("envoi du message body: 1\n");
+					sendStdin(fd, 10, node_courant->value, longueur_MB);
+				}
+			}else{
+				printf("envoi du message body: 0\n");
+				sendStdin(fd, 10, "hello world", 11);
 			}
+			//lecture de la reponse
+			char * content = calloc(1, sizeof(char));
+			readResponse(fd, content);
+			printf("Result = _%s_\n",content);
+
+			free(content);
+			close(fd);
+			goto ENDWHILE_add;
 		}
 
 		int taille_fich;

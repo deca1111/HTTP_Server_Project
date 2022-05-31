@@ -28,7 +28,6 @@ char* mimeType(char* nom_fichier);
 int version(_Token * root);
 int methode(_Token * root);
 int connexion(_Token * root);
-void cutQuery(char* tab[500][2], char* copy);
 char* decodePercent(char* src, int len, char* buffer);
 
 void sendLengthHeader(int taille_fich, unsigned int clientID);

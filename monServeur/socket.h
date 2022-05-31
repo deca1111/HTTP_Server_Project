@@ -15,6 +15,10 @@
 
 #include "fastcgi.h"
 
+#define sendStdin(fd,id,stdin,len) sendWebData(fd,FCGI_STDIN,id,stdin,len)
+#define sendData(fd,id,data,len) sendWebData(fd,FCGI_DATA,id,data,len)
+#define sendParams(fd,id,params,len) sendWebData(fd,FCGI_PARAMS,id,params,len)
+
 void writeSocket(int fd,FCGI_Header *h,unsigned int len);
 void writeLen(int len, char **p);
 int addNameValuePair(FCGI_Header *h,char *name,char *value);
@@ -27,7 +31,8 @@ void sendEndRequest(int fd,unsigned short requestId,unsigned int appStatus,unsig
 void sendUnknownType(int fd,unsigned short requestId,unsigned char type);
 void completeParamsHeader(FCGI_Header * header, char * tab[500][2]);
 void afficherHeader(FCGI_Header * header);
-char* sendStdinToPhp(int fd, char * data, unsigned int len, char ** content);
+void readResponse(int fd, char * content);
+void completeParamsConst(FCGI_Header * header);
 
 
 #endif

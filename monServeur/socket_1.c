@@ -1,5 +1,5 @@
 #include "socket.h"
-
+#include "fonction.h"
 // =========================================================================================================== //
 void writeSocket(int fd,FCGI_Header *h,unsigned int len){
 	int w;
@@ -87,9 +87,7 @@ void sendAbortRequest(int fd,unsigned short requestId){
 	h.paddingLength=0;
 	writeSocket(fd,&h,FCGI_HEADER_SIZE+(h.contentLength)+(h.paddingLength));
 }
-#define sendStdin(fd,id,stdin,len) sendWebData(fd,FCGI_STDIN,id,stdin,len)
-#define sendData(fd,id,data,len) sendWebData(fd,FCGI_DATA,id,data,len)
-#define sendParams(fd,id,params,len) sendWebData(fd,FCGI_PARAMS,id,params,len)
+
 //============================================================================================================ //
 void sendWebData(int fd,unsigned char type,unsigned short requestId,char *data,unsigned int len){
 	FCGI_Header h;
@@ -154,12 +152,7 @@ FCGI_UnknownTypeBody *unknown;
 	unknown->type=type;
 	writeSocket(fd,&h,FCGI_HEADER_SIZE+(h.contentLength)+(h.paddingLength));
 }
-// =========================================================================================================== //
-void completeParamsHeader(FCGI_Header * header, char * tab[500][2]){
-	for(int i = 0; i < 500 && tab[i][0] != NULL; i++){
-		addNameValuePair(header,tab[i][0], tab[i][2]);
-	}
-}
+
 // =========================================================================================================== //
 #define MAX_SIZE 100
 void afficherHeader(FCGI_Header * header){
@@ -172,50 +165,74 @@ void afficherHeader(FCGI_Header * header){
 	printf("// ---------------------------- //\n");
 }
 // =========================================================================================================== //
-char* sendStdinToPhp(int fd, char * data, unsigned int len, char ** content){
+void readResponse(int fd, char * content){
 	int ret;
 	FCGI_Header head_temp;
-	sendStdin(fd, 10, data, len);
 	// lecture du premier header
 	if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
 		perror("erreur de lecture du header\n");
-		return NULL;
+		return;
 	}
 	afficherHeader(&head_temp);
 	int taille_lu;
 	int taille_totale_lu = 0;
 	int taille_a_lire;
-	char * res;
 	// tant qu'on a pas le header de fin, on continue
 	while(head_temp.type != FCGI_END_REQUEST){
-		if((res = realloc(*content, sizeof(char) * head_temp.contentLength + sizeof(*content))) == NULL ){
+		if((content = realloc(content, sizeof(char) * ntohs(head_temp.contentLength) + taille_totale_lu)) == NULL ){
 			perror("erreur allocation memoire\n");
-			return NULL;
+			return;
 		}
-		*content = res;
-		taille_a_lire = ntohs(head_temp.contentLength) + head_temp.paddingLength;
+		taille_a_lire = ntohs(head_temp.contentLength);
 		taille_lu = 0;
 		// on lit tout le stdout
 		while(taille_lu < taille_a_lire){
-			ret = read(fd, *content + taille_totale_lu, taille_a_lire - taille_lu);
+			ret = read(fd, content + taille_totale_lu, taille_a_lire - taille_lu);
 			if(ret == -1){
 				perror("erreur lecture\n");
-				return NULL;
+				return;
 			}
+			printf("content : _%s_, taille_totale_lu : %d\n", content+taille_totale_lu, taille_totale_lu);
 			taille_lu += ret;
+			taille_totale_lu += ret;
+
 		}
+		// on lit le padding
+		taille_a_lire = head_temp.paddingLength;
+		taille_lu = 0;
+		char * buff = malloc(taille_a_lire * sizeof(char));
+		while(taille_lu < taille_a_lire){
+			ret = read(fd, buff, taille_a_lire - taille_lu);
+			if(ret == -1){
+				perror("erreur lecture\n");
+				return;
+			}
+			printf("content : _%s_, taille_totale_lu : %d\n", content+taille_totale_lu, taille_totale_lu);
+			taille_lu += ret;
+
+		}
+		free(buff);
 	// lecture du nouveau FCGI_Header
 	if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
 		perror("erreur de lecture du header\n");
-		return NULL;
+		return;
 	}
+
 	afficherHeader(&head_temp);
-	free(res);
 	}
-	return "ok";
 }
 // =========================================================================================================== //
+void completeParamsConst(FCGI_Header * header){
+	addNameValuePair(header, "GATEWAY_INTERFACE", "CGI/1.1");
+	addNameValuePair(header, "SERVER_NAME", "127.0.0.1");
+	addNameValuePair(header, "SERVER_ADDR", "127.0.0.1");
+	addNameValuePair(header, "SERVER_PORT", "8080");
+	addNameValuePair(header, "SERVER_PROTOCOL", "HTTP/1.1");
+	addNameValuePair(header, "REQUEST_SCHEME", "http");
+	addNameValuePair(header, "DOCUMENT_ROOT", "/home/leovalette/Documents/3A/S2/NE302/HTTP_Server_Project/monServeur/dataPhpServer");
+	addNameValuePair(header, "CONTEXT_DOCUMENT_ROOT", "/home/leovalette/Documents/3A/S2/NE302/HTTP_Server_Project/monServeur/dataPhpServer");
 
+}
 /*
 int test(int argc,char *argv[]){
 	int fd;
