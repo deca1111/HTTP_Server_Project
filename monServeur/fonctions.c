@@ -135,8 +135,33 @@ int connexion(_Token * root){
 	return result;
 }
 
+void cutQuery(char* tab[500][2], char* copy){
+
+	char* strToken = strtok(copy,"=&");
+	int index = 0;
+	while ( strToken != NULL ) {
+		tab[index/2][index%2] = strToken;
+		index++;
+		strToken = strtok(NULL,"=&");
+	}
+
+	for(int i = 0; i<500; i++){
+		if(tab[i][0]!= NULL) {
+			char* buffer = calloc(strlen(tab[i][0])+1,sizeof(char));
+			decodePercent(tab[i][0],strlen(tab[i][0]),buffer);
+			tab[i][0] = buffer;
+		}
+		if(tab[i][1]!= NULL) {
+			char* buffer = calloc(strlen(tab[i][1])+1,sizeof(char));
+			decodePercent(tab[i][1],strlen(tab[i][1]),buffer);
+			tab[i][1] = buffer;
+		}
+	}
+	//decodePercent(copy,strlen(copy),copy);
+}
+
 char* decodePercent(char* src, int len, char* buffer){
-	int j = 0, value;
+	int j = 0, value = 0;
 	char petit_buffer[2];
 	for(int i = 0; i < len; i++){
 		if(src[i] == '%'){
