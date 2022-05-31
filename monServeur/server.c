@@ -116,6 +116,12 @@ int main()
 
 		//comportement en cas de fichier php (GET ou POST)
 		if (isPHP) {
+
+			//initialisation communication PHP
+			int fd = createSocket(9000);
+			sendBeginRequest(fd,10,FCGI_RESPONDER,FCGI_KEEP_CONN);
+
+			close(fd);
 			//on gere les query
 			if(hasQuery){
 				char *tab_query[500][2];

@@ -24,5 +24,6 @@
 #include "api.h"
 #include "fonction.h"
 #include "annexe.h"
+#include "socket.h"
 
 #endif
