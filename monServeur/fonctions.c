@@ -205,6 +205,63 @@ void sendDateHeader(unsigned int clientID){
 	free(header_date);
 }
 
+void parsePhpContent(char * content, char * new[2]){
+	int index = 0;
+	while (index < (int) strlen(content) && content[index] != '\n'){
+		index ++;
+	}
+
+	new[0] = calloc(index + 1, sizeof(char));
+	new[1] = calloc(strlen(content) - index + 1, sizeof(char));
+	strncpy(new[0], content, index - 1);
+	strncpy(new[1], content + index, strlen(content) - index);
+
+
+}
+
+
+
+
+
+void sendPhpResponse(char* content, unsigned int clientID){
+	char * new[2];
+
+	parsePhpContent(content, new);
+
+
+	writeDirectClient(clientID,REPONSE_STATUS,strlen(REPONSE_STATUS));
+	sendTypeHeader(new[0], clientID);
+	sendLengthHeader(strlen(new[1]),clientID);
+	writeDirectClient(clientID,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+	writeDirectClient(clientID,new[1],strlen(new[1]));
+
+	free(new[0]);
+	free(new[1]);
+}
+
+void sendPhpError(char * error, char* content, unsigned int clientID){
+	char * new[2];
+
+	parsePhpContent(content, new);
+
+	writeDirectClient(clientID,REPONSE_STATUS,strlen(REPONSE_STATUS));
+	sendTypeHeader("text/plain\r\n", clientID);
+	sendLengthHeader(strlen(new[0]) + strlen(error),clientID);
+	writeDirectClient(clientID,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
+	char * buffer = calloc(strlen(new[0]) + strlen(error) + 2 + strlen(PETITE_JOKE), sizeof(char));
+	strcat(buffer, PETITE_JOKE);
+	strcat(buffer, new[0]);
+	strcat(buffer, "\n\n");
+	strcat(buffer, error);
+
+
+	writeDirectClient(clientID,buffer,strlen(buffer));
+	free(buffer);
+	free(new[0]);
+	free(new[1]);
+}
+
+
 void sendAllowHeader(char* method_allowed, unsigned int clientID){
 	char* header_allow = calloc(strlen(REPONSE_ALLOW) + strlen(method_allowed) + 1, sizeof(char));
 	strcat(header_allow,REPONSE_ALLOW);

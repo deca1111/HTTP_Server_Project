@@ -1,5 +1,4 @@
 #include "socket.h"
-#include "fonction.h"
 // =========================================================================================================== //
 void writeSocket(int fd,FCGI_Header *h,unsigned int len){
 	int w;
@@ -32,6 +31,7 @@ int addNameValuePair(FCGI_Header *h,char *name,char *value){
 
 	if (name) nameLen=strlen(name);
 	if (value) valueLen=strlen(value);
+	printf("longueur Name : %d || longueur Value : %d\n", nameLen, valueLen);
 
 	// si les tailles sont trop grandes on retourne une erreur
 	if ((valueLen > FASTCGIMAXNVPAIR) || (valueLen > FASTCGIMAXNVPAIR) ) return -1;
@@ -154,49 +154,91 @@ FCGI_UnknownTypeBody *unknown;
 }
 
 // =========================================================================================================== //
-#define MAX_SIZE 100
+
 void afficherHeader(FCGI_Header * header){
 	printf("// ----- Affichage header ----- //\n");
 	printf("version : _%d_\n", header->version);
 	printf("type : _%d_\n", header->type);
 	printf("requestId : _%d_\n", ntohs(header->requestId));
-	printf("contentLength : _%d_\n", ntohs(header->contentLength));
+	printf("contentLength : _%d_\n", 	ntohs(header->contentLength));
 	printf("paddingLength : _%d_\n", header->paddingLength);
 	printf("// ---------------------------- //\n");
 }
 // =========================================================================================================== //
-void readResponse(int fd, char * content){
-	int ret;
+int readResponse(int fd, char* response[2]){
+	int ret =0, hasError = 0;
 	FCGI_Header head_temp;
+
+	char * content = calloc(1, sizeof(char));
+	char * error = calloc(1, sizeof(char));
+
 	// lecture du premier header
 	if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
 		perror("erreur de lecture du header\n");
-		return;
+		return EXIT_FAILURE;
 	}
-	afficherHeader(&head_temp);
+	//afficherHeader(&head_temp);
 	int taille_lu;
-	int taille_totale_lu = 0;
+	int size_content = 0;
+	int size_error = 0;
 	int taille_a_lire;
+
 	// tant qu'on a pas le header de fin, on continue
 	while(head_temp.type != FCGI_END_REQUEST){
-		if((content = realloc(content, sizeof(char) * ntohs(head_temp.contentLength) + taille_totale_lu)) == NULL ){
-			perror("erreur allocation memoire\n");
-			return;
-		}
-		taille_a_lire = ntohs(head_temp.contentLength);
-		taille_lu = 0;
-		// on lit tout le stdout
-		while(taille_lu < taille_a_lire){
-			ret = read(fd, content + taille_totale_lu, taille_a_lire - taille_lu);
-			if(ret == -1){
-				perror("erreur lecture\n");
-				return;
+
+		if(head_temp.type == FCGI_STDERR){
+			//header d'erreur
+
+			hasError = ERROR_PHP;
+
+			//resize de la chaine d'erreur
+			if((error = realloc(error, sizeof(char) * (ntohs(head_temp.contentLength) + size_error + 2))) == NULL ){
+				perror("erreur allocation memoire\n");
+				return EXIT_FAILURE;
 			}
-			printf("content : _%s_, taille_totale_lu : %d\n", content+taille_totale_lu, taille_totale_lu);
-			taille_lu += ret;
-			taille_totale_lu += ret;
+			bzero(error+size_error,(ntohs(head_temp.contentLength)+2));
+
+			// on lit tout l'erreur
+			taille_a_lire = ntohs(head_temp.contentLength);
+			taille_lu = 0;
+			while(taille_lu < taille_a_lire){
+				ret = read(fd, error + size_error, taille_a_lire - taille_lu);
+				if(ret == -1){
+					perror("erreur lecture\n");
+					return EXIT_FAILURE;
+				}
+				printf("errror : _%s_, size_error : %d\n", error+size_error, size_error+ret);
+				taille_lu += ret;
+				size_error += ret;
+			}
+
+			strcatLen(error,"\n",size_error++,1);
+		}else if(head_temp.type == FCGI_STDOUT){
+			//header stdOUT
+
+			//resize de la chaine de content
+			if((content = realloc(content, sizeof(char) * ntohs(head_temp.contentLength) + size_content+1)) == NULL ){
+				perror("erreur allocation memoire\n");
+				return EXIT_FAILURE;
+			}
+			bzero(content+size_content,(ntohs(head_temp.contentLength)+1));
+
+			// on lit tout le stdout
+			taille_a_lire = ntohs(head_temp.contentLength);
+			taille_lu = 0;
+			while(taille_lu < taille_a_lire){
+				ret = read(fd, content + size_content, taille_a_lire - taille_lu);
+				if(ret == -1){
+					perror("erreur lecture\n");
+					return EXIT_FAILURE;
+				}
+				printf("content : _%s_, size_content : %d\n", content+size_content, size_content+ret);
+				taille_lu += ret;
+				size_content += ret;
+			}
 
 		}
+
 		// on lit le padding
 		taille_a_lire = head_temp.paddingLength;
 		taille_lu = 0;
@@ -205,22 +247,28 @@ void readResponse(int fd, char * content){
 			ret = read(fd, buff, taille_a_lire - taille_lu);
 			if(ret == -1){
 				perror("erreur lecture\n");
-				return;
+				free(buff);
+				return EXIT_FAILURE;
 			}
-			printf("content : _%s_, taille_totale_lu : %d\n", content+taille_totale_lu, taille_totale_lu);
 			taille_lu += ret;
-
 		}
 		free(buff);
-	// lecture du nouveau FCGI_Header
-	if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
-		perror("erreur de lecture du header\n");
-		return;
+
+		// lecture du nouveau FCGI_Header
+		if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
+			perror("erreur de lecture du header\n");
+			return EXIT_FAILURE;
+		}
+
+		// afficherHeader(&head_temp);
 	}
 
-	afficherHeader(&head_temp);
-	}
+	response[0] = error;
+	response[1] = content;
+
+	return(hasError);
 }
+
 // =========================================================================================================== //
 void completeParamsConst(FCGI_Header * header){
 	addNameValuePair(header, "GATEWAY_INTERFACE", "CGI/1.1");
@@ -229,58 +277,45 @@ void completeParamsConst(FCGI_Header * header){
 	addNameValuePair(header, "SERVER_PORT", "8080");
 	addNameValuePair(header, "SERVER_PROTOCOL", "HTTP/1.1");
 	addNameValuePair(header, "REQUEST_SCHEME", "http");
-	addNameValuePair(header, "DOCUMENT_ROOT", "/home/leovalette/Documents/3A/S2/NE302/HTTP_Server_Project/monServeur/dataPhpServer");
-	addNameValuePair(header, "CONTEXT_DOCUMENT_ROOT", "/home/leovalette/Documents/3A/S2/NE302/HTTP_Server_Project/monServeur/dataPhpServer");
-
 }
-/*
-int test(int argc,char *argv[]){
-	int fd;
-	FCGI_Header header;
-	char * name[500][2] = {{"SCRIPT_FILENAME", "/var/www/html/index.php"}};
-	for(int i = 1; i<500 ; i++){
-		name[i][0] = NULL;
-		name[i][1] = NULL;
+// =========================================================================================================== //
+int fillHeaderPost(FCGI_Header *header, _Token * root){
+	_Token *token_CL = NULL, *token_CT = NULL, *token_Ref = NULL;
+	Lnode *node_CL, *node_CT, *node_Ref;
+
+	token_CL = searchTree(root,"Content_Length");
+	token_CT = searchTree(root,"Content_Type");
+	token_Ref = searchTree(root,"Referer");
+
+	if((token_CL==NULL)||(token_CT==NULL)||(token_Ref==NULL)){
+		//bad request, Content-Lenght-Header obligatoire
+		return -1;
 	}
-	char ** content = calloc(1, sizeof(char));
-	// creation du header params
-	completeParamsHeader(&header, name);
-	// creation de la socket
-	fd=createSocket(9000);
-	// envoie du begin request
-	sendBeginRequest(fd,10,FCGI_RESPONDER,FCGI_KEEP_CONN);
-	// envoi des params
-	sendParams(fd, 10, header.contentData, header.contentLength);
-	// envoi du stdin
-	sendStdinToPhp(fd, "coucou", 6, content);
-	printf("Result = _%s_\n",*content);
-	free(content);
-	return 0;
 
+	node_CL = (Lnode *)token_CL->node;
+	node_CT = (Lnode *)token_CT->node;
+	node_Ref = (Lnode *)token_Ref->node;
 
+	char* contentLength = calloc(node_CL->len + 1 , sizeof(char));
+	char* contentType = calloc(node_CT->len + 1 , sizeof(char));
+	char* referer = calloc(node_Ref->len + 1 , sizeof(char));
 
+	strncpy(contentLength,node_CL->value,node_CL->len);
+	strncpy(contentType,node_CT->value,node_CT->len);
+	strncpy(referer,node_Ref->value,node_Ref->len);
 
+	int longueur_MB = atoi(contentLength);
 
+	addNameValuePair(header, "CONTENT_LENGTH", contentLength);
+	addNameValuePair(header, "CONTENT_TYPE", contentType);
+	addNameValuePair(header, "HTTP_REFERER", referer);
 
+	free(contentLength);
+	purgeElement(&token_CL);
+	free(contentType);
+	purgeElement(&token_CT);
+	free(referer);
+	purgeElement(&token_Ref);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return longueur_MB;
 }
-*/

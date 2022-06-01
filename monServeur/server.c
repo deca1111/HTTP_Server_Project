@@ -24,8 +24,8 @@ int main()
 		}
 
 		//declaration des var
-		_Token *token_host = NULL,*token_query = NULL,*root = NULL,*token_path = NULL,*token_courant=NULL;
-		Lnode *node_path, *node_host, *node_query, *node_courant;
+		_Token *token_host = NULL,*token_query = NULL,*root = NULL,*token_path = NULL,*token_body=NULL;
+		Lnode *node_path, *node_host, *node_query, *node_body;
 
 		root=getRootTree();
 
@@ -77,7 +77,7 @@ int main()
 
 
 		//decodage du percent encoding sur l'@ du fichier
-		char* path = calloc(40, sizeof(char));
+		char* path = calloc(MAX_SIZE, sizeof(char));
 		path = decodePercent(node_path->value, node_path->len, path);
 
 		//on recupere le mime type du fichier
@@ -88,18 +88,21 @@ int main()
 
 		//recherche du fichier demandé dans le serveur
 		char* add_serv_http = calloc(strlen(DIR_DATA) + (strlen(path)) + (size_t) MAX_SIZE, sizeof(char));
-		char* add_serv_php = calloc((strlen(path)) + (size_t) MAX_SIZE, sizeof(char));
+		char* add_serv_php = calloc(strlen(START_PHP_FILENAME)  + (strlen(path)) + (size_t) MAX_SIZE, sizeof(char));
+		char* script_name = calloc((strlen(path)) + (size_t) MAX_SIZE, sizeof(char));
 		strcatLen(add_serv_http,DIR_DATA,0,strlen(DIR_DATA));
+		strcatLen(add_serv_php,START_PHP_FILENAME,0,strlen(START_PHP_FILENAME));
 
 		if(hasHost){
 			strcat(add_serv_http,"/");
-			strcat(add_serv_php,"/");
+			strcat(script_name,"/");
 			strcatLen(add_serv_http,node_host->value,strlen(add_serv_http),node_host->len);
-			strcatLen(add_serv_php,node_host->value,strlen(add_serv_php),node_host->len);
+			strcatLen(script_name,node_host->value,strlen(script_name),node_host->len);
 		}
 
 		strcatLen(add_serv_http,path,strlen(add_serv_http),strlen(path));
-		strcatLen(add_serv_php,path,strlen(add_serv_php),strlen(path));
+		strcatLen(script_name,path,strlen(script_name),strlen(path));
+		strcatLen(add_serv_php,script_name,strlen(add_serv_php),strlen(script_name));
 
 		free(path);
 
@@ -130,58 +133,80 @@ int main()
 				query = calloc(node_query->len + 1, sizeof(char));
 				strncpy(query, node_query->value, node_query->len);
 				addNameValuePair(&header, "QUERY_STRING", query);
+			}else{
+				addNameValuePair(&header, "QUERY_STRING", NULL);
 			}
 			//completion et envoie du header fcgi
-			completeParamsConst(&header);
-			addNameValuePair(&header, "SCRIPT_NAME", add_serv_php);
+			//completeParamsConst(&header);
+			printf("Script name : [%s]\nScript filename : [%s]\nLongueur : %d\n",script_name,add_serv_php,(int) strlen(add_serv_php));
+
 			addNameValuePair(&header, "REQUEST_METHOD", (method == POST_METHODE)?"POST":"GET");
-			sendParams(fd, 10, header.contentData, header.contentLength);
-			if(hasQuery) free(query);
+			addNameValuePair(&header, "SCRIPT_NAME", script_name);
+			addNameValuePair(&header, "SCRIPT_FILENAME", add_serv_php);
+
+
 			//on gere le message body
 			if(method == POST_METHODE){
-				token_courant = searchTree(root,"Content_Length");
-				if(token_courant==NULL){
-					//bad request, Content-Lenght-Header obligatoire
+
+				int longueur_MB = fillHeaderPost(&header, root);
+
+				if(longueur_MB == -1){
 					sendError400(requete->clientId);
 					goto ENDWHILE_add;
 				}
-				node_courant = (Lnode *)token_courant->node;
-				char* buffer = calloc(node_courant->len + 1 , sizeof(char));
-				strncpy(buffer,node_courant->value,node_courant->len);
-				int longueur_MB = atoi(buffer);
-				free(buffer);
-				printf("envoi du message body\n");
+				sendParams(fd, 10, header.contentData, header.contentLength);
+				sendParams(fd, 10, NULL, 0);
+
+
+				if(hasQuery) free(query);
+
 				//envoi du message body
 				if(longueur_MB == 0){
-					printf("envoi du message body: 0\n");
-					sendStdin(fd, 10, "hello world", 11);
+					sendStdin(fd, 10, "", 0);
 				}else{
-					purgeElement(&token_courant);
-					token_courant = searchTree(root,"message-body");
-					if(token_courant==NULL){
+
+					token_body = searchTree(root,"message_body");
+
+					if(token_body==NULL){
 						//bad request, pas de message body
 						sendError400(requete->clientId);
 						goto ENDWHILE_add;
 					}
-					node_courant = (Lnode *)token_courant->node;
+
+					node_body = (Lnode *)token_body->node;
 					printf("envoi du message body: 1\n");
-					sendStdin(fd, 10, node_courant->value, longueur_MB);
+					sendStdin(fd, 10, node_body->value, longueur_MB);
+
 				}
 			}else{
-				printf("envoi du message body: 0\n");
-				sendStdin(fd, 10, "hello world", 11);
+				sendParams(fd, 10, header.contentData, header.contentLength);
+				sendParams(fd, 10, NULL, 0);
+
+				if(hasQuery) free(query);
+
+				sendStdin(fd, 10, "", 0);
 			}
 			//lecture de la reponse
-			char * content = calloc(1, sizeof(char));
-			readResponse(fd, content);
-			printf("Result = _%s_\n",content);
+			char* response[2];
 
-			free(content);
+			if(readResponse(fd, response) == ERROR_PHP){
+				sendPhpError(response[0], response[1], requete->clientId);
+			}else{
+				sendPhpResponse(response[1], requete->clientId);
+			}
+
+			printf("Error = _%s_\n",response[0]);
+			printf("Content = _%s_\n",response[1]);
+
+
+			free(response[0]);
+			free(response[1]);
 			close(fd);
 			goto ENDWHILE_add;
 		}
 
 		int taille_fich;
+		printf("serveur http: [%s]\n", add_serv_http);
 		if ((taille_fich = checkIfFileExists(add_serv_http)) == -1) {
 			//fichier non trouvé
 			sendError404(requete->clientId);
@@ -219,6 +244,7 @@ int main()
 		ENDWHILE_add:
 		free(add_serv_http);
 		free(add_serv_php);
+		free(script_name);
 
 
 
@@ -228,7 +254,7 @@ int main()
 		purgeElement(&token_host);
 		purgeElement(&token_path);
 		purgeElement(&token_query);
-		purgeElement(&token_courant);
+		purgeElement(&token_body);
 
 		purgeTree(root);
 

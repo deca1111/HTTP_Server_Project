@@ -6,7 +6,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		</head>
 		<body> <!-- Corps de la page -->
-			<form action="formulaire_get.php" method="GET">	<!-- Début du formulaire -->
+			<form action="formulaire_post ok.php" method="POST">	<!-- Début du formulaire -->
 				<!-- Liste déroulante -->
 				<select name="titre">
 					<option>Mlle</option><option selected>Mme</option><option>M.</option>
@@ -29,10 +29,12 @@
 				<input type="submit" name="btOK" value="OK">
 			</form> <!-- Fin du formulaire -->
 			<?php 
-				if(isset($_GET['nom'])){
-					echo 'Votre nom est : '.$_GET['nom'];
-					echo 'Votre prenom est : '.$_GET['prenom'];
-					echo 'Et vous avez :'.$_GET['age'].' ans';
+				if(isset($_POST['nom']) && $_POST['nom'] != ""){
+					echo '<br>Votre nom est : '.$_POST['nom'];
+					echo '<br>';
+					echo 'Votre prenom est : '.$_POST['prenom'];
+					echo '<br>';
+					echo 'Et vous avez :'.$_POST['age'].' ans';
 				}else{
 					echo 'Vous n avez pas de nom';
 				}

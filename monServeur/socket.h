@@ -14,6 +14,7 @@
 #include <sys/mman.h>
 
 #include "fastcgi.h"
+#include "fonction.h"
 
 #define sendStdin(fd,id,stdin,len) sendWebData(fd,FCGI_STDIN,id,stdin,len)
 #define sendData(fd,id,data,len) sendWebData(fd,FCGI_DATA,id,data,len)
@@ -31,8 +32,8 @@ void sendEndRequest(int fd,unsigned short requestId,unsigned int appStatus,unsig
 void sendUnknownType(int fd,unsigned short requestId,unsigned char type);
 void completeParamsHeader(FCGI_Header * header, char * tab[500][2]);
 void afficherHeader(FCGI_Header * header);
-void readResponse(int fd, char * content);
+int readResponse(int fd, char* response[2]);
 void completeParamsConst(FCGI_Header * header);
-
+int fillHeaderPost(FCGI_Header *header, _Token * root);
 
 #endif

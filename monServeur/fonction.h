@@ -5,6 +5,7 @@
 #include "annexe.h"
 #include "api.h"
 #include "httpparser.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,12 +30,15 @@ int version(_Token * root);
 int methode(_Token * root);
 int connexion(_Token * root);
 char* decodePercent(char* src, int len, char* buffer);
+void parsePhpContent(char * content, char * new[2]);
 
 void sendLengthHeader(int taille_fich, unsigned int clientID);
 void sendFichier(int fichier, int taille_fich, unsigned int clientID);
 void sendTypeHeader(char* type, unsigned int clientID);
 void sendDateHeader(unsigned int clientID);
 void sendAllowHeader(char* method_allowed, unsigned int clientID);
+void sendPhpResponse(char* content, unsigned int clientID);
+void sendPhpError(char * error, char* content, unsigned int clientID);
 
 
 void sendError400(unsigned int clientID);

@@ -29,9 +29,11 @@
 				<input type="submit" name="btOK" value="OK">
 			</form> <!-- Fin du formulaire -->
 			<?php 
-				if(isset($_POST['nom'])){
-					echo 'Votre nom est : '.$_POST['nom'];
+				if(isset($_POST['nom']) && $_POST['nom'] != ""){
+					echo '<br>Votre nom est : '.$_POST['nom'];
+					echo '<br>'
 					echo 'Votre prenom est : '.$_POST['prenom'];
+					echo '<br>';
 					echo 'Et vous avez :'.$_POST['age'].' ans';
 				}else{
 					echo 'Vous n avez pas de nom';
