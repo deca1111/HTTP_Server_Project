@@ -43,14 +43,12 @@ int strcmpLen(char* c1, char* c2, int l){
 		}
 		return 0;
 	}
-
 	//concatene c2 dans c1, il faut que c1 soit assez grand
 void strcatLen(char* c1, char* c2, int l1, int l2){
 		for(int i=0;i<l2;i++){
 			c1[l1+i] = c2[i];
 		}
 	}
-
 	//renvoi la taille du fichier si le fichier existe, -1 sinon
 int checkIfFileExists(const char* filename){
 	    struct stat buffer;
@@ -60,13 +58,12 @@ int checkIfFileExists(const char* filename){
 	    else
 	        return -1;
 	}
-
 char *get_filename_ext(char *filename) {
 	    char *dot = strrchr(filename, '.');
 	    if(!dot || dot == filename) return "";
 	    return dot + 1;
 	}
-
+	// renvoie le type mime d'un fichier
 char* mimeType(char* nom_fichier){
 		char* result = "application/octet-stream\r\n";
 		char *ext = get_filename_ext(nom_fichier);
@@ -77,7 +74,7 @@ char* mimeType(char* nom_fichier){
 		}
 		return result;
 	}
-
+	// renvoie la version http du token
 int version (_Token * root){
 	_Token *r = NULL;
 	Lnode *node;
@@ -94,7 +91,7 @@ int version (_Token * root){
 	purgeElement(&r);
 	return result;
 }
-
+	// renvoie la methode utilisé dans le token
 int methode(_Token * root){
 	_Token *r = NULL;
 	Lnode *node;
@@ -113,7 +110,7 @@ int methode(_Token * root){
 	purgeElement(&r);
 	return result;
 }
-
+	// renvoie le type de connexion employé
 int connexion(_Token * root){
 	_Token *r = NULL;
 	Lnode *node;
@@ -134,9 +131,7 @@ int connexion(_Token * root){
 	purgeElement(&r);
 	return result;
 }
-
-
-
+	// prend un pointeur vers char en source et renvoie un pointeur vers char en ayant remplcé les %xx en caracteres
 char* decodePercent(char* src, int len, char* buffer){
 	int j = 0, value = 0;
 	char petit_buffer[2];
@@ -153,7 +148,7 @@ char* decodePercent(char* src, int len, char* buffer){
 	}
 	return buffer;
 }
-
+	// envoie au client la taille taille_fich
 void sendLengthHeader(int taille_fich, unsigned int clientID){
 	//Header Length
 	char length [40];snprintf (length,40, "%d\r\n", taille_fich);
@@ -169,7 +164,7 @@ void sendLengthHeader(int taille_fich, unsigned int clientID){
 	writeDirectClient(clientID,header_length,strlen(header_length));
 	free(header_length);
 }
-
+	// envoie un fichier au client
 void sendFichier(int fichier, int taille_fich, unsigned int clientID){
 	writeDirectClient(clientID,SAUT_DE_LIGNE,strlen(SAUT_DE_LIGNE));
 	char * pointeur;
@@ -179,7 +174,7 @@ void sendFichier(int fichier, int taille_fich, unsigned int clientID){
 	}
 	writeDirectClient(clientID,pointeur,taille_fich);
 }
-
+	// envoie au client le header header-type
 void sendTypeHeader(char* type, unsigned int clientID){
 	char* header_type = calloc(strlen(REPONSE_CONTENT_TYPE) + strlen(type) + 1, sizeof(char));
 	strcat(header_type,REPONSE_CONTENT_TYPE);
@@ -188,7 +183,7 @@ void sendTypeHeader(char* type, unsigned int clientID){
 	writeDirectClient(clientID,header_type,strlen(header_type));
 	free(header_type);
 }
-
+// envoie au client le header date
 void sendDateHeader(unsigned int clientID){
 	time_t timestamp = time( NULL );
 	struct tm * gmtTime = gmtime( & timestamp );
@@ -204,7 +199,7 @@ void sendDateHeader(unsigned int clientID){
 	writeDirectClient(clientID,header_date,strlen(header_date));
 	free(header_date);
 }
-
+// découpe la réponse d'un serveur php pour separer le header du message
 void parsePhpContent(char * content, char * new[2]){
 	int index = 0;
 	while (index < (int) strlen(content) && content[index] != '\n'){
@@ -218,11 +213,7 @@ void parsePhpContent(char * content, char * new[2]){
 
 
 }
-
-
-
-
-
+// envoie la reponse du serveur php au client du serveur http
 void sendPhpResponse(char* content, unsigned int clientID){
 	char * new[2];
 
@@ -238,7 +229,7 @@ void sendPhpResponse(char* content, unsigned int clientID){
 	free(new[0]);
 	free(new[1]);
 }
-
+// envoie l'erreur du serveur php au client du serveur http
 void sendPhpError(char * error, char* content, unsigned int clientID){
 	char * new[2];
 
@@ -260,8 +251,7 @@ void sendPhpError(char * error, char* content, unsigned int clientID){
 	free(new[0]);
 	free(new[1]);
 }
-
-
+// envoie au client le header allow
 void sendAllowHeader(char* method_allowed, unsigned int clientID){
 	char* header_allow = calloc(strlen(REPONSE_ALLOW) + strlen(method_allowed) + 1, sizeof(char));
 	strcat(header_allow,REPONSE_ALLOW);
@@ -271,27 +261,27 @@ void sendAllowHeader(char* method_allowed, unsigned int clientID){
 	free(header_allow);
 }
 
-
+// envoie au client une erreur 400
 void sendError400(unsigned int clientID){
 	printf("(%s)",ERROR_400);
 	writeDirectClient(clientID,ERROR_400,strlen(ERROR_400));
 }
-
+// envoie au client une erreur 404
 void sendError404(unsigned int clientID){
 	printf("(%s)",ERROR_404);
 	writeDirectClient(clientID,ERROR_404,strlen(ERROR_404));
 }
-
+// envoie au client une erreur 505
 void sendError505(unsigned int clientID){
 	printf("(%s)",ERROR_505);
 	writeDirectClient(clientID,ERROR_505,strlen(ERROR_505));
 }
-
+// envoie au client une erreur 501
 void sendError501(unsigned int clientID){
 	printf("(%s)",ERROR_501);
 	writeDirectClient(clientID,ERROR_501,strlen(ERROR_501));
 }
-
+// envoie au client une erreur 405
 void sendError405(unsigned int clientID){
 	printf("(%s)",ERROR_405);
 	writeDirectClient(clientID,ERROR_405,strlen(ERROR_405));

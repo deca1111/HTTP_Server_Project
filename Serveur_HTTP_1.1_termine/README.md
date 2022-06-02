@@ -12,7 +12,7 @@ Pour compiler le projet, utiliser la ligne de commande suivante en se trouvant d
 make
 ```
 
-Puis copier coller la commande suivante (aussi affichée par la commande précédente) : 
+Puis copier coller la commande suivante (aussi affichée par la commande précédente) :
 
 ```bash
 export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$(LIBPARS):$(LIBREQ)
@@ -57,4 +57,37 @@ GET /monFichierExemple.txt HTTP/1.0
 ### Fonctions NON implémentées : ###
 
 - Pas de gestion de la méthode POST.
-- PAs de gestion des querys.
+- Pas de gestion des querys.
+
+## **Étape 4 / PHP**
+
+Dans cette étape, nous avons implémenté la gestion des scripts php et la communication avec un serveur d'application php.
+
+Pour faciliter le projet, il faut installer le serveur php sur sa machine en local et configurer le port d'écoute sur 9000.
+Voici la procédure d'installation sur une machine linux:
+
+```bash
+# Installation du serveur php
+sudo apt-get install php-form
+
+# Il faut modifier la ligne du fichier /etc/php/8.x/fpm/pool.d/www.conf
+# (ou /etc/php/7.x/fpm/pool.d/www.conf en fonction de la version de php)
+# Pour permettre au serveur d'écouter sur le bon port
+listen = 9000
+
+# Il faut restart le serveur php pour qu'il tienne compte des modifications
+systemctl restart php8.1-fpm
+```
+
+Une fois le serveur php installé, il faudra placer les scripts php dans un dossier avec la même arboressance que celle du serveur php.
+Ensuite, il faut modifier la ligne 5 du fichier "annexe.h" pour mettre l'adresse de la racine de votre serveur php.
+Si vous avez placé la base de votre arboressance dans le fichier /home/userir/doc/php, il faudra modifier la ligne de cette maniere :
+
+```c
+// La taille de cette string ne doit pas dépasser Ox7F
+#define START_PHP_FILENAME "proxy:fcgi://127.0.0.1:9000//home/userir/doc/php"
+```
+
+Après ces modifications, vous pourrez utiliser vos scripts php sur vos sites (le multi-hosting est implémenté) comme pour n'importe quel autre type de fichier.
+
+De plus, si le serveur php renvois une erreur, cette erreur sera affichée comme un "text/plain" sur la page de votre navigateur

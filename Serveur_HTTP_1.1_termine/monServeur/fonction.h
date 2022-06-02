@@ -19,8 +19,6 @@
 #include <time.h>
 #include<sys/stat.h>
 
-
-
 int strcmpLen(char* c1, char* c2, int l);
 void strcatLen(char* c1, char* c2, int l1, int l2);
 int checkIfFileExists(const char* filename);

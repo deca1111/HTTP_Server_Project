@@ -154,7 +154,7 @@ FCGI_UnknownTypeBody *unknown;
 }
 
 // =========================================================================================================== //
-
+// Permet d'afficher le header
 void afficherHeader(FCGI_Header * header){
 	printf("// ----- Affichage header ----- //\n");
 	printf("version : _%d_\n", header->version);
@@ -165,6 +165,7 @@ void afficherHeader(FCGI_Header * header){
 	printf("// ---------------------------- //\n");
 }
 // =========================================================================================================== //
+// Permet de lire la réponse du serveur php
 int readResponse(int fd, char* response[2]){
 	int ret =0, hasError = 0;
 	FCGI_Header head_temp;
@@ -177,46 +178,44 @@ int readResponse(int fd, char* response[2]){
 		perror("erreur de lecture du header\n");
 		return EXIT_FAILURE;
 	}
-	//afficherHeader(&head_temp);
 	int taille_lu;
 	int size_content = 0;
 	int size_error = 0;
 	int taille_a_lire;
 
-	// tant qu'on a pas le header de fin, on continue
+	// tant qu'on a pas le header FCGI_END_REQUEST, on continue
 	while(head_temp.type != FCGI_END_REQUEST){
-
+		// dans le cas d'un FCGI_STDERR
 		if(head_temp.type == FCGI_STDERR){
-			//header d'erreur
-
 			hasError = ERROR_PHP;
 
-			//resize de la chaine d'erreur
+			// On realloue de la memoire pour modifier la taille de notre erreur avec le nouveau contentLength
 			if((error = realloc(error, sizeof(char) * (ntohs(head_temp.contentLength) + size_error + 2))) == NULL ){
 				perror("erreur allocation memoire\n");
 				return EXIT_FAILURE;
 			}
+			// On initialise ce qui vient d'etre alloue avec des 0
 			bzero(error+size_error,(ntohs(head_temp.contentLength)+2));
 
-			// on lit tout l'erreur
+
 			taille_a_lire = ntohs(head_temp.contentLength);
 			taille_lu = 0;
+			// On lit toute l'erreur
 			while(taille_lu < taille_a_lire){
 				ret = read(fd, error + size_error, taille_a_lire - taille_lu);
 				if(ret == -1){
 					perror("erreur lecture\n");
 					return EXIT_FAILURE;
 				}
-				printf("errror : _%s_, size_error : %d\n", error+size_error, size_error+ret);
 				taille_lu += ret;
 				size_error += ret;
 			}
-
+			// on ajoute une \n a la fin de notre erreur
 			strcatLen(error,"\n",size_error++,1);
 		}else if(head_temp.type == FCGI_STDOUT){
-			//header stdOUT
+			// si on a un header FCGI_STDOUT
 
-			//resize de la chaine de content
+				// On realloue de la memoire pour modifier la taille de notre contenu avec le nouveau contentLength
 			if((content = realloc(content, sizeof(char) * ntohs(head_temp.contentLength) + size_content+1)) == NULL ){
 				perror("erreur allocation memoire\n");
 				return EXIT_FAILURE;
@@ -232,17 +231,17 @@ int readResponse(int fd, char* response[2]){
 					perror("erreur lecture\n");
 					return EXIT_FAILURE;
 				}
-				printf("content : _%s_, size_content : %d\n", content+size_content, size_content+ret);
 				taille_lu += ret;
 				size_content += ret;
 			}
 
 		}
 
-		// on lit le padding
+
 		taille_a_lire = head_temp.paddingLength;
 		taille_lu = 0;
 		char * buff = malloc(taille_a_lire * sizeof(char));
+		// On lit le padding et on le jette dans un buffer
 		while(taille_lu < taille_a_lire){
 			ret = read(fd, buff, taille_a_lire - taille_lu);
 			if(ret == -1){
@@ -254,13 +253,11 @@ int readResponse(int fd, char* response[2]){
 		}
 		free(buff);
 
-		// lecture du nouveau FCGI_Header
+		// lecture et affectation du FCGI_Header suivant
 		if((ret = read(fd, &head_temp, FCGI_HEADER_SIZE)) == -1){
 			perror("erreur de lecture du header\n");
 			return EXIT_FAILURE;
 		}
-
-		// afficherHeader(&head_temp);
 	}
 
 	response[0] = error;
@@ -270,6 +267,7 @@ int readResponse(int fd, char* response[2]){
 }
 
 // =========================================================================================================== //
+// Ajouter des parametres en dur dans un header
 void completeParamsConst(FCGI_Header * header){
 	addNameValuePair(header, "GATEWAY_INTERFACE", "CGI/1.1");
 	addNameValuePair(header, "SERVER_NAME", "127.0.0.1");
@@ -279,6 +277,7 @@ void completeParamsConst(FCGI_Header * header){
 	addNameValuePair(header, "REQUEST_SCHEME", "http");
 }
 // =========================================================================================================== //
+// Remplie le content du header params avec les parametres Content_Length, Content_Type et referer
 int fillHeaderPost(FCGI_Header *header, _Token * root){
 	_Token *token_CL = NULL, *token_CT = NULL, *token_Ref = NULL;
 	Lnode *node_CL, *node_CT, *node_Ref;

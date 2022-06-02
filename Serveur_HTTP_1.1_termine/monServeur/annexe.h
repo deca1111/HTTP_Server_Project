@@ -2,6 +2,7 @@
 #define __ANNEXE_H__
 
 #define DIR_DATA "./dataHttpServer"
+// Ligne a modifier pour les scripts php
 #define START_PHP_FILENAME "proxy:fcgi://127.0.0.1:9000//home/routhred/Documents/php"
 #define ERROR_400 "HTTP/1.1 400 Bad Request\r\n\r\n"
 #define ERROR_404 "HTTP/1.1 404 Not Found\r\n\r\n"
