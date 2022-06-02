@@ -1,0 +1,2 @@
+GET /monFichierExemple.txt HTTP/1.0
+
