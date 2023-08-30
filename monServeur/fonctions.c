@@ -215,12 +215,7 @@ void parsePhpContent(char * content, char * new[2]){
 	new[1] = calloc(strlen(content) - index + 1, sizeof(char));
 	strncpy(new[0], content, index - 1);
 	strncpy(new[1], content + index, strlen(content) - index);
-
-
 }
-
-
-
 
 
 void sendPhpResponse(char* content, unsigned int clientID){
